@@ -1,0 +1,54 @@
+20110616 - v 2.0
+  Possibilité de forcer la supression d'un jeu ou d'un adhérent ainsi que de tous les prêts liés
+
+20100830 - v 1.7
+  Correction de 2 autres bugs de sécurité.
+
+20100319 - v 1.6
+  Correction de 3 bugs de sécurité.
+
+20100317 - v 1.5
+  Les adhérents devant renouveler l'adhésion apparaissent en rouge au
+  moment de prêter un jeu, avec la date d'adhésion en prime.
+
+20091017 - v 1.4
+	Possibilité de supprimer un adhérent s'il n'a aucun prêt rattaché.
+20090213 - v 1.3
+	La présence moyenne par jour de la semaine se fait par année maintenant.
+20080131 - v 1.2
+	Ajout d'un test pour PHP >= 5.1.0
+	Ajout de la licence sur tous les fichiers sources afin de publier le code
+20080123 - v 1.1
+	Ajout de stats à l'année en séparant les enfants de moins de 6 ans et de plus de 6 ans
+20070118 - v 1.0
+	Ajout d'un prolongateur de prêt, qui duplique le prêt avec 1 mois de décalage.
+	Ajout d'un historique des prêts pour les jouets.
+20060720 - v 0.9
+	Ajout d'un graphique de statistiques par mois.
+20060411 - v 0.8
+	Recherche limitée à 100 résultats au lieu de 50, ça a gêné une fois.
+	Possibilité d'afficher tous les prêts en cours d'un adhérent sans limite.
+20060312
+	Affichage des stats de la base dans la page statistiques.
+20060227 - v 0.7
+	Affichage des identifiants et de la date de naissance pour la liste des adhérents.
+20060203 - v 0.6
+	Statistiques par jour de la semaine.
+20060202
+	Statistiques par trimestre, mois et année.
+20060125 - v 0.5
+	Toutes les listes alternent la couleur de fond.
+	La recherche de prêts devient multi-critères.
+	Les adhérents sont listés par nom et prénom, sans afficher l'identifiant.
+	Les jeux sont listés par nom, sans afficher l'identifiant.
+20060125 - v 0.4
+	Ajout de l'état du prêt à la recherche de prêts.
+20060118 - v 0.3
+	Ajout d'une liste des prêts en retard.
+	Recherche de prêts : correction bugs plus possibilité de recherche par nom de jeu ou d'adhérent.
+20060115 - v 0.2
+	Ajout d'un changelog
+	Suppression des alertes PHP5
+	Tri par ordre alphabétique des adhérents dans la liste des prêts, à la demande d'Isabelle.
+	Le télépĥone du domicile n'était pas enregistré.
+20051130 - v0.1

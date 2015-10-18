@@ -18,7 +18,7 @@ This file is part of phpLudoreve.
 
 include "entt.php";
 
-$sql = "SELECT jeu.id_jeu, nom, categorie_esar.label,
+$sql = "SELECT jeu.id_jeu, nom, CONCAT (categorie_esar.label, ' - ', categorie_esar.name) AS label,
 	id_pret as etat_pret
 	FROM jeu
 	left outer join categorie_esar on jeu.categorie_esar_id = categorie_esar.id

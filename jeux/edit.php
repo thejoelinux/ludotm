@@ -232,4 +232,3 @@ function completeHandler (response) {
 <?php 
 include "../fonctions/finpage.php";
 ?>
-

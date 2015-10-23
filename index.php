@@ -16,5 +16,90 @@ This file is part of phpLudoreve.
     along with phpLudoreve.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-header("Location: ./accueil/index.php");
+session_start();
+include("config/config.php");
+include("classes/data.php");
+$data = new data();
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+        <link href="css/styles.css" rel="stylesheet" type="text/css">
+        <link href="css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+        <script src="js/jquery-1.11.3.min.js"></script>
+        <script src="js/jquery.dataTables.min.js"></script>
+        <script src="js/functions.js"></script>
+
+    </head>
+<body>
+<div id="header_zone">
+    <div id="menu_zone">
+<?php
+$contexts = array("members", "games");
+if(!array_key_exists("o", $_REQUEST)) {
+    $_REQUEST["o"] = "home";
+} else {
+    if(!in_array($_REQUEST["o"], $contexts)) {
+        echo '{"message":"Error : '.$_REQUEST["o"].' : no such context."}';
+        exit();
+    }    
+}
+while(list($key, $val) = each($contexts)) { ?>
+    <a href="javascript:set_value('o', '<?=$key?>');set_value('a','');set_value('i','');document.defaultform.submit()"><?=$val?></a> ::
+<?php } ?>
+    </div>
+</div>
+<?php
+// compute date
+include("helpers/date.php");
+?>
+<div id="middle_zone">
+    <div id="main_view">
+    <form action="index.php" method="post" id="defaultform" name="defaultform">
+
+<?php
+
+switch($_REQUEST["o"]) {
+    case "games";
+        include("games/games.php");
+    break;
+
+    case "members";
+        include("members/members.php");
+    break;
+
+    default:
+        include("accueil/index.php");
+    break;
+}
+
+//header("Location: ./accueil/index.php");
+?>
+        <input type="hidden" name="o" id="o" value="<?=$_REQUEST["o"]?>"> 
+        <input type="hidden" name="a" id="a" value="<?=(array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : ""?>"> 
+        <input type="hidden" name="i" id="i" value="<?=(array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : ""?>">
+    </div>
+    <div id="toolbox">
+<?php
+include("helpers/calendar.php");
+// FIXME include("helpers/history.php");
+?>
+    </div>
+    </form>
+</div>
+<div id="footer_zone">
+<?php if($debug) { ?>
+<pre>
+REQUEST :
+<?php print_r($_REQUEST) ?>
+SESSION :
+<?php print_r($_SESSION) ?>
+</pre>
+<?php } ?>
+</div>
+
+</body>
+</html>

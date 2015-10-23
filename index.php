@@ -38,7 +38,7 @@ $data = new data();
 <div id="header_zone">
     <div id="menu_zone">
 <?php
-$contexts = array("members", "games");
+$contexts = array("home", "members", "games");
 if(!array_key_exists("o", $_REQUEST)) {
     $_REQUEST["o"] = "home";
 } else {
@@ -47,8 +47,11 @@ if(!array_key_exists("o", $_REQUEST)) {
         exit();
     }    
 }
+?>
+    <a href="javascript:set_value('o', '<?=$val?>');set_value('a','');set_value('i','');document.defaultform.submit()"><?=$val?></a>
+<?php
 while(list($key, $val) = each($contexts)) { ?>
-    <a href="javascript:set_value('o', '<?=$key?>');set_value('a','');set_value('i','');document.defaultform.submit()"><?=$val?></a> ::
+    :: <a href="javascript:set_value('o', '<?=$val?>');set_value('a','');set_value('i','');document.defaultform.submit()"><?=$val?></a>
 <?php } ?>
     </div>
 </div>
@@ -72,7 +75,9 @@ switch($_REQUEST["o"]) {
     break;
 
     default:
-        include("accueil/index.php");
+        ?>
+        //include("accueil/index.php");
+        <?php
     break;
 }
 

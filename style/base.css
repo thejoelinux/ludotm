@@ -16,7 +16,7 @@ This file is part of phpLudoreve.
 */
 
 html,body {
-background-color : #bbbbff;
+background-color : #bbbbff !important;
 color : #552222;
 }
 

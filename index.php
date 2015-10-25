@@ -74,7 +74,7 @@ if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $conte
 // compute date
 include("helpers/date.php");
 ?>
-<form action="index.php" method="post" id="defaultform" name="defaultform">
+<form action="index.php" method="post" id="defaultform" name="defaultform" enctype="multipart/form-data">
 <div class="container-fluid">
   <div class="row">
 	<div class="col-sm-9 col-md-10 main">

@@ -50,7 +50,7 @@ class data {
     * @param $query the select sql statement to execute
     * @param $rset
     */
-    public function select ($query, &$rset) {
+    public function select ($query, &$rset, $object = false) {
 
         $conn = "db_handle";
         if (! ($this->db_handle && ($result = $this->$conn->query($query)))) {
@@ -60,17 +60,33 @@ class data {
                     mysqli_error($this->$conn),
                     $query);
         }
-        $rset = new rset(
-                mysqli_field_count($this->$conn),
-                $result->num_rows
-        );
-        $rset->raw_content = $result;
-        $rset->content[0]  = mysqli_fetch_array($rset->raw_content, MYSQLI_ASSOC);
-        $finfo             = $result->fetch_fields();
-        foreach ($finfo as $val) {
-            $rset->table[] = $val->name;
-        }
-
+		if($object) {
+			if(!class_exists($object)) {
+				throw new data_exception(
+					0,
+					"Calling select to object w/ a class <b>$object</b> that doesn't even exists",
+					"select (\$query, &\$rset, $object)");
+			}
+			$rset = array();
+			if($result->num_rows <= 1) {
+				$rset = $result->fetch_object($object);
+			} else {
+				while ($obj = $result->fetch_object($object)) {
+					$rset[] = $obj;
+			    }
+			}
+		} else {
+			$rset = new rset(
+					mysqli_field_count($this->$conn),
+					$result->num_rows
+			);
+			$rset->raw_content = $result;
+			$rset->content[0]  = mysqli_fetch_array($rset->raw_content, MYSQLI_ASSOC);
+			$finfo             = $result->fetch_fields();
+			foreach ($finfo as $val) {
+				$rset->table[] = $val->name;
+			}
+		}
         return true;
     }
 

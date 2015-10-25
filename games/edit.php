@@ -15,12 +15,9 @@ This file is part of phpLudoreve.
     You should have received a copy of the GNU General Public License
     along with phpLudoreve.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-    include "entt.php";
 ?>
-
-<script src="../js/jquery-1.11.3.min.js"></script>
-<SCRIPT LANGUAGE="JavaScript">
+<script>
+/* FIXME view form validation later
 function validate_and_submit ()
 {
     if(document.forms["saisie"].nom.value == 0)
@@ -31,81 +28,66 @@ function validate_and_submit ()
     document.forms["saisie"].submit();
     return true;
 }
-</SCRIPT>
-
+</script>
 <?php
-    echo "<center>";
-    if (isset($_GET['id_jeu'])) {
-        $jeu = get_jeu($_GET['id_jeu']);
-        echo "<h3>JEU n°".$_GET['id_jeu'];
-        if (est_prete($_GET['id_jeu'])) {
-            echo "(INDISPONIBLE)</h3>";
-        } else {
-            echo "(DISPONIBLE)</h3>";
-        }
-        echo "<a href='../pret/recherche.php?jeu=".$jeu['nom']."'>
-            Historique des prêts</a>";
-    }
-    else 
-    #Création à vide
-    {
-        $jeu = array('nom'=>'','reference'=>'','fabricant'=>'','infos_fabricant'=>'','categorie'=>'',
-            'categorie_esar_id' => 0,
-            'prix'=>'','date_achat'=>date("Y-m-d"),'inventaire'=>'','commentaire'=>'');
-        echo "<h3>NOUVEAU JEU</h3>";
-    }
+// since we are in the edit form, we have an existing $game
 ?>
+<center>
+<h3>JEU n°<?=$game->id_jeu?>
+	<?php if($game->id_pret) { ?>
+	(INDISPONIBLE) FIXME : lien vers pret en cours
+	<?php } else { ?>
+	(DISPONIBLE)
+	<?php } ?>
+	</h3>
+
+<a href="index.php?o=prets&id_jeu=<?$game->id_pret?>">Historique des prêts</a>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="nom">Nom</label>
+		<div class="col-sm-4">
+			<input type="text" id="nom" class="form-control" value="<?=$game->nom?>"/>
+		</div>
+		<label class="control-label col-sm-2" for="reference">Référence</label>
+		<div class="col-sm-4">
+			<input type="text" id="reference" class="form-control" value="<?=$game->reference?>"/>
+		</div>	
+	</div>
 
 <table>
-<form name="saisie" action="valide.php" enctype="multipart/form-data" method="post">
-    <tr>
-        <td align=right>Nom</td>
-        <td align=left><input type=text name=nom SIZE=50 MAXLENGTH=50 
-            value="<?php echo $jeu['nom'];?>"></td>
-    </tr>   
-    <tr>
-        <td align=right>Référence</td>
-        <td align=left><input type=text name=reference SIZE=20 MAXLENGTH=20 
-            value="<?php echo $jeu['reference'];?>"></td>
-    </tr>   
     <tr>
         <td align=right>Fabricant</td>
         <td align=left><input type=text name=fabricant SIZE=20 MAXLENGTH=20 
-            value="<?php echo $jeu['fabricant'];?>"></td>
+            value="<?=$game->fabricant?>"></td>
     </tr>   
     <tr>
         <td align=right>Informations du Fabricant</td>
         <td align=left><input type=text name=infos_fabricant SIZE=60 MAXLENGTH=60 
-            value="<?php echo $jeu['infos_fabricant'];?>"></td>
+            value="<?=$game->infos_fabricant?>"></td>
     </tr>   
     <tr>
         <td align=right>Catégorie</td>
         <td align=left><input type=text name=categorie SIZE=40 MAXLENGTH=40 
-            value="<?php echo $jeu['categorie'];?>">
+            value="<?=$game->categorie?>">
         (ex sy as rè)
         </td>
     </tr>   
     <tr>
         <td align=right>Catégorie ESAR</td>
-        <td align="left">
-            <?php select_categorie_esar($jeu['categorie_esar_id']);?>   
+        <td align="left">FIXME - wait a minute
+            <?php //select_categorie_esar($game->categorie_esar_id);?>   
         </td>
     </tr>
     <tr>
         <td align=right>Prix</td>
         <td align=left><input type=text name=prix SIZE=3 MAXLENGTH=3 
-            value="<?php echo $jeu['prix'];?>">
+            value="<?=$game->prix?>">
         </td>
     </tr>   
     <tr>
         <td align="right">Medias</td>
         <td style="background-color: white">
         <?php
-        if(!array_key_exists("id_jeu", $jeu)) {
-        ?>
-            Il faut enregistrer le jeu avant d'ajouter des médias.
-        <?php
-        } else {
             if(is_array($jeu['medias'])) {
                 ?><div id="media_list"><?php
                 // DEBUG echo "<pre>"; print_r($jeu["medias"]); echo "</pre>";
@@ -175,9 +157,7 @@ function completeHandler (response) {
 }
 
 </script>
-            <?php
-        }
-        ?>
+
         </td>
     </tr>
     <tr>

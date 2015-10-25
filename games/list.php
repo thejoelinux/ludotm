@@ -20,8 +20,6 @@ $data->select($sql, $rset);
 	</thead>
 	<tbody>
 <?php
-$ligne=FALSE;
-# affichage des résultats de la requête dans le menu déroulant
 do { ?>
 	<tr>
 		<td>

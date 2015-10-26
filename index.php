@@ -17,8 +17,11 @@ This file is part of phpLudoreve.
 */
 
 session_start();
+function __autoload($class_name) {
+    include "classes/".strtolower($class_name).".php";
+}
 include("config/config.php");
-include("classes/data.php");
+global $data;
 $data = new data();
 ?>
 <!DOCTYPE html>
@@ -59,7 +62,10 @@ if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $conte
 <?php } ?>
       </ul>
 	  <form class="navbar-form navbar-right">
-		<input type="text" class="form-control" placeholder="Recherche...">
+		<input type="text" class="form-control" placeholder="Recherche..."
+                name="search" id="search" autocomplete="off">
+                <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+		        <input type="hidden" name="everything_data" id="everything_data" value="">
 	  </form>
 	  <!-- when authentication will be ready
 	  <ul class="nav navbar-nav navbar-right">
@@ -129,16 +135,16 @@ SESSION :
 <script src="js/zabuto_calendar.min.js"></script>
 <script src="js/functions.js"></script>
 <script type="application/javascript">
-    $(document).ready(function () {
-        $("#my-calendar").zabuto_calendar({
-			language: "fr",
-			today: true,
-		});
+$(document).ready(function () {
+    $("#my-calendar").zabuto_calendar({
+        language: "fr",
+        today: true,
     });
-	/*
-	TODO : Display calendar events via ajax
-	See documentation at https://github.com/zabuto/calendar
-	*/
+});
+/*
+TODO : Display calendar events via ajax
+See documentation at https://github.com/zabuto/calendar
+*/
 </script>
 </body>
 </html>

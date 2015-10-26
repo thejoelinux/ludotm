@@ -30,7 +30,7 @@ function validate_and_submit ()
 }
 </script>
 <?php
-// since we are in the edit form, we have an existing $game
+// since we are in the edit form, we have an existing $game from the controller
 ?>
 <center>
 <h3>JEU n°<?=$game->id_jeu?>

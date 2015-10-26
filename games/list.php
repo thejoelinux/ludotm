@@ -1,14 +1,3 @@
-<?php
-// SQL SELECT jeu categorie_esar prets
-$sql = "SELECT jeu.id_jeu, nom, 
-		CONCAT (categorie_esar.label, ' - ', categorie_esar.name) AS label,
-		id_pret as etat_pret
-	FROM jeu
-		LEFT OUTER JOIN categorie_esar ON jeu.categorie_esar_id = categorie_esar.id
-		LEFT OUTER JOIN prets ON (jeu.id_jeu = prets.id_jeu AND date_retour > curdate())
-	ORDER BY nom"; 
-$data->select($sql, $rset);
-?>
 <h1>Liste des jeux</h1>
 <table id="list_jeu">
 	<thead>
@@ -20,19 +9,19 @@ $data->select($sql, $rset);
 	</thead>
 	<tbody>
 <?php
-do { ?>
+while(list($key, $val) = each($games)) { ?>
 	<tr>
 		<td>
-			<a href="index.php?o=games&a=edit&i=<?=$rset->value("id_jeu")?>"><?=$rset->value("nom")?></a>
+			<a href="index.php?o=games&a=edit&i=<?=$val->id_jeu?>"><?=$val->nom?></a>
 		</td>
 		<td>
-			<?=$rset->value("label")?>
+			<?=$val->label?>
 		</td>
 		<td>
-			<?=($rset->value("etat_pret") == "") ? "Libre" : "Emprunte"?>
+			<?=($val->etat_pret == "") ? "Libre" : "Emprunte"?>
 		</td>
 	</tr>
-<?php } while($rset->nextrow()); ?>
+<?php } ?>
 	</tbody>
 </table>
 <script>

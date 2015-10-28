@@ -30,7 +30,7 @@ $data = new data();
 	<meta charset="UTF-8">
 	<link rel="shortcut icon" href="images/favicon.png">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<!-- link rel="stylesheet" href="css/bootstrap-theme.min.css" -->
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="css/zabuto_calendar.min.css">
 	<link rel="stylesheet" href="css/jquery.dataTables.min.css" -->
 	<link rel="stylesheet" href="css/styles.css">
@@ -140,6 +140,7 @@ $(document).ready(function () {
         language: "fr",
         today: true,
     });
+});
 /*
 TODO : Display calendar events via ajax
 See documentation at https://github.com/zabuto/calendar

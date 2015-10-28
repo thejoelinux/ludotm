@@ -171,4 +171,14 @@ img#logo {
   margin: 0 20px 5px 20px;
   padding: 3px 0;
   border-bottom: 1px solid #ccc;
+  width: 100;
+  background-color: #DDDDDD;
+  font-weight: bolder;
+
 }
+.tt-menu {  
+  z-index: 5051;
+  background-color: white;
+  border: 2px solid #DDDDDD;
+  }
+

@@ -62,7 +62,7 @@ if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $conte
 <?php } ?>
       </ul>
 	  <form class="navbar-form navbar-right">
-        <div id="search-all" class="form-control">
+        <div id="search-all" >
             <input class="typeahead" type="text" placeholder="Recherche...">
         </div>
 	  </form>
@@ -160,7 +160,7 @@ $(document).ready(function () {
       display: 'nom',
       source: members,
       templates: {
-        header: '<h3 class="category-name">Adhérents</h3>'
+        header: '<span class="category-name">Adhérents</span>'
       }
     },
     {
@@ -168,7 +168,7 @@ $(document).ready(function () {
       display: 'nom',
       source: games,
       templates: {
-        header: '<h3 class="category-name">Jeux</h3>'
+        header: '<span class="category-name">Jeux</span>'
       }
     });
     // from https://github.com/twitter/typeahead.js/issues/300 suggestion

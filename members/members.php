@@ -32,6 +32,16 @@ switch($_REQUEST["a"]) {
 		}
 	break;
 
+    case "name_list": // for API
+        try {
+            Member::fetch_all($members);
+            echo json_encode($members);
+            exit(); // no further rendering needed 
+		} catch(data_exception $e) {
+			$render = "views/data_exception";
+		}
+    break;
+
     default:
         try {
             Member::fetch_all($members);

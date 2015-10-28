@@ -33,6 +33,16 @@ switch($_REQUEST["a"]) {
 		}
 	break;
 
+    case "name_list": // for API
+        try {
+            Game::fetch_all($games);
+            echo json_encode($games);
+            exit(); // no further rendering needed 
+		} catch(data_exception $e) {
+			$render = "views/data_exception";
+		}
+    break;
+
     default:
         try {
             Game::fetch_all($games);

@@ -165,3 +165,10 @@ img#logo {
 .main .page-header {
   margin-top: 0;
 }
+
+/* multi search home page form */
+#search-all .category-name {
+  margin: 0 20px 5px 20px;
+  padding: 3px 0;
+  border-bottom: 1px solid #ccc;
+}

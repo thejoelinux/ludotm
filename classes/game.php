@@ -42,12 +42,12 @@ class Game {
         return sizeof($this->medias);
     }
 
-    public static function fetch_all(&$games) {
+    public static function fetch_all(&$games, $fields = false) {
         $games = array();
-        // SQL SELECT jeu categorie_esar prets
         $sql = "SELECT jeu.id_jeu, nom, 
-                CONCAT (categorie_esar.label, ' - ', categorie_esar.name) AS label,
-                id_pret as etat_pret
+            CONCAT (categorie_esar.label, ' - ', categorie_esar.name) AS label,
+            id_pret as etat_pret
+
             FROM jeu
                 LEFT OUTER JOIN categorie_esar ON jeu.categorie_esar_id = categorie_esar.id
                 LEFT OUTER JOIN prets ON (jeu.id_jeu = prets.id_jeu AND date_retour > curdate())

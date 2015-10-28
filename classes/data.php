@@ -1,6 +1,6 @@
 <?php
-include("classes/data_exception.php");
-include("classes/rset.php");
+//include("classes/data_exception.php");
+//include("classes/rset.php");
 
 class data {
 
@@ -67,10 +67,10 @@ class data {
 					"Calling select to object w/ a class <b>$object</b> that doesn't even exists",
 					"select (\$query, &\$rset, $object)");
 			}
-			$rset = array();
 			if($result->num_rows <= 1) {
 				$rset = $result->fetch_object($object);
 			} else {
+			    $rset = array();
 				while ($obj = $result->fetch_object($object)) {
 					$rset[] = $obj;
 			    }

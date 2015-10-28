@@ -41,7 +41,7 @@ function validate_and_submit ()
 	<?php } ?>
 	</h3>
 
-<a href="index.php?o=prets&id_jeu=<?$game->id_pret?>">Historique des prêts</a>
+<a href="index.php?o=prets&id_jeu=<?=$game->id_pret?>">Historique des prêts</a>
 
 	<div class="form-group">
 		<label class="control-label col-sm-2" for="nom">Nom</label>
@@ -53,40 +53,33 @@ function validate_and_submit ()
 			<input type="text" id="reference" class="form-control" value="<?=$game->reference?>"/>
 		</div>	
 	</div>
-
-<table>
-    <tr>
-        <td align=right>Fabricant</td>
-        <td align=left><input type=text name=fabricant SIZE=20 MAXLENGTH=20 
-            value="<?=$game->fabricant?>"></td>
-    </tr>   
-    <tr>
-        <td align=right>Informations du Fabricant</td>
-        <td align=left><input type=text name=infos_fabricant SIZE=60 MAXLENGTH=60 
-            value="<?=$game->infos_fabricant?>"></td>
-    </tr>   
-    <tr>
-        <td align=right>Catégorie</td>
-        <td align=left><input type=text name=categorie SIZE=40 MAXLENGTH=40 
-            value="<?=$game->categorie?>">
-        (ex sy as rè)
-        </td>
-    </tr>   
-    <tr>
-        <td align=right>Catégorie ESAR</td>
-        <td align="left">FIXME - wait a minute
-            <?php //select_categorie_esar($game->categorie_esar_id);?>   
-        </td>
-    </tr>
-    <tr>
-        <td align=right>Prix</td>
-        <td align=left><input type=text name=prix SIZE=3 MAXLENGTH=3 
-            value="<?=$game->prix?>">
-        </td>
-    </tr>   
-    <tr>
-        <td align="right">Medias</td>
-        <td style="background-color: white">
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="fabricant">Fabricant</label>
+        <div class="col-sm-2">
+            <input type="text" id="fabricant" class="form-control" value="<?=$game->fabricant?>"/>
+        </div>
+        <label class="control-label col-sm-2" for="infos_fabricant">Infos fabricant</label>
+        <div class="col-sm-2">
+            <input type="text" id="infos_fabricant" class="form-control" value="<?=$game->infos_fabricant?>"/>
+        </div>
+        <label class="control-label col-sm-2" for="prix">Prix</label>
+        <div class="col-sm-2">
+            <input type="text" id="prix" class="form-control" value="<?=$game->prix?>"/>
+        </div>
+    </div>
+     <div class="form-group">
+        <label class="control-label col-sm-2" for="categorie">Catégorie (ex sy as rè)</label>
+        <div class="col-sm-4">
+            <input type="text" id="categorie" class="form-control" value="<?=$game->categorie?>"/>
+        </div>
+        <label class="control-label col-sm-2" for="categorie_esar_id">Catégorie ESAR</label>
+        <div class="col-sm-4">
+            <input type="text" id="categorie_esar_id" class="form-control" value="<?=$game->categorie_esar_id?>"/>
+        </div>
+    </div>
+     <div class="form-group">
+        <label class="control-label col-sm-2" for="medias">Médias</label>
+        <div class="col-sm-8">
         <?php
             if(is_array($jeu['medias'])) {
                 ?><div id="media_list"><?php
@@ -111,55 +104,19 @@ function validate_and_submit ()
             <?php
             }
             ?>
-            <input type="file" name="media"/>
-            <input type="button" value="Ajouter" id="add_media" />
-<script>
-function delete_file(id) {
-    alert("Pas encore fonctionnel...");
-}
-$('#add_media').click(function(){
-    var formData = new FormData($('form')[0]);
-    $.ajax({
-        url: 'upload.php?id_jeu=<?=$jeu["id_jeu"]?>',  //Server script to process data
-        type: 'POST',
-        xhr: function() {  // Custom XMLHttpRequest
-            var myXhr = $.ajaxSettings.xhr();
-            if(myXhr.upload){ // Check if upload property exists
-                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-            }
-            return myXhr;
-        },
-        //Ajax events
-        //beforeSend: beforeSendHandler,
-        // FIXME 
-        success: completeHandler,
-        // FIXME error: errorHandler,
-        // Form data
-        data: formData,
-        //Options to tell jQuery not to process data or worry about content-type.
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-});
-function progressHandlingFunction(e){
-    if(e.lengthComputable){
-        $('progress').attr({value:e.loaded,max:e.total});
-    }
-}
-function completeHandler (response) {
-    $('#media_list').html(
-        $('#media_list').html() + "<div id='media_" +
-            response.media_id + "'>" + response.description + "</div>" + 
-            "<a href=\"javascript:delete_file(" + response.media_id + ")\">Effacer</a>"
-            );
-    alert(response);    
-}
+            <div class="input-group">
+                <input type="file" name="media" class="form-control"/>
+                <input type="button" value="Ajouter" id="add_media" class="input-group-addon" />
+                <!-- 
+                javascript for these controls is at the end of the page 
+                -->
+            </div>
 
-</script>
 
-        </td>
-    </tr>
+        </div>
+    </div>
+    <!-- 
+    <table>
     <tr>
         <td align=right>Nombre de joueurs</td>
         <td align=left>Mini -><input type=text name=nombre_mini SIZE=3 MAXLENGTH=3 
@@ -206,9 +163,50 @@ function completeHandler (response) {
             <input type="button" value="VALIDER" onClick="validate_and_submit()">
         </td>
     </tr>   
-
+-->
 </form>
+<script>
+function delete_file(id) {
+    alert("Pas encore fonctionnel...");
+}
+$('#add_media').click(function(){
+    var formData = new FormData($('form')[0]);
+    $.ajax({
+        url: 'upload.php?id_jeu=<?=$jeu["id_jeu"]?>',  //Server script to process data
+        type: 'POST',
+        xhr: function() {  // Custom XMLHttpRequest
+            var myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){ // Check if upload property exists
+                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+            }
+            return myXhr;
+        },
+        //Ajax events
+        //beforeSend: beforeSendHandler,
+        // FIXME 
+        success: completeHandler,
+        // FIXME error: errorHandler,
+        // Form data
+        data: formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+});
+function progressHandlingFunction(e){
+    if(e.lengthComputable){
+        $('progress').attr({value:e.loaded,max:e.total});
+    }
+}
+function completeHandler (response) {
+    $('#media_list').html(
+        $('#media_list').html() + "<div id='media_" +
+            response.media_id + "'>" + response.description + "</div>" + 
+            "<a href=\"javascript:delete_file(" + response.media_id + ")\">Effacer</a>"
+            );
+    alert(response);    
+}
+
+</script>
 </table>
-<?php 
-include "../fonctions/finpage.php";
-?>

@@ -62,10 +62,9 @@ if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $conte
 <?php } ?>
       </ul>
 	  <form class="navbar-form navbar-right">
-		<input type="text" class="form-control" placeholder="Recherche..."
-                name="search" id="search" autocomplete="off">
-                <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-		        <input type="hidden" name="everything_data" id="everything_data" value="">
+        <div id="search" class="form-control">
+            <input class="typeahead" type="text" placeholder="Recherche...">
+        </div>
 	  </form>
 	  <!-- when authentication will be ready
 	  <ul class="nav navbar-nav navbar-right">
@@ -133,6 +132,7 @@ SESSION :
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
 <script src="js/zabuto_calendar.min.js"></script>
+<script src="js/typeahead.bundle.min.js"></script>
 <script src="js/functions.js"></script>
 <script type="application/javascript">
 $(document).ready(function () {
@@ -140,7 +140,6 @@ $(document).ready(function () {
         language: "fr",
         today: true,
     });
-});
 /*
 TODO : Display calendar events via ajax
 See documentation at https://github.com/zabuto/calendar

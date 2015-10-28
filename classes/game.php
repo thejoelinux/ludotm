@@ -15,7 +15,7 @@ class Game {
 	    }
 	}
 
-    public function fetch($id) {
+    public static function fetch($id) {
         // SQL SELECT jeu prets
         $sql = "SELECT jeu.id_jeu, nom, reference, fabricant, categorie, categorie_esar_id,
             commentaire, infos_fabricant, inventaire, date_achat, prix, nombre_mini, nombre_maxi,
@@ -23,9 +23,13 @@ class Game {
             FROM jeu
                 LEFT OUTER JOIN prets ON (jeu.id_jeu = prets.id_jeu AND prets.rendu = 0)
             WHERE jeu.id_jeu = ".$id;
-        $GLOBALS["data"]->select($sql, $my, "Game");
-        foreach(get_object_vars($my) as $var => $value) $this->$var = $value;
-        return $this->id_jeu;
+        $GLOBALS["data"]->select($sql, $game, "Game");
+        // foreach(get_object_vars($my) as $var => $value) $this->$var = $value;
+        return $game;
+    }
+
+    public function render_json() {
+        echo json_encode($this);
     }
 
     public function fetch_medias() {

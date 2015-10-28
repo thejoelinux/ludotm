@@ -21,11 +21,10 @@ $render = "list";
 switch($_REQUEST["a"]) {
 	case "edit":
 		try {
-            $game = new Game();
-            $id_jeu = $game->fetch($data->db_escape_string($_REQUEST["i"]));
-			if($id_jeu != 0) {
+            $game = Game::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($game->id_jeu != 0) {
 				$game->fetch_medias();
-				$render = "games/edit";
+                $render = "games/edit";
 			} else {
                 print_r($id_jeu);
 				$render = "games/not_found"; // TODO

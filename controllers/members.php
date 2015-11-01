@@ -21,38 +21,37 @@ $render = "list";
 switch($_REQUEST["a"]) {
 	case "edit":
 		try {
-            $game = Game::fetch($data->db_escape_string($_REQUEST["i"]));
-			if($game->id_jeu != 0) {
-				$game->fetch_medias();
-                $render = "games/edit";
+            $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($member->id_adherent != 0) {
+                $render = "members/edit";
 			} else {
-				$render = "games/not_found"; // TODO
+				$render = "members/not_found"; // TODO
 			}
 		} catch(data_exception $e) {
-			$render = "views/data_exception";
+			$render = "data_exception";
 		}
 	break;
 
     case "name_list": // for API
         try {
-            Game::fetch_all($games);
-            echo json_encode($games);
+            Member::fetch_all($members);
+            echo json_encode($members);
             exit(); // no further rendering needed 
 		} catch(data_exception $e) {
-			$render = "views/data_exception";
+			$render = "data_exception";
 		}
     break;
 
     default:
         try {
-            Game::fetch_all($games);
-            $render = "games/list";
+            Member::fetch_all($members);
+            $render = "members/list";
         } catch(data_exception $e) {
-			$render = "views/data_exception";
+			$render = "data_exception";
 		}
     break;
 }
 
 // view part
-include($render.".php");
+include("views/".$render.".php");
 ?>

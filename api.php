@@ -23,19 +23,27 @@ function __autoload($class_name) {
 include("config/config.php");
 global $data;
 $data = new data();
-$contexts = array("members" => "Adhérents", "games" => "Jeux");
+// this is a json-only zone
+header("Content-Type: application/json");
+$contexts = array("members" => "Adhérents", 
+	"games" => "Jeux", 
+	"esar_categories" => "Catégories ESAR");
 if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $contexts)) {
     // FIXME send correct HTTP code
     exit();
 }
 switch($_REQUEST["o"]) {
     case "games";
-        include("games/games.php");
+        include("controllers/games.php");
     break;
 
     case "members";
-        include("members/members.php");
+        include("controllers/members.php");
     break;
+
+	case "esar_categories":
+		include("controllers/esar_categories.php");
+	break;
 
     default:
 		//header("Location: ./accueil/index.php");

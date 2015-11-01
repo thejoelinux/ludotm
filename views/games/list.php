@@ -25,7 +25,13 @@ while(list($key, $val) = each($games)) { ?>
 	</tbody>
 </table>
 <script>
-$(document).ready(function() {$('#list_jeu').DataTable({"autoWidth": false})});
+$(document).ready(function() {
+	$('#list_jeu').DataTable(
+		/*{"autoWidth": false}*/
+		)
+/*		.removeClass( 'display' )
+		.addClass('table table-striped table-bordered');*/
+});
 /* FIXME : translation of the table
 see https://datatables.net/plug-ins/i18n/French
 */

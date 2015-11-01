@@ -19,39 +19,58 @@ This file is part of phpLudoreve.
 // controller 
 $render = "list";
 switch($_REQUEST["a"]) {
+	case "edit_medias":
+	case "update":
 	case "edit":
 		try {
-            $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
-			if($member->id_adherent != 0) {
-                $render = "members/edit";
+            $game = Game::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($game->id_jeu != 0) {
+				$game->fetch_medias();
+				if($_REQUEST["a"] == "update") {
+					$game->update();
+					$_REQUEST["a"] = "edit";
+				}
+				$render = "games/".$_REQUEST["a"];
 			} else {
-				$render = "members/not_found"; // TODO
+				$render = "games/not_found"; // TODO
 			}
 		} catch(data_exception $e) {
-			$render = "views/data_exception";
+			$render = "data_exception";
 		}
 	break;
 
     case "name_list": // for API
         try {
-            Member::fetch_all($members);
-            echo json_encode($members);
+            Game::fetch_all($games);
+            echo json_encode($games);
             exit(); // no further rendering needed 
 		} catch(data_exception $e) {
-			$render = "views/data_exception";
+			$render = "data_exception";
 		}
     break;
+	
+	case "delete":
+		// FIXME : make a screen to confirm the deletion of the game
+		// and all the things w/it, like : medias, comments, lends...
+		$render = "games/confirm_delete";
+	break;
+
+	case "confirm_delete":
+		// FIXME : call the model, delete depedants items
+		// and the game itself
+		$render = "games/list";
+	break;
 
     default:
         try {
-            Member::fetch_all($members);
-            $render = "members/list";
+            Game::fetch_all($games);
+            $render = "games/list";
         } catch(data_exception $e) {
-			$render = "views/data_exception";
+			$render = "data_exception";
 		}
     break;
 }
 
 // view part
-include($render.".php");
+include("views/".$render.".php");
 ?>

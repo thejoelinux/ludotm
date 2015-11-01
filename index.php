@@ -28,11 +28,14 @@ $data = new data();
 <html>
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="images/favicon.png">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="css/zabuto_calendar.min.css">
-	<link rel="stylesheet" href="css/jquery.dataTables.min.css" -->
+	<link rel="stylesheet" href="css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.css">
+	<!-- link rel="stylesheet" href="css/datatables.min.css" -->
 	<link rel="stylesheet" href="css/styles.css">
 	<script src="js/jquery-1.11.3.min.js"></script>
 </head>
@@ -43,11 +46,11 @@ if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $conte
     $_REQUEST["o"] = "home";
 } 
 ?>
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" 
-	  	data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	  	data-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
@@ -79,18 +82,18 @@ if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $conte
 // compute date
 include("helpers/date.php");
 ?>
-<form action="index.php" method="post" id="defaultform" name="defaultform" enctype="multipart/form-data">
-<div class="container-fluid">
-  <div class="row">
-	<div class="col-sm-9 col-md-10 main">
+<form action="index.php" method="POST" id="defaultform" name="defaultform" 
+	class="form-horizontal" enctype="multipart/form-data">
+	<!-- div class="col-sm-9 col-md-10 main" -->
+	<div class="container">
 <?php
 switch($_REQUEST["o"]) {
     case "games";
-        include("games/games.php");
+        include("controllers/games.php");
     break;
 
     case "members";
-        include("members/members.php");
+        include("controllers/members.php");
     break;
 
     default:
@@ -101,22 +104,20 @@ switch($_REQUEST["o"]) {
     break;
 }
 ?>
-        <input type="hidden" name="o" id="o" value="<?=$_REQUEST["o"]?>"> 
-        <input type="hidden" name="a" id="a" value="<?=(array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : ""?>"> 
-        <input type="hidden" name="i" id="i" value="<?=(array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : ""?>">
-	<div>
+	</div>
 
-	<div class="col-sm-3 col-sm-offset-9 col-md-2  col-md-offset-10 sidebar">
+	<!-- div class="col-sm-3 col-sm-offset-9 col-md-2  col-md-offset-10 sidebar">
 	  <ul class="nav nav-sidebar">
 	  <div id="my-calendar"></div>
+	  </ul>
+	</div -->
 <?php
 //include("helpers/calendar.php");
 // FIXME include("helpers/history.php");
 ?>
-	  </ul>
-	</div>
-  </div>
-</div>  
+	<input type="hidden" name="o" id="o" value="<?=$_REQUEST["o"]?>"> 
+	<input type="hidden" name="a" id="a" value="<?=(array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : ""?>"> 
+	<input type="hidden" name="i" id="i" value="<?=(array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : ""?>">
 </form>
 <footer>
 <?php if($debug) { ?>
@@ -131,15 +132,20 @@ SESSION :
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
+<!-- script src="js/datatables.js"></script -->
 <script src="js/zabuto_calendar.min.js"></script>
 <script src="js/typeahead.bundle.min.js"></script>
+<script src="js/moment-with-locales.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>
 <script src="js/functions.js"></script>
 <script type="application/javascript">
 $(document).ready(function () {
+	/*
     $("#my-calendar").zabuto_calendar({
         language: "fr",
         today: true,
     });
+	*/
     var members = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nom'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -160,7 +166,7 @@ $(document).ready(function () {
       display: 'nom',
       source: members,
       templates: {
-        header: '<span class="category-name">Adhérents</span>'
+        header: '<h3 class="category-name">Adhérents</h3>'
       }
     },
     {
@@ -168,7 +174,7 @@ $(document).ready(function () {
       display: 'nom',
       source: games,
       templates: {
-        header: '<span class="category-name">Jeux</span>'
+        header: '<h3 class="category-name">Jeux</h3>'
       }
     });
     // from https://github.com/twitter/typeahead.js/issues/300 suggestion

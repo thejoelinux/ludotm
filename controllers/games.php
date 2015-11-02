@@ -19,6 +19,16 @@ This file is part of phpLudoreve.
 // controller 
 $render = "list";
 switch($_REQUEST["a"]) {
+	case "new":
+	case "create":
+		$game = new Game(0);
+		if($_REQUEST["a"] == "create") {
+			$game->create();
+		}
+		$_REQUEST["i"] = $game->id_jeu;
+		$render = "games/edit";
+	break;
+
 	case "edit_medias":
 	case "update":
 	case "edit":

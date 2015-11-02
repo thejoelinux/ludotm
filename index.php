@@ -149,13 +149,15 @@ $(document).ready(function () {
     var members = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nom'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: 'api.php?o=members&a=name_list'
+      prefetch: { url : 'api.php?o=members&a=name_list',
+	  	cache: false }
     });
 
     var games = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nom'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: 'api.php?o=games&a=name_list'
+      prefetch: { url : 'api.php?o=games&a=name_list',
+	  	cache: false }
     });
 
     $('#search-all .typeahead').typeahead({

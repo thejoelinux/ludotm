@@ -33,7 +33,6 @@ class Game {
         foreach(get_object_vars($this) as $var => $value) {
 			// check if there is a corresponding value in _REQUEST
 			// and the value has really changed
-			//echo "check for $var... ";
 			if(array_key_exists($var, $_REQUEST)) {
 				if($var == "date_achat") {
 					$_REQUEST["date_achat"] = date_format(date_create_from_format('d-m-Y', $_REQUEST["date_achat"]),'m/d/Y');
@@ -54,6 +53,31 @@ class Game {
 				WHERE id_jeu = ".$this->id_jeu;
         	return $GLOBALS["data"]->update($sql);
 		}
+	}
+
+	public function create() {
+		$fields_sql = "(";
+		$datas_sql = "(";
+		foreach(get_object_vars($this) as $var => $value) {
+			// check if there is a corresponding value in _REQUEST
+			// and the value is not empty
+			if(array_key_exists($var, $_REQUEST) && $_REQUEST[$var] != "") {
+				if($var == "date_achat") {
+					$_REQUEST["date_achat"] = date_format(date_create_from_format('d-m-Y', $_REQUEST["date_achat"]),'m/d/Y');
+				}
+				$this->$var = $_REQUEST[$var];
+				if($var == "date_achat") {
+					$_REQUEST["date_achat"] = date_format(date_create_from_format('m/d/Y', $_REQUEST["date_achat"]),'Y-m-d');
+				}
+				$fields_sql .= " $var,";
+				$datas_sql .= " '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";
+				// DEBUG echo "REQ : ".$_REQUEST[$var]." != OBJ : ".$value."<br>";
+			}
+		}
+		// SQL INSERT jeu
+		$sql = " INSERT INTO jeu ".substr($fields_sql, 0, -1).")
+			VALUES ".substr($datas_sql, 0, -1).")";
+		return $this->id_jeu = $GLOBALS["data"]->insert($sql);	
 	}
 
     public function render_json() {

@@ -17,34 +17,34 @@ This file is part of phpLudoreve.
 */
 ?>
 <script>
-/* FIXME view form validation later
-function validate_and_submit ()
-{
-    if(document.forms["saisie"].nom.value == 0)
-    {
+function validate_and_submit () {
+    if(document.defaultform.nom.value == 0) {
         alert ("Vous n'avez pas saisi le nom!");
         return false;
     }
-    document.forms["saisie"].submit();
+    document.defaultform.submit();
     return true;
 }
-*/
 </script>
 <?php
 // since we are in the edit form, we have an existing $game from the controller
 ?>
 <div class="col-sm-12" align="center">
-    <h2><?=$game->nom?>
-	<small>
-	<?php if($game->id_pret) { ?>
-	(INDISPONIBLE) FIXME : lien vers pret en cours
+	<?php if($game->id_jeu != 0) { ?>
+		<h2><?=$game->nom?>
+		<small>
+		<?php if($game->id_pret) { ?>
+		(INDISPONIBLE) FIXME : lien vers pret en cours
+		<?php } else { ?>
+		(DISPONIBLE)
+		<?php } ?>
+		</small></h2>
+		<!-- FIXME : put this in a side bar helper <
+		a href="index.php?o=prets&id_jeu=<?=$game->id_pret?>">Historique des prêts</a>
+		-->
 	<?php } else { ?>
-	(DISPONIBLE)
+		<h2>Nouveau jeu</h2>
 	<?php } ?>
-    </small></h2>
-    <!-- FIXME : put this in a side bar helper <
-    a href="index.php?o=prets&id_jeu=<?=$game->id_pret?>">Historique des prêts</a>
-    -->
 </div>
 
 <div class="form-group">
@@ -136,7 +136,8 @@ function validate_and_submit ()
                 $('#datetimepicker1').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date('<?=$game->date_achat?>')
+					defaultDate: new Date(<?=($game->date_achat != ""
+						? "'".$game->date_achat."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
            			 $('#date_achat') = ev.format();
@@ -147,13 +148,73 @@ function validate_and_submit ()
 </div>
 <div class="form-group">
 	<label class="control-label col-sm-2" for="media">Medias</label>
-	<div class="col-sm-10">
-	<?php if(sizeof($game->medias)) { while(list($key, $val) = each($game->medias)) { ?>
-
-	<?php } } else { ?>
+	<div class="col-sm-10" style="margin-top: 5px">
+	<?php if(sizeof($game->medias)) { ?>
+		<div id="media_list">
+		<?php 
+		// DEBUG 
+		echo "<pre>"; print_r($game->medias); echo "</pre>";
+		while(list($key, $val) = each($game->medias)) { 
+			?><div id="media_<?=$val->id?>"><?=$val->description?>
+				<a href="javascript:delete_file(<?=$val->id?>)">Effacer</a>
+			<?php
+			if(preg_match("/.jpg$/", $val["file"])) { ?>
+				<img width="100" height="80" src="uploads/<?=$val["file"]?>">
+			<?php } ?></div><?php
+		}
+		?>
+		</div>
+	<?php } else { ?>
 		Aucun média associé.
 	<?php } ?>
-	<a href="index.php?o=games&a=edit_medias&i=<?=$game->id_jeu?>">Gérer les médias</a>
+	<?php if ($game->id_jeu != 0) { ?>
+	<!-- begin medias form -->
+		<input type="file" name="media" id="media"/>
+		<input type="button" value="Ajouter" id="add_media" />
+<script>
+$('#add_media').click(function(){
+	var formData = new FormData($('form')[0]);
+    $.ajax({
+        url: 'api.php?o=medias&a=upload&game_id=<?=$game->id_jeu?>', //Server script to process data
+        type: 'POST',
+        xhr: function() {  // Custom XMLHttpRequest
+            var myXhr = $.ajaxSettings.xhr();
+			if(myXhr.upload){ // Check if upload property exists
+                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+            }
+            return myXhr;
+        },
+        //Ajax events
+        //beforeSend: beforeSendHandler,
+        success: completeHandler,
+        // FIXME error: errorHandler,
+        // Form data
+        data: formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+});
+function progressHandlingFunction(e){
+    if(e.lengthComputable){
+        $('progress').attr({value:e.loaded,max:e.total});
+    }
+}
+function completeHandler (response) {
+    $('#media_list').html(
+        $('#media_list').html() + '<div id="media_' +
+            response.id + '">' + response.description + 
+            '<a href="javascript:delete_file(' + response.id + ')">Effacer</a>' +
+			'FIXME' + response.file + '</div>'
+            );
+    alert(response);    
+}
+</script>
+	<!-- end medias form -->	
+	<?php } else { ?>
+		Il faut enregistrer le jeu avant d'ajouter des médias.
+	<?php } ?>
 	</div>
 </div>
 <div class="form-group">
@@ -170,10 +231,13 @@ function validate_and_submit ()
 </div>
 
 <div class="form-group">
-	<div class="col-sm-2 col-sm-offset-5">
-    <input type="submit" class="btn btn-primary" value="Valider" onClick="set_value('a', 'update');">
 <?php if ($game->id_jeu != 0) { ?>
+	<div class="col-sm-4 col-sm-offset-4">
+    <input type="submit" class="btn btn-primary" value="Enregistrer les changements" onClick="set_value('a', 'update');">
     <input type="button" class="btn btn-danger" value="Supprimer" onClick="if(confirm('Really ?')) {set_value('a','delete'); defaultform.submit()}">
+<?php } else { ?>
+	<div class="col-sm-2 col-sm-offset-6">
+    <input type="button" class="btn btn-primary" value="Créer" onClick="set_value('a', 'create');validate_and_submit()">
 <?php } ?>
 	</div>
 </div>

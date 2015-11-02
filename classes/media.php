@@ -19,6 +19,22 @@ class Media {
         $GLOBALS["data"]->select($sql, $medias, "Media");
         return sizeof($medias);
     }
+
+	public function create() {
+		// SQL INSERT medias
+		$sql = "INSERT INTO medias (description, id_jeu)
+				VALUES ('$description', ".$_REQUEST["game_id"].")";
+		return $this->id = $GLOBALS["data"]->insert($sql);
+	}
+
+	public function update($filename, $filetype) {
+		$this->file = $filename."-".$this->id.".".$filetype;
+		// SQL UPDATE medias
+		$sql = "UPDATE medias 
+			SET file = '".$this->file."'
+			WHERE id = ".$this->id;
+		return $GLOBALS["data"]->update($sql);
+	}
 }
 
 ?>

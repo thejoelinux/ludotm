@@ -1,4 +1,13 @@
-<h1>Liste des jeux</h1>
+<div class="col-sm-8" align="center">
+	<h2>Liste des jeux</h2>
+</div>
+<div class="col-sm-4" align="center">
+	<span class="btn btn-success" onClick="set_value('a', 'new'); defaultform.submit()">
+		<i class="glyphicon glyphicon-plus"></i>
+		<span>Nouveau jeu ...</span>
+	</span>
+</div>
+<div class="col-sm-12" align="center">
 <table id="list_jeu">
 	<thead>
 		<tr>
@@ -24,6 +33,7 @@ while(list($key, $val) = each($games)) { ?>
 <?php } ?>
 	</tbody>
 </table>
+</div>
 <script>
 $(document).ready(function() {
 	$('#list_jeu').DataTable(

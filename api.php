@@ -27,7 +27,9 @@ $data = new data();
 header("Content-Type: application/json");
 $contexts = array("members" => "Adhérents", 
 	"games" => "Jeux", 
-	"esar_categories" => "Catégories ESAR");
+	"esar_categories" => "Catégories ESAR",
+	"medias" => "Medias"
+	);
 if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $contexts)) {
     // FIXME send correct HTTP code
     exit();
@@ -43,6 +45,10 @@ switch($_REQUEST["o"]) {
 
 	case "esar_categories":
 		include("controllers/esar_categories.php");
+	break;
+
+	case "medias":
+		include("controllers/medias.php");
 	break;
 
     default:

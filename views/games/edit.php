@@ -173,7 +173,7 @@ function validate_and_submit () {
 		<input type="button" value="Ajouter" id="add_media" />
 <script>
 $('#add_media').click(function(){
-	var formData = new FormData($('form')[0]);
+    var formData = new FormData($('#defaultform')[0]);
     $.ajax({
         url: 'api.php?o=medias&a=upload&game_id=<?=$game->id_jeu?>', //Server script to process data
         type: 'POST',

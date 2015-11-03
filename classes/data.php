@@ -50,7 +50,7 @@ class data {
     * @param $query the select sql statement to execute
     * @param $rset
     */
-    public function select ($query, &$rset, $object = false) {
+    public function select ($query, &$rset, $object = false, $force_array = false) {
 
         $conn = "db_handle";
         if (! ($this->db_handle && ($result = $this->$conn->query($query)))) {
@@ -67,7 +67,7 @@ class data {
 					"Calling select to object w/ a class <b>$object</b> that doesn't even exists",
 					"select (\$query, &\$rset, $object)");
 			}
-			if($result->num_rows <= 1) {
+			if($result->num_rows <= 1 && !$force_array) {
 				$rset = $result->fetch_object($object);
 			} else {
 			    $rset = array();

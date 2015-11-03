@@ -22,15 +22,14 @@ switch($_REQUEST["a"]) {
 	case "upload": // for API
 		$media = new Media();
         try {
+			$media->set_mime_type($_FILES["media"]["type"]);
 			$target_dir = "uploads/";
 			$target_file = $target_dir . basename($_FILES["media"]["name"]);
-			$uploadOk = 1;
 			$filetype = pathinfo($target_file,PATHINFO_EXTENSION);
 			$media->description = pathinfo($target_file,PATHINFO_FILENAME);
 			$filename = basename($_FILES["media"]["tmp_name"]);
 
-			// DEBUG 
-			print_r($_FILES);
+			// DEBUG print_r($_FILES);
 
 			// create and get back the id
 			// the reason for this is that the file name, to be garanteed unique
@@ -42,13 +41,28 @@ switch($_REQUEST["a"]) {
 			// DEBUG echo "move_uploaded_file(".$_FILES["media"]["tmp_name"].",".$target_dir.$filename.");";
 			move_uploaded_file($_FILES["media"]["tmp_name"], $target_dir.$media->file);
 
-			// echo back the json
-			// echo '{"media_id": "'.$media->id.'", "description": "'.$media->description.'", "file":""}';
-            echo json_encode($media);
-            exit(); // no further rendering needed 
+			$render = "json/list";
 		} catch(data_exception $e) {
 			$render = "views/data_exception";
 		}
     break;
+
+	case "delete":
+		if($_REQUEST["i"] = Media::delete($_REQUEST["i"])) {
+			$render = "json/list";
+		} else {
+			$render = "views/data_exception";
+		}
+	break;		
+
+	case "list": // for API
+		$render = "json/list";
+	break;
 }
 
+if($render == "json/list") {
+	$medias = array();
+	Media::fetch_all($medias, $_REQUEST["i"]);
+	echo json_encode($medias);
+	exit(); // no further rendering needed 
+}

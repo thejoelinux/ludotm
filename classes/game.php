@@ -84,6 +84,7 @@ class Game {
         echo json_encode($this);
     }
 
+	// probably not used - done in javascript on the edit view for the game
     public function fetch_medias() {
         $this->medias = array();
 		Media::fetch_all($this->medias, $this->id_jeu);

@@ -74,7 +74,7 @@ function validate_and_submit () {
     </div>
 </div>
  <div class="form-group">
-    <label class="control-label col-sm-2" for="categorie">Catégorie (ex sy as rè)</label>
+    <label class="control-label col-sm-2" for="categorie">Catégorie</label>
     <div class="col-sm-4">
         <input type="text" id="categorie" name="categorie" class="form-control" value="<?=$game->categorie?>"/>
     </div>
@@ -88,14 +88,16 @@ function validate_and_submit () {
              success: function(output) {
 				var html = '';
 				$.each(output, function(key, val){
-				  html = html + '<option value=\"' + val.id + '\"'
+				  html = html + '<option value="' + val.id + '"'
 				  		+ (val.id == <?=$game->categorie_esar_id?> ? ' selected ' : '' ) + '>'
 						+ val.label + ' - ' + val.name + '</option>';
 				});
                 $('#categorie_esar_id').html(html);
             },
           error: function (xhr, ajaxOptions, thrownError) {
-            alert(xhr.status + " "+ thrownError);
+		  	// well, that's weird, ok :)
+		  	$('#categorie_esar_id').html('<option value="">' + xhr.status + ' ' + thrownError + '</option>');
+            // alert(xhr.status + " " + thrownError);
           }});
 		</script>
     </div>
@@ -148,74 +150,29 @@ function validate_and_submit () {
 </div>
 <div class="form-group">
 	<label class="control-label col-sm-2" for="media">Medias</label>
+<?php if ($game->id_jeu == 0) { ?>
 	<div class="col-sm-10" style="margin-top: 5px">
-	<?php if(sizeof($game->medias)) { ?>
-		<div id="media_list">
-		<?php 
-		// DEBUG 
-		echo "<pre>"; print_r($game->medias); echo "</pre>";
-		while(list($key, $val) = each($game->medias)) { 
-			?><div id="media_<?=$val->id?>"><?=$val->description?>
-				<a href="javascript:delete_file(<?=$val->id?>)">Effacer</a>
-			<?php
-			if(preg_match("/.jpg$/", $val["file"])) { ?>
-				<img width="100" height="80" src="uploads/<?=$val["file"]?>">
-			<?php } ?></div><?php
-		}
-		?>
-		</div>
-	<?php } else { ?>
-		Aucun média associé.
-	<?php } ?>
-	<?php if ($game->id_jeu != 0) { ?>
-	<!-- begin medias form -->
-		<input type="file" name="media" id="media"/>
-		<input type="button" value="Ajouter" id="add_media" />
-<script>
-$('#add_media').click(function(){
-    var formData = new FormData($('#defaultform')[0]);
-    $.ajax({
-        url: 'api.php?o=medias&a=upload&game_id=<?=$game->id_jeu?>', //Server script to process data
-        type: 'POST',
-        xhr: function() {  // Custom XMLHttpRequest
-            var myXhr = $.ajaxSettings.xhr();
-			if(myXhr.upload){ // Check if upload property exists
-                myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-            }
-            return myXhr;
-        },
-        //Ajax events
-        //beforeSend: beforeSendHandler,
-        success: completeHandler,
-        // FIXME error: errorHandler,
-        // Form data
-        data: formData,
-        //Options to tell jQuery not to process data or worry about content-type.
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-});
-function progressHandlingFunction(e){
-    if(e.lengthComputable){
-        $('progress').attr({value:e.loaded,max:e.total});
-    }
-}
-function completeHandler (response) {
-    $('#media_list').html(
-        $('#media_list').html() + '<div id="media_' +
-            response.id + '">' + response.description + 
-            '<a href="javascript:delete_file(' + response.id + ')">Effacer</a>' +
-			'FIXME' + response.file + '</div>'
-            );
-    alert(response);    
-}
-</script>
-	<!-- end medias form -->	
-	<?php } else { ?>
 		Il faut enregistrer le jeu avant d'ajouter des médias.
-	<?php } ?>
 	</div>
+<?php } else { ?>
+	<div class="col-sm-2" align="center">
+		<input type="file" name="media" id="media" class="form-control btn">
+		<span class="btn btn-success fileinput-button" id="add_media">
+			<i class="glyphicon glyphicon-plus"></i>
+			<span>Ajouter...</span>
+		</span>
+	</div>
+	<div class="col-sm-8">
+		<div id="media_list"></div>
+		<script src="js/media_form.js"></script>
+		<script>
+		// fire this fonction when the dom is ready
+		$(document).ready(function () {
+			loadMedias(<?=$game->id_jeu?>);
+		});
+		</script>
+	</div>
+<?php } ?>
 </div>
 <div class="form-group">
     <label class="control-label col-sm-2" for="inventaire">Inventaire</label>

@@ -35,7 +35,6 @@ switch($_REQUEST["a"]) {
 		try {
             $game = Game::fetch($data->db_escape_string($_REQUEST["i"]));
 			if($game->id_jeu != 0) {
-				$game->fetch_medias();
 				if($_REQUEST["a"] == "update") {
 					$game->update();
 					$_REQUEST["a"] = "edit";

@@ -25,32 +25,10 @@ global $data;
 $data = new data();
 // this is a json-only zone
 header("Content-Type: application/json");
-switch($_REQUEST["o"]) {
-    case "games";
-        include("controllers/games.php");
-    break;
-
-    case "members";
-        include("controllers/members.php");
-    break;
-
-	case "membership_types":
-		include("controllers/membership_types.php");
-	break;
-
-	case "esar_categories":
-		include("controllers/esar_categories.php");
-	break;
-
-	case "medias":
-		include("controllers/medias.php");
-	break;
-
-    default:
-		//header("Location: ./accueil/index.php");
-        ?>
-        //include("accueil/index.php");
-        <?php
-    break;
+if(array_key_exists("o", $_REQUEST) && $_REQUEST["o"] != ""
+	&& file_exists("controllers/".$_REQUEST["o"].".php")) {
+        include("controllers/".$_REQUEST["o"].".php");
+} else {
+	header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
 }
 ?>

@@ -19,34 +19,20 @@ This file is part of phpLudoreve.
 // controller 
 $render = "list";
 switch($_REQUEST["a"]) {
-	case "upload": // for API
-		$media = new Media();
-		if($_FILES["media"]["name"] != "") {
+	case "add": // for API
+		$family_member = new Family_Member();
+		if($_REQUEST["fm_firstname"] != "" && $_REQUEST["fm_lastname"] != ""
+			&& $_REQUEST["fm_birthdate"] != "" && $_REQUEST["fm_link_id"] != "") {
 			try {
-				$media->set_mime_type($_FILES["media"]["type"]);
-				// FIXME : refactor this mess
-				$target_dir = "uploads/";
-				$target_file = $target_dir.basename($_FILES["media"]["name"]);
-				$filetype = pathinfo($target_file,PATHINFO_EXTENSION);
-				$media->description = pathinfo($target_file,PATHINFO_FILENAME);
-				$filename = strtolower(preg_replace(
-					array('/[^a-zA-Z0-9 -]/', '/[ -]+/', '/^-|-$/'), 
-					array('', '-', ''),
-					$media->description));
-				// $filename = basename($_FILES["media"]["tmp_name"]);
-
-				// create and get back the id
-				// the reason for this is that the file name, to be garanteed unique
-				// will include the id from the DB
-				$media->create();
-				$media->update($filename, $filetype);	
-
-				// then mv the file in uploads/ dir
-				move_uploaded_file($_FILES["media"]["tmp_name"], $target_dir.$media->file);
+				$family_member->create(
+					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_firstname"]), 
+					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_lastname"]),
+					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_birthdate"]), 
+					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_link_id"]));
 
 				$render = "json/list";
 			} catch(data_exception $e) {
-				$render = "views/data_exception";
+				$render = "data_exception";
 			}
 		} else {
 			$render = "unprocessable";
@@ -54,7 +40,7 @@ switch($_REQUEST["a"]) {
 	break;
 
 	case "delete":
-		if($_REQUEST["i"] = Media::delete($_REQUEST["i"])) {
+		if($_REQUEST["i"] = Family_Member::delete($GLOBALS["data"]->db_escape_string($_REQUEST["i"]))) {
 			$render = "json/list";
 		} else {
 			$render = "unprocessable";
@@ -67,9 +53,9 @@ switch($_REQUEST["a"]) {
 }
 
 if($render == "json/list") {
-	$medias = array();
-	Media::fetch_all($medias, $_REQUEST["i"]);
-	echo json_encode($medias);
+	$family_members = array();
+	Family_Member::fetch_all($family_members, $_REQUEST["i"]);
+	echo json_encode($family_members);
 	exit(); // no further rendering needed 
 }
 

@@ -23,9 +23,10 @@ switch($_REQUEST["a"]) {
         try {
             Membership_Type::fetch_all($membership_types);
             echo json_encode($membership_types);
-            exit(); // no further rendering needed 
 		} catch(data_exception $e) {
-			$render = "views/data_exception";
+			header($_SERVER['SERVER_PROTOCOL'] . ' Internal Server Error', true, 500);
 		}
+		exit(); // no further rendering needed 
     break;
 }
+

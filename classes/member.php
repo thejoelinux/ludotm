@@ -6,10 +6,28 @@ class Member {
 	public $tel_maison, $tel_travail, $tel_mobile, $tel_fax, $commentaire;
 	public $num_adherent, $membership_type_id, $adhesion, $email, $newsletter, $autres, $caution;
 
+	public $family_links;
+
 	public function __construct($id = 0) {
     	if (!$this->id_adherent) {
 			$this->id_adherent = $id;
 	    }
+		$this->family_links = array(
+			1 => "Enfant",
+			2 => "Conjoint",
+			3 => "Autre");
+	}
+
+	public static function get_family_link_name($id = 0) {
+		$family_links = array(
+			1 => "Enfant",
+			2 => "Conjoint",
+			3 => "Autre");
+		if(array_key_exists($id, $family_links)) {
+			return $family_links[$id];
+		} else {
+			return false;
+		}
 	}
 
     public static function fetch($id) {

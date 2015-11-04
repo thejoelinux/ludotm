@@ -87,6 +87,17 @@ function validate_and_submit () {
 	<!-- TODO auto complete on the existing values -->
 </div>
 <div class="form-group">
+    <label class="control-label col-sm-2" for="email">Mail</label>
+    <div class="col-sm-4">
+        <input type="text" id="email" name="email" class="form-control" value="<?=$member->email?>"/>
+    </div>
+    <label class="control-label col-sm-2" for="newsletter">Newsletter</label>
+    <div class="col-sm-1">
+        <input type="checkbox" id="newsletter" name="newsletter" class="form-control" 
+			<?=($member->newsletter ? "checked" : "")?>/>
+    </div>
+</div>
+<div class="form-group">
     <label class="control-label col-sm-2" for="tel_maison">Tél. maison</label>
     <div class="col-sm-4">
         <input type="text" id="tel_maison" name="tel_maison" class="form-control" value="<?=$member->tel_maison?>">
@@ -136,30 +147,6 @@ function validate_and_submit () {
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2 col-xs-7" for="nombre_mini">Nombre de joueurs de </label>
-    <div class="col-sm-1 col-xs-1">
-        <input type="text" id="nombre_mini" name="nombre_mini" class="form-control" value="<?=$member->nombre_mini?>"/>
-    </div>
-    <label class="control-label col-sm-1 col-xs-1" for="nombre_maxi">à</label>
-    <div class="col-sm-1 col-xs-1">
-        <input type="text" id="nombre_maxi" name="nombre_maxi" class="form-control" value="<?=$member->nombre_maxi?>"/>
-    </div>
-    <label class="control-label col-sm-3 col-xs-7" for="age_mini">Age des joueurs de </label>
-    <div class="col-sm-1 col-xs-1">
-        <input type="text" id="age_mini" name="age_mini" class="form-control" value="<?=$member->age_mini?>"/>
-    </div>
-    <label class="control-label col-sm-1 col-xs-1" for="age_maxi">à</label>
-    <div class="col-sm-2 col-xs-1">
-        <input type="text" id="age_maxi" name="age_maxi" class="form-control" value="<?=$member->age_maxi?>"/>
-    </div>
-</div>
-<div class="form-group">
-    <label class="control-label col-sm-2" for="type">Type de jeu</label>
-    <div class="col-sm-4">
-        <input type="text" id="type" name="type" class="form-control" value="<?=$member->type?>"/>
-    </div>
-</div>
-<div class="form-group">
     <label class="control-label col-sm-2" for="date_inscription">Date d'inscription</label>
     <div class="col-sm-4">
 		<div class='input-group date' id='inscription_datetimepicker'>
@@ -182,42 +169,84 @@ function validate_and_submit () {
             });
         </script>
     </div>
-
-	<label class="control-label col-sm-2" for="media">Medias</label>
+	<div class="col-sm-4">
+	</div>
+</div>
+<div class="form-group">
+	<label class="control-label col-sm-2" for="family_members">Membres de la famille</label>
 <?php if ($member->id_adherent == 0) { ?>
 	<div class="col-sm-10" style="margin-top: 5px">
-		Il faut enregistrer le jeu avant d'ajouter des médias.
+		Il faut enregistrer l'adhérent avant d'ajouter des membres de la famille.
 	</div>
 <?php } else { ?>
-	<div class="col-sm-2" align="center">
-		<input type="file" name="media" id="media" class="form-control btn">
-		<span class="btn btn-success fileinput-button" id="add_media">
-			<i class="glyphicon glyphicon-plus"></i>
-			<span>Ajouter...</span>
-		</span>
-	</div>
-	<div class="col-sm-8">
-		<div id="media_list"></div>
-		<script src="js/media_form.js"></script>
+	<div class="col-sm-10">
+		<div id="family_member_list"></div>
+		<script src="js/family_member_form.js"></script>
 		<script>
 		// fire this fonction when the dom is ready
 		$(document).ready(function () {
-			loadMedias(<?=$member->id_adherent?>);
+			loadFamilyMembers(<?=$member->id_adherent?>);
 		});
 		</script>
 	</div>
-<?php } ?>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="inventaire">Inventaire</label>
-    <div class="col-sm-10">
-        <textarea id="inventaire" name="inventaire" class="form-control" rows="4"><?=$member->inventaire?></textarea>
+	<label class="control-label col-sm-1 col-sm-offset-2" for="fm_lastname">Nom</label>
+    <div class="col-sm-2">
+        <input type="text" id="fm_lastname" name="fm_lastname" class="form-control" value="<?=$member->nom?>"/>
     </div>
+	<label class="control-label col-sm-1" for="fm_firstname">Prénom</label>
+    <div class="col-sm-2">
+        <input type="text" id="fm_firstname" name="fm_firstname" class="form-control" value=""/>
+    </div>
+	<label class="control-label col-sm-1" for="fm_birthdate">DDN</label>
+	<div class="col-sm-2">
+		<div class='input-group date' id='fm_birth_datetimepicker'>
+        	<input type="text" id="fm_birthdate" name="fm_birthdate" class="form-control"/>
+			<span class="input-group-addon">
+				<span class="glyphicon glyphicon-calendar"></span>
+			</span>
+		</div>
+		<script type="text/javascript">
+            $(function () {
+                $('#fm_birth_datetimepicker').datetimepicker({
+					locale: 'fr',
+					format: 'DD-MM-YYYY',
+					defaultDate: new Date()
+				})
+				.on('changeDate', function(ev){
+           			 $('#fm_birthdate') = ev.format();
+		        });
+            });
+        </script>
+    </div>
+</div>
+<div class="form-group">
+	<label class="control-label col-sm-1 col-sm-offset-2" for="fm_link_id">Lien</label>
+    <div class="col-sm-2">
+        <select id="fm_link_id" name="fm_link_id" class="form-control">
+		<?php while(list($key, $val) = each($member->family_links)) { ?>
+			<option value="<?=$key?>"><?=$val?></option>
+		<?php } ?>
+		</select>
+    </div>
+	<div class="col-sm-2 col-sm-offset-2" align="center">
+		<button type="button" class="btn btn-sm btn-success" id="add_family_member">
+			<span class="glyphicon glyphicon-plus"> Ajouter...
+		</button>
+	</div>
+<?php } ?>
 </div>
 <div class="form-group">
     <label class="control-label col-sm-2" for="commentaire">Commentaire</label>
     <div class="col-sm-10">
         <textarea id="commentaire" name="commentaire" class="form-control" rows="4"><?=$member->commentaire?></textarea>
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2" for="autres">Autres personnes</label>
+    <div class="col-sm-10">
+        <textarea id="autres" name="autres" class="form-control" rows="4"><?=$member->autres?></textarea>
     </div>
 </div>
 

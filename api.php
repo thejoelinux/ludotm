@@ -25,15 +25,6 @@ global $data;
 $data = new data();
 // this is a json-only zone
 header("Content-Type: application/json");
-$contexts = array("members" => "Adhérents", 
-	"games" => "Jeux", 
-	"esar_categories" => "Catégories ESAR",
-	"medias" => "Medias"
-	);
-if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $contexts)) {
-    // FIXME send correct HTTP code
-    exit();
-}
 switch($_REQUEST["o"]) {
     case "games";
         include("controllers/games.php");
@@ -42,6 +33,10 @@ switch($_REQUEST["o"]) {
     case "members";
         include("controllers/members.php");
     break;
+
+	case "membership_types":
+		include("controllers/membership_types.php");
+	break;
 
 	case "esar_categories":
 		include("controllers/esar_categories.php");

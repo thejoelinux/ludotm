@@ -70,7 +70,7 @@ $('#add_media').click(function(){
 			return myXhr;
 		},
 		success: completeMediaHandler,
-		// error: errorHandler,
+		error: function(){alert('Erreur lors de l\'envoi du fichier.')},
 		// Form data
 		data: formData,
 		//Options to tell jQuery not to process data or worry about content-type.

@@ -16,6 +16,16 @@ This file is part of phpLudoreve.
     along with phpLudoreve.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-	include "../fonctions/enttappli.php";
-?>
-<div class="corps"><h2>JEUX</h2>
+// controller 
+$render = "list";
+switch($_REQUEST["a"]) {
+	case "list": // for API
+        try {
+            Membership_Type::fetch_all($membership_types);
+            echo json_encode($membership_types);
+            exit(); // no further rendering needed 
+		} catch(data_exception $e) {
+			$render = "views/data_exception";
+		}
+    break;
+}

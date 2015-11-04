@@ -21,37 +21,39 @@ $render = "list";
 switch($_REQUEST["a"]) {
 	case "upload": // for API
 		$media = new Media();
-        try {
-			$media->set_mime_type($_FILES["media"]["type"]);
-			$target_dir = "uploads/";
-			$target_file = $target_dir . basename($_FILES["media"]["name"]);
-			$filetype = pathinfo($target_file,PATHINFO_EXTENSION);
-			$media->description = pathinfo($target_file,PATHINFO_FILENAME);
-			$filename = basename($_FILES["media"]["tmp_name"]);
+		if($_FILES["media"]["name"] != "") {
+			try {
+				$media->set_mime_type($_FILES["media"]["type"]);
+				// FIXME : refactor this mess
+				$target_dir = "uploads/";
+				$target_file = $target_dir.basename($_FILES["media"]["name"]);
+				$filetype = pathinfo($target_file,PATHINFO_EXTENSION);
+				$media->description = pathinfo($target_file,PATHINFO_FILENAME);
+				$filename = basename($_FILES["media"]["tmp_name"]);
 
-			// DEBUG print_r($_FILES);
+				// create and get back the id
+				// the reason for this is that the file name, to be garanteed unique
+				// will include the id from the DB
+				$media->create();
+				$media->update($filename, $filetype);	
 
-			// create and get back the id
-			// the reason for this is that the file name, to be garanteed unique
-			// will include the id from the DB
-			$media->create();
-			$media->update($filename, $filetype);	
+				// then mv the file in uploads/ dir
+				move_uploaded_file($_FILES["media"]["tmp_name"], $target_dir.$media->file);
 
-			// then mv the file in uploads/ dir
-			// DEBUG echo "move_uploaded_file(".$_FILES["media"]["tmp_name"].",".$target_dir.$filename.");";
-			move_uploaded_file($_FILES["media"]["tmp_name"], $target_dir.$media->file);
-
-			$render = "json/list";
-		} catch(data_exception $e) {
-			$render = "views/data_exception";
+				$render = "json/list";
+			} catch(data_exception $e) {
+				$render = "views/data_exception";
+			}
+		} else {
+			$render = "unprocessable";
 		}
-    break;
+	break;
 
 	case "delete":
 		if($_REQUEST["i"] = Media::delete($_REQUEST["i"])) {
 			$render = "json/list";
 		} else {
-			$render = "views/data_exception";
+			$render = "unprocessable";
 		}
 	break;		
 
@@ -66,3 +68,7 @@ if($render == "json/list") {
 	echo json_encode($medias);
 	exit(); // no further rendering needed 
 }
+
+// view part
+include("views/".$render.".php");
+?>

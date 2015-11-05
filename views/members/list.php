@@ -1,4 +1,13 @@
-<h1>Liste des adhérents</h1>
+<div class="col-sm-8" align="center">
+	<h2>Liste des adhérents</h2>
+</div>
+<div class="col-sm-4" align="center">
+	<span class="btn btn-success" onClick="set_value('a', 'new'); defaultform.submit()">
+		<i class="glyphicon glyphicon-plus"></i>
+		<span>Nouvelle adhésion...</span>
+	</span>
+</div>
+<div class="col-sm-12" align="center">
 <table id="list_member">
 	<thead>
 		<tr>
@@ -24,6 +33,7 @@ while(list($key, $val) = each($members)) { ?>
 <?php } ?>
 	</tbody>
 </table>
+</div>
 <script>
 $(document).ready(function() {$('#list_member').DataTable({"autoWidth": false})});
 /* FIXME : translation of the table

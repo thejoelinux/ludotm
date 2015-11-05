@@ -19,10 +19,25 @@ This file is part of phpLudoreve.
 // controller 
 $render = "list";
 switch($_REQUEST["a"]) {
+	case "new":
+	case "create":
+		$member = new Member(0);
+		if($_REQUEST["a"] == "create") {
+			$member->create();
+		}
+		$_REQUEST["i"] = $member->id_adherent;
+		$render = "members/edit";
+	break;
+
+	case "update":
 	case "edit":
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
 			if($member->id_adherent != 0) {
+				if($_REQUEST["a"] == "update") {
+					$member->update();
+					$_REQUEST["a"] = "edit";
+				}
                 $render = "members/edit";
 			} else {
 				$render = "members/not_found"; // TODO

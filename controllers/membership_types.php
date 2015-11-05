@@ -18,15 +18,28 @@ This file is part of phpLudoreve.
 
 // controller 
 $render = "list";
+// format
+$format = (preg_match("/api.php/", $_SERVER["REQUEST_URI"])) ? "json" : "html";
+
 switch($_REQUEST["a"]) {
-	case "list": // for API
-        try {
-            Membership_Type::fetch_all($membership_types);
-            echo json_encode($membership_types);
-		} catch(data_exception $e) {
-			header($_SERVER['SERVER_PROTOCOL'] . ' Internal Server Error', true, 500);
+	case "list": // for API or HTML
+		if($format == "json") {
+        	try {
+            	Membership_Type::fetch_all($membership_types);
+	            echo json_encode($membership_types);
+				exit(); // no further rendering needed 
+			} catch(data_exception $e) {
+				header($_SERVER['SERVER_PROTOCOL'] . ' Internal Server Error', true, 500);
+				exit(); // no further rendering needed 
+			}
+		} else {
+			// as there is not many fields
+			// no prefetching - display a table, fill it with ajax call
+			// add/edit rows with ajax call
+			$render = "membership_types/list";
 		}
-		exit(); // no further rendering needed 
     break;
 }
-
+// view part
+include("views/".$render.".php");
+?>

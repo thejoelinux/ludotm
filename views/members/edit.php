@@ -133,7 +133,7 @@ function validate_and_submit () {
 				var html = '';
 				$.each(output, function(key, val){
 				  html = html + '<option value="' + val.id + '"'
-				  		+ (val.id == <?=$member->membership_type_id?> ? ' selected ' : '' ) + '>'
+				  		+ (val.id == <?=(int)$member->membership_type_id?> ? ' selected ' : '' ) + '>'
 						+ val.name + '</option>';
 				});
                 $('#membership_type_id').html(html);

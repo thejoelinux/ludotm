@@ -35,12 +35,12 @@ class Game {
 			// and the value has really changed
 			if(array_key_exists($var, $_REQUEST)) {
 				if($var == "date_achat") {
-					$_REQUEST["date_achat"] = date_format(date_create_from_format('d-m-Y', $_REQUEST["date_achat"]),'m/d/Y');
+					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				if($_REQUEST[$var] != $value) {
 					$this->$var = $_REQUEST[$var];
 					if($var == "date_achat") {
-						$_REQUEST["date_achat"] = date_format(date_create_from_format('m/d/Y', $_REQUEST["date_achat"]),'Y-m-d');
+						$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 					}
 					$update_sql .= " $var = '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";
 					// DEBUG echo "REQ : ".$_REQUEST[$var]." != OBJ : ".$value."<br>";
@@ -56,18 +56,17 @@ class Game {
 	}
 
 	public function create() {
-		$fields_sql = "(";
-		$datas_sql = "(";
+		$fields_sql = $datas_sql = "";
 		foreach(get_object_vars($this) as $var => $value) {
 			// check if there is a corresponding value in _REQUEST
 			// and the value is not empty
 			if(array_key_exists($var, $_REQUEST) && $_REQUEST[$var] != "") {
 				if($var == "date_achat") {
-					$_REQUEST["date_achat"] = date_format(date_create_from_format('d-m-Y', $_REQUEST["date_achat"]),'m/d/Y');
+					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				$this->$var = $_REQUEST[$var];
 				if($var == "date_achat") {
-					$_REQUEST["date_achat"] = date_format(date_create_from_format('m/d/Y', $_REQUEST["date_achat"]),'Y-m-d');
+					$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 				}
 				$fields_sql .= " $var,";
 				$datas_sql .= " '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";
@@ -75,8 +74,8 @@ class Game {
 			}
 		}
 		// SQL INSERT jeu
-		$sql = " INSERT INTO jeu ".substr($fields_sql, 0, -1).")
-			VALUES ".substr($datas_sql, 0, -1).")";
+		$sql = " INSERT INTO jeu (".substr($fields_sql, 0, -1).")
+			VALUES (".substr($datas_sql, 0, -1).")";
 		return $this->id_jeu = $GLOBALS["data"]->insert($sql);	
 	}
 

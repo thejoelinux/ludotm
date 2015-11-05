@@ -40,12 +40,6 @@ $data = new data();
 	<script src="js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
-<?php
-$contexts = array("members" => "Adhérents", "games" => "Jeux");
-if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $contexts)) {
-    $_REQUEST["o"] = "home";
-} 
-?>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -60,9 +54,18 @@ if(!array_key_exists("o", $_REQUEST) || !array_key_exists($_REQUEST["o"], $conte
     </div>
     <div id="navbar" class="collapse navbar-collapse navbar-right">
       <ul class="nav navbar-nav">
-<?php while(list($key, $val) = each($contexts)) { ?>
-    	<li><a href="index.php?o=<?=$key?>"><?=$val?></a></li>
-<?php } ?>
+    	<li><a href="index.php?o=members">Adhérents</a></li>
+    	<li><a href="index.php?o=games">Jeux</a></li>
+		<li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
+		  	aria-expanded="false">Options <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="index.php?o=membership_types&a=list">Types d'adhésion</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
       </ul>
 	  <form class="navbar-form navbar-right">
         <div id="search-all" >
@@ -87,34 +90,16 @@ include("helpers/date.php");
 	<!-- div class="col-sm-9 col-md-10 main" -->
 	<div class="container">
 <?php
-switch($_REQUEST["o"]) {
-    case "games";
-        include("controllers/games.php");
-    break;
-
-    case "members";
-        include("controllers/members.php");
-    break;
-
-    default:
-		//header("Location: ./accueil/index.php");
-        ?>
-        //include("accueil/index.php");
-        <?php
-    break;
+if(array_key_exists("o", $_REQUEST) && $_REQUEST["o"] != ""
+	&& file_exists("controllers/".$_REQUEST["o"].".php")) {
+        include("controllers/".$_REQUEST["o"].".php");
+} else {
+	?>
+	//include("accueil/index.php");
+	<?php
 }
 ?>
 	</div>
-
-	<!-- div class="col-sm-3 col-sm-offset-9 col-md-2  col-md-offset-10 sidebar">
-	  <ul class="nav nav-sidebar">
-	  <div id="my-calendar"></div>
-	  </ul>
-	</div -->
-<?php
-//include("helpers/calendar.php");
-// FIXME include("helpers/history.php");
-?>
 	<input type="hidden" name="o" id="o" value="<?=$_REQUEST["o"]?>"> 
 	<input type="hidden" name="a" id="a" value="<?=(array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : ""?>"> 
 	<input type="hidden" name="i" id="i" value="<?=(array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : ""?>">

@@ -29,7 +29,6 @@ switch($_REQUEST["a"]) {
 		$render = "games/edit";
 	break;
 
-	case "edit_medias":
 	case "update":
 	case "edit":
 		try {
@@ -39,7 +38,7 @@ switch($_REQUEST["a"]) {
 					$game->update();
 					$_REQUEST["a"] = "edit";
 				}
-				$render = "games/".$_REQUEST["a"];
+				$render = "games/edit";
 			} else {
 				$render = "games/not_found"; // TODO
 			}

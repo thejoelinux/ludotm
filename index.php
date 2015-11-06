@@ -94,9 +94,8 @@ if(array_key_exists("o", $_REQUEST) && $_REQUEST["o"] != ""
 	&& file_exists("controllers/".$_REQUEST["o"].".php")) {
         include("controllers/".$_REQUEST["o"].".php");
 } else {
-	?>
-	//include("accueil/index.php");
-	<?php
+    $_REQUEST["o"] = "home";
+    include("controllers/home.php");
 }
 ?>
 	</div>
@@ -125,12 +124,6 @@ SESSION :
 <script src="js/functions.js"></script>
 <script type="application/javascript">
 $(document).ready(function () {
-	/*
-    $("#my-calendar").zabuto_calendar({
-        language: "fr",
-        today: true,
-    });
-	*/
     var members = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nom'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -144,6 +137,19 @@ $(document).ready(function () {
       prefetch: { url : 'api.php?o=games&a=name_list',
 	  	cache: false }
     });
+
+    $('#search-members .typeahead').typeahead({
+        highlight: true
+    },
+    {
+      name: 'members',
+      display: 'nom',
+      source: members,
+      templates: {
+        header: '<h3 class="category-name">Adhérents</h3>'
+      }
+    });
+        
 
     $('#search-all .typeahead').typeahead({
       highlight: true

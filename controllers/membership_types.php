@@ -23,22 +23,59 @@ $format = (preg_match("/api.php/", $_SERVER["REQUEST_URI"])) ? "json" : "html";
 
 switch($_REQUEST["a"]) {
 	case "list": // for API or HTML
-		if($format == "json") {
-        	try {
-            	Membership_Type::fetch_all($membership_types);
-	            echo json_encode($membership_types);
+		try {
+			Membership_Type::fetch_all($membership_types);
+			if($format == "json") {
+				echo json_encode($membership_types);
 				exit(); // no further rendering needed 
-			} catch(data_exception $e) {
-				header($_SERVER['SERVER_PROTOCOL'] . ' Internal Server Error', true, 500);
-				exit(); // no further rendering needed 
+			} else {
+				$render = "membership_types/list";
 			}
-		} else {
-			// as there is not many fields
-			// no prefetching - display a table, fill it with ajax call
-			// add/edit rows with ajax call
-			$render = "membership_types/list";
+		} catch(data_exception $e) {
+			header($_SERVER['SERVER_PROTOCOL'] . ' Internal Server Error', true, 500);
+			exit(); // no further rendering needed 
 		}
     break;
+
+	case "new":
+	case "create":
+		$membership_type = new Membership_Type(0);
+		if($_REQUEST["a"] == "create") {
+			$membership_type->create();
+		}
+		$_REQUEST["i"] = $membership_type->id;
+		$render = "membership_types/edit";
+	break;
+
+	case "delete":
+		try {
+			if($_REQUEST["i"] = Membership_Type::delete($_REQUEST["i"])) {
+				$render = "membership_types/list";
+			} else {
+				$render = "unprocessable";
+			}
+		} catch(data_exception $e) {
+			$render = "data_exception";
+		}
+	break;
+
+	case "update":
+	case "edit":
+		try {
+            $membership_type = Membership_Type::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($membership_type->id != 0) {
+				if($_REQUEST["a"] == "update") {
+					$membership_type->update();
+					$_REQUEST["a"] = "edit";
+				}
+				$render = "membership_types/edit";
+			} else {
+				$render = "membership_types/not_found"; // TODO
+			}
+		} catch(data_exception $e) {
+			$render = "data_exception";
+		}
+	break;
 }
 // view part
 include("views/".$render.".php");

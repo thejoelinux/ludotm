@@ -15,37 +15,27 @@ This file is part of phpLudoreve.
     You should have received a copy of the GNU General Public License
     along with phpLudoreve.  If not, see <http://www.gnu.org/licenses/>.
 */
-?>
-<script>
-function validate_and_submit () {
-    if(document.defaultform.nom.value == 0) {
-        alert ("Vous n'avez pas saisi le nom!");
-        return false;
-    }
-    document.defaultform.submit();
-    return true;
-}
-</script>
-<?php
 // since we are in the edit form, we have an existing $game from the controller
 ?>
-<div class="col-sm-12" align="center">
+<div class="panel panel-default">
+  <div class="panel-heading">
+		<h4><!--  class="panel-title" -->
+  		<span class="glyphicon glyphicon-knight" style="margin-right: 10px" ></span>
 	<?php if($game->id_jeu != 0) { ?>
-		<h2><?=$game->nom?>
+		<?=$game->nom?>
 		<small>
 		<?php if($game->id_pret) { ?>
 		(INDISPONIBLE) FIXME : lien vers pret en cours
 		<?php } else { ?>
 		(DISPONIBLE)
 		<?php } ?>
-		</small></h2>
-		<!-- FIXME : put this in a side bar helper <
-		a href="index.php?o=prets&id_jeu=<?=$game->id_pret?>">Historique des prêts</a>
-		-->
+		</small>
 	<?php } else { ?>
-		<h2>Nouveau jeu</h2>
+		Nouveau jeu
 	<?php } ?>
-</div>
+		</h4>
+  </div>
+  <div class="panel-body">
 
 <div class="form-group">
     <label class="control-label col-sm-2" for="nom">Nom</label>
@@ -89,7 +79,7 @@ function validate_and_submit () {
 				var html = '';
 				$.each(output, function(key, val){
 				  html = html + '<option value="' + val.id + '"'
-				  		+ (val.id == <?=$game->categorie_esar_id?> ? ' selected ' : '' ) + '>'
+				  		+ (val.id == <?=(int)$game->categorie_esar_id?> ? ' selected ' : '' ) + '>'
 						+ val.label + ' - ' + val.name + '</option>';
 				});
                 $('#categorie_esar_id').html(html);
@@ -188,13 +178,47 @@ function validate_and_submit () {
 </div>
 
 <div class="form-group">
+	<div class="col-sm-12" align="center">
+		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la liste">
 <?php if ($game->id_jeu != 0) { ?>
-	<div class="col-sm-4 col-sm-offset-4">
-    <input type="submit" class="btn btn-primary" value="Enregistrer les changements" onClick="set_value('a', 'update');">
-    <input type="button" class="btn btn-danger" value="Supprimer" onClick="if(confirm('Really ?')) {set_value('a','delete'); defaultform.submit()}">
+    	<input type="submit" class="btn btn-success" id="save_button" value="Enregistrer les changements">
+	    <input type="button" class="btn btn-danger" id="delete_button" value="Supprimer">
 <?php } else { ?>
-	<div class="col-sm-2 col-sm-offset-6">
-    <input type="button" class="btn btn-primary" value="Créer" onClick="set_value('a', 'create');validate_and_submit()">
+    	<input type="button" class="btn btn-success" id="save_button" value="Créer">
 <?php } ?>
 	</div>
 </div>
+
+  <!-- end of panel -->
+  </div>
+</div>
+<script>
+// buttons events
+$('#save_button').click(function(){
+    if(dGocument.defaultform.nom.value == 0) {
+        alert ("Vous n'avez pas saisi de nom !");
+        return false;
+    }
+	if($('#i').val() == 0) {
+		$('#a').val('create');
+	} else {
+		$('#a').val('update');
+	}
+    document.defaultform.submit();
+    return true;
+});
+$('#delete_button').click(function(){
+	var msg = 'Voulez-vous réellement supprimer un jeu ?\n' + 
+		'Cette action n\'est possible que si le jeu n\'a été\n' +
+		'l\'objet d\'aucun emprunt.';
+	if(confirm(msg)) {
+		$('#a').val('confirm_delete');
+    	document.defaultform.submit();
+	}
+});
+$('#back_button').click(function(){
+	// TODO this function should verify that the object has not been modified
+	// and if yes, ask for confirmation from the user.
+	window.location.href='index.php?o=games&a=list';
+});
+</script>

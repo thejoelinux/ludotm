@@ -69,16 +69,25 @@ switch($_REQUEST["a"]) {
 	break;
 
 	case "update":
+		try {
+            $membership_type = Membership_Type::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($membership_type->id != 0) {
+				$membership_type->update();
+				Membership_Type::fetch_all($membership_types);
+				$render = "membership_types/list";
+			} else {
+				$render = "membership_types/not_found"; // TODO
+			}
+		} catch(data_exception $e) {
+			$render = "data_exception";
+		}
+	break;
+
 	case "edit":
 		try {
             $membership_type = Membership_Type::fetch($data->db_escape_string($_REQUEST["i"]));
 			if($membership_type->id != 0) {
-				if($_REQUEST["a"] == "update") {
-					$membership_type->update();
-					$_REQUEST["a"] = "edit";
-				}
-				Membership_Type::fetch_all($membership_types);
-				$render = "membership_types/list";
+				$render = "membership_types/edit";
 			} else {
 				$render = "membership_types/not_found"; // TODO
 			}

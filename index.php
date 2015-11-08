@@ -61,7 +61,7 @@ $data = new data();
 		  	aria-expanded="false">Options <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="index.php?o=membership_types&a=list">Types d'adhésion</a></li>
-            <li><a href="#">Something else here</a></li>
+            <li><a href="index.php?o=payment_methods&a=list">Méthodes de paiement</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#">Separated link</a></li>
           </ul>

@@ -38,6 +38,7 @@ switch($_REQUEST["a"]) {
 					$member->update();
 					$_REQUEST["a"] = "edit";
 				}
+				Member_Subscription::get_current($member_subscription, $_REQUEST["i"]);
                 $render = "members/edit";
 			} else {
 				$render = "members/not_found"; // TODO
@@ -56,6 +57,8 @@ switch($_REQUEST["a"]) {
 			$render = "data_exception";
 		}
     break;
+
+	
 
     default:
         try {

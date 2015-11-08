@@ -1,20 +1,12 @@
-<script>
-function validate_and_submit () {
-    if(document.defaultform.name.value == 0) {
-        alert ("Vous n'avez pas saisi de nom pour ce type");
-        return false;
-    }
-    document.defaultform.submit();
-    return true;
-}
-</script>
-<div class="col-sm-12" align="center">
-	<?php if($membership_type->id != 0) { ?>
-		<h2>Modifier le type : <?=$membership_type->name?></h2>
-	<?php } else { ?>
-		<h2>Nouveau type d'adhésion</h2>
-	<?php } ?>
-</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+		<h4><!--  class="panel-title" -->
+  		<span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
+		<?=($membership_type->id != 0) ? "Adhésion : ".$membership_type->name : "Nouveau type d'adhésion"?>
+		</h4>
+  </div>
+  <div class="panel-body">
+
 <div class="form-group">
     <label class="control-label col-sm-2" for="name">Nom</label>
     <div class="col-sm-4">
@@ -32,13 +24,48 @@ function validate_and_submit () {
     </div>
 </div>
 <div class="form-group">
-	<div class="col-sm-10 col-sm-offset-2" align="center">
-	<input type="button" class="btn btn-primary" value="&lt;&lt; Retour à la liste" onClick="window.location.href='index.php?o=membership_types&a=list'">
+	<div class="col-sm-12" align="center">
+	<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la liste">
 <?php if ($membership_type->id != 0) { ?>
-    <input type="submit" class="btn btn-success" value="Enregistrer les changements" onClick="set_value('a', 'update');">
-    <input type="button" class="btn btn-danger" value="Supprimer" onClick="if(confirm('Really ?')) {set_value('a','delete'); defaultform.submit()}">
+    <input type="submit" class="btn btn-success" id="save_button" value="Enregistrer les changements">
+    <input type="button" class="btn btn-danger" id="delete_button" value="Supprimer">
 <?php } else { ?>
-    <input type="button" class="btn btn-success" value="Créer" onClick="set_value('a', 'create');validate_and_submit()">
+    <input type="button" class="btn btn-success" id="save_button" value="Créer">
 <?php } ?>
 	</div>
 </div>
+
+  <!-- end of panel -->
+  </div>
+</div>
+
+<script>
+// buttons events
+$('#save_button').click(function(){
+    if(document.defaultform.name.value == 0) {
+        alert ("Vous n'avez pas saisi de nom !");
+        return false;
+    }
+	if($('#i').val() == 0) {
+		$('#a').val('create');
+	} else {
+		$('#a').val('update');
+	}
+    document.defaultform.submit();
+    return true;
+});
+$('#delete_button').click(function(){
+	var msg = 'Voulez-vous réellement supprimer ce type d\'adhésion ?\n' + 
+		'Cette action n\'est possible que si ce type n\'a été\n' +
+		'utilisé pour l\'inscription d\'un adhérent.';
+	if(confirm(msg)) {
+		$('#a').val('delete');
+    	document.defaultform.submit();
+	}
+});
+$('#back_button').click(function(){
+	// TODO this function should verify that the object has not been modified
+	// and if yes, ask for confirmation from the user.
+	window.location.href='index.php?o=membership_types&a=list';
+});
+</script>

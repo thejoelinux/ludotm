@@ -22,7 +22,7 @@ class Media {
     }
 
 	public static function delete($id) {
-		// SQL SELECT media
+		// SQL SELECT medias
 		$sql = " SELECT file, id_jeu
 			FROM medias
 			WHERE id = $id ";

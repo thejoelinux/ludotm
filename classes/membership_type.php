@@ -44,7 +44,7 @@ class Membership_Type {
 			}
 		}
 		if($update_sql != "") {
-			// SQL UPDATE membership_type
+			// SQL UPDATE membership_types
 			$sql = " UPDATE membership_types SET ".substr($update_sql, 0, -1)."
 				WHERE id = ".$this->id;
         	return $GLOBALS["data"]->update($sql);

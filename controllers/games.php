@@ -58,9 +58,18 @@ switch($_REQUEST["a"]) {
     break;
 	
 	case "delete":
-		// FIXME : make a screen to confirm the deletion of the game
-		// and all the things w/it, like : medias, comments, lends...
-		$render = "games/confirm_delete";
+
+		try {
+            $game = Game::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($game->id_jeu != 0) {
+				$_REQUEST["a"] = "confirm_delete";
+				$render = "games/confirm_delete";
+			} else {
+				$render = "games/not_found"; // TODO
+			}
+		} catch(data_exception $e) {
+			$render = "data_exception";
+		}
 	break;
 
 	case "confirm_delete":

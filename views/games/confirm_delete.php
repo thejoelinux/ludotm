@@ -1,0 +1,3 @@
+
+		// FIXME : make a screen to confirm the deletion of the game
+		// and all the things w/it, like : medias, comments, lends...

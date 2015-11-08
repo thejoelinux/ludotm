@@ -32,13 +32,13 @@ function validate_and_submit () {
     </div>
 </div>
 <div class="form-group">
+	<div class="col-sm-10 col-sm-offset-2" align="center">
+	<input type="button" class="btn btn-primary" value="&lt;&lt; Retour à la liste" onClick="window.location.href='index.php?o=membership_types&a=list'">
 <?php if ($membership_type->id != 0) { ?>
-	<div class="col-sm-4 col-sm-offset-4">
-    <input type="submit" class="btn btn-primary" value="Enregistrer les changements" onClick="set_value('a', 'update');">
+    <input type="submit" class="btn btn-success" value="Enregistrer les changements" onClick="set_value('a', 'update');">
     <input type="button" class="btn btn-danger" value="Supprimer" onClick="if(confirm('Really ?')) {set_value('a','delete'); defaultform.submit()}">
 <?php } else { ?>
-	<div class="col-sm-2 col-sm-offset-6">
-    <input type="button" class="btn btn-primary" value="Créer" onClick="set_value('a', 'create');validate_and_submit()">
+    <input type="button" class="btn btn-success" value="Créer" onClick="set_value('a', 'create');validate_and_submit()">
 <?php } ?>
 	</div>
 </div>

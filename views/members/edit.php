@@ -15,27 +15,16 @@ This file is part of phpLudoreve.
     You should have received a copy of the GNU General Public License
     along with phpLudoreve.  If not, see <http://www.gnu.org/licenses/>.
 */
-?>
-<script>
-function validate_and_submit () {
-    if(document.defaultform.nom.value == 0) {
-        alert ("Vous n'avez pas saisi le nom!");
-        return false;
-    }
-    document.defaultform.submit();
-    return true;
-}
-</script>
-<?php
 // since we are in the edit form, we have an existing $member from the controller
 ?>
-<div class="col-sm-12" align="center">
-	<?php if($member->id_adherent != 0) { ?>
-		<h2><?=$member->nom?> <?=$member->prenom?></h2>
-	<?php } else { ?>
-		<h2>Nouvel adhérent</h2>
-	<?php } ?>
-</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+  		<h4><span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
+	<?=($member->id_adherent != 0) ? $member->nom." ".$member->prenom : "Nouvel adhérent"?>
+		
+		</h4>
+  </div>
+  <div class="panel-body">
 
 <div class="form-group">
     <label class="control-label col-sm-2" for="nom">Nom</label>
@@ -118,32 +107,13 @@ function validate_and_submit () {
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="adhesion">Adhesion</label>
+    <label class="control-label col-sm-2" for="member_subscription">Adhesion</label>
     <div class="col-sm-4">
-        <input type="text" id="adhesion" name="adhesion" class="form-control" value="<?=$member->adhesion?>"/>
+        <input type="text" id="member_subscription" name="member_subscription" class="form-control" value="<?=$member_subscription?>"/>
     </div>
-    <label class="control-label col-sm-2" for="membership_type_id">Type d'adhésion</label>
+	<label class="control-label col-sm-2" for="adhesion">Emprunts</label>
     <div class="col-sm-4">
-        <select id="membership_type_id" name="membership_type_id" class="form-control">
-		</select>
-		<script>
-		$('#membership_type_id').html('<option value="">Loading...</option>');
-		$.ajax({url: 'api.php?o=membership_types&a=list',
-             success: function(output) {
-				var html = '';
-				$.each(output, function(key, val){
-				  html = html + '<option value="' + val.id + '"'
-				  		+ (val.id == <?=(int)$member->membership_type_id?> ? ' selected ' : '' ) + '>'
-						+ val.name + '</option>';
-				});
-                $('#membership_type_id').html(html);
-            },
-          error: function (xhr, ajaxOptions, thrownError) {
-		  	// well, that's weird, ok :)
-		  	$('#membership_type_id').html('<option value="">' + xhr.status + ' ' + thrownError + '</option>');
-            // alert(xhr.status + " " + thrownError);
-        }});
-		</script>
+        <input type="text" id="loans" name="loans" class="form-control" value="<?=$member_loans?>"/>
     </div>
 </div>
 <div class="form-group">
@@ -251,13 +221,48 @@ function validate_and_submit () {
 </div>
 
 <div class="form-group">
+	<div class="col-sm-12" align="center">
+		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la liste">
 <?php if ($member->id_adherent != 0) { ?>
-	<div class="col-sm-4 col-sm-offset-4">
-    <input type="submit" class="btn btn-primary" value="Enregistrer les changements" onClick="set_value('a', 'update');">
-    <input type="button" class="btn btn-danger" value="Supprimer" onClick="if(confirm('Really ?')) {set_value('a','delete'); defaultform.submit()}">
+    	<input type="button" class="btn btn-success" id="save_button" value="Enregistrer les changements">
+	    <input type="button" class="btn btn-danger" id="delete_button" value="Supprimer">
 <?php } else { ?>
-	<div class="col-sm-2 col-sm-offset-6">
-    <input type="button" class="btn btn-primary" value="Créer" onClick="set_value('a', 'create');validate_and_submit()">
+    	<input type="button" class="btn btn-success" id="save_button" value="Créer">
 <?php } ?>
 	</div>
 </div>
+
+  <!-- end of panel -->
+  </div>
+</div>
+
+<script>
+// buttons events
+$('#save_button').click(function(){
+    if(document.defaultform.nom.value == 0) {
+        alert ("Vous n'avez pas saisi de nom!");
+        return false;
+    }
+	if($('#i').val() == 0) {
+		$('#a').val('create');
+	} else {
+		$('#a').val('update');
+	}
+    document.defaultform.submit();
+    return true;
+});
+$('#delete_button').click(function(){
+	var msg = 'Voulez-vous réellement supprimer un adhérent ?\n' + 
+		'Cette action n\'est possible que si l\'adhérent n\'a fait aucun\n' +
+		'emprunt et payé aucune cotisation.';
+	if(confirm(msg)) {
+		$('#a').val('confirm_delete');
+    	document.defaultform.submit();
+	}
+});
+$('#back_button').click(function(){
+	// TODO this function should verify that the object has not been modified
+	// and if yes, ask for confirmation from the user.
+	window.location.href='index.php?o=members&a=list';
+});
+</script>

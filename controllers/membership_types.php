@@ -37,19 +37,28 @@ switch($_REQUEST["a"]) {
 		}
     break;
 
-	case "new":
 	case "create":
-		$membership_type = new Membership_Type(0);
-		if($_REQUEST["a"] == "create") {
+		try {
+			$membership_type = new Membership_Type(0);
 			$membership_type->create();
+	
+			Membership_Type::fetch_all($membership_types);
+			$render = "membership_types/list";
+		} catch(data_exception $e) {
+			$render = "data_exception";
 		}
-		$_REQUEST["i"] = $membership_type->id;
+	break;
+
+	case "new":
+		$membership_type = new Membership_Type(0);
+		$_REQUEST["i"] = 0;
 		$render = "membership_types/edit";
 	break;
 
 	case "delete":
 		try {
 			if($_REQUEST["i"] = Membership_Type::delete($_REQUEST["i"])) {
+				Membership_Type::fetch_all($membership_types);
 				$render = "membership_types/list";
 			} else {
 				$render = "unprocessable";
@@ -68,7 +77,8 @@ switch($_REQUEST["a"]) {
 					$membership_type->update();
 					$_REQUEST["a"] = "edit";
 				}
-				$render = "membership_types/edit";
+				Membership_Type::fetch_all($membership_types);
+				$render = "membership_types/list";
 			} else {
 				$render = "membership_types/not_found"; // TODO
 			}

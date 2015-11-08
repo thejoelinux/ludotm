@@ -18,17 +18,16 @@
 		<td>
 			<a href="index.php?o=membership_types&a=edit&i=<?=$val->id?>">
 				<button type="button" class="btn btn-default btn-sm">
-				  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Modifier
-				</button>
+				  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 			</a>
-			<a href="index.php?o=membership_types&a=delete&i=<?=$val->id?>">
+			<a onClick="if(confirm('Êtes vous sur ?')) { set_value('a', 'delete'); set_value('i', '<?=$val->id?>'); defaultform.submit()}" href="#">
 				<button type="button" class="btn btn-danger btn-sm">
 				  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 			</a>
 		</td>
 	<?php } ?>
 </table>
-<div class="col-sm-4 col-sm-offset-2" align="center">
+<div class="col-sm-8 col-sm-offset-2" align="center">
 	<span class="btn btn-success btm-md" onClick="set_value('a', 'new'); defaultform.submit()">
 		<i class="glyphicon glyphicon-plus"></i>
 		<span>Nouveau type</span>

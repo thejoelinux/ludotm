@@ -125,7 +125,7 @@ SESSION :
 <script type="application/javascript">
 $(document).ready(function () {
     var members = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nom'),
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('full_name'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       prefetch: { url : 'api.php?o=members&a=name_list',
 	  	cache: false }
@@ -143,20 +143,32 @@ $(document).ready(function () {
     },
     {
       name: 'members',
-      display: 'nom',
+      display: 'full_name',
       source: members,
       templates: {
         header: '<h3 class="category-name">Adhérents</h3>'
       }
     });
-        
+
+	$('#search-games .typeahead').typeahead({
+        highlight: true
+    },
+    {
+      name: 'games',
+      display: 'nom',
+      source: games
+    }).bind('typeahead:selected', function(obj, datum, name) {      
+        if(typeof datum.id_jeu !== 'undefined') {
+            $('#id_jeu').val(datum.id_jeu);
+        }
+    });
 
     $('#search-all .typeahead').typeahead({
       highlight: true
     },
     {
       name: 'members',
-      display: 'nom',
+      display: 'full_name',
       source: members,
       templates: {
         header: '<h3 class="category-name">Adhérents</h3>'

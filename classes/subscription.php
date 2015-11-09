@@ -1,6 +1,6 @@
 <?php
 
-class Member_Subscription {
+class Subscription {
 	public $id, $start_date, $end_date, $member_id, $member_name, $membership_type_id, $payment_method_id;
 	public $price, $credit, $comments, $created_at, $updated_at;
 
@@ -11,51 +11,53 @@ class Member_Subscription {
 	    }
 	}
 
-	public static function get_current(&$member_subscription, $member_id) {
-		$member_subscription = "Aucune souscription trouvée.";
-		// SQL SELECT member_subscriptions membership_types payment_methods
-        $sql = " SELECT ms.id, end_date,
-					ms.credit, mt.name as membership_type_name
-            FROM member_subscriptions ms, membership_types mt
-            WHERE member_id = ".$member_id."
-				AND ms.membership_type_id = mt.id
-				AND end_date > curdate()
-				ORDER BY end_date
-				LIMIT 0,1";
-        $GLOBALS["data"]->select($sql, $rset);
-		if($rset->numrows) {
-	        return "Souscription de type ".$rset->value("membership_type_name").
-				" jusqu'au ".$rset->value("end_date");
-		}
-		return $member_subscription;
+	public function text(){
+		return "Du ".$this->start_date." au ".$this->end_date;
 	}
 
-	public static function fetch_all(&$member_subscriptions, $member_id) {
-        $member_subscriptions = array();
-		// SQL SELECT member_subscriptions adherent membership_types payment_methods
+	public static function fetch($id) {
+		// SQL SELECT subscriptions membership_types payment_methods
         $sql = " SELECT ms.id, start_date, end_date, ms.member_id, CONCAT(a.nom, ' ', a.prenom) as member_name,
 				ms.membership_type_id, mt.name as membership_type_name,
-				ms.payment_method_id, ms.name as payment_method_name,
-				price, credit, ms.comments, ms.created_at, ms.updated_at
-            FROM member_subscriptions ms, adherent a, membership_types mt, payment_methods pm
+				ms.payment_method_id, pm.name as payment_method_name,
+				ms.price, credit, ms.comments, ms.created_at, ms.updated_at
+            FROM subscriptions ms, adherent a, membership_types mt, payment_methods pm
+            WHERE ms.id = ".$id."
+				AND ms.member_id = a.id_adherent
+				AND ms.membership_type_id = mt.id
+				AND ms.payment_method_id = pm.id
+				";
+        $GLOBALS["data"]->select($sql, $subscription, "Subscription");
+		return $subscription;
+	}
+
+	public static function fetch_all(&$subscriptions, $member_id) {
+        $subscriptions = array();
+		// SQL SELECT subscriptions adherent membership_types payment_methods
+        $sql = " SELECT ms.id, start_date, end_date, ms.member_id, CONCAT(a.nom, ' ', a.prenom) as member_name,
+				ms.membership_type_id, mt.name as membership_type_name,
+				ms.payment_method_id, pm.name as payment_method_name,
+				ms.price, credit, ms.comments, ms.created_at, ms.updated_at
+            FROM subscriptions ms, adherent a, membership_types mt, payment_methods pm
             WHERE member_id = ".$member_id."
 				AND ms.member_id = a.id_adherent
 				AND ms.membership_type_id = mt.id
-				ANS ms.payment_method_id = pm.id
+				AND ms.payment_method_id = pm.id
+				ORDER BY end_date
 				";
-        $GLOBALS["data"]->select($sql, $member_subscriptions, "Member_Subscription", true);
-        return sizeof($member_subscriptions);
+        $GLOBALS["data"]->select($sql, $subscriptions, "Subscription", true);
+        return sizeof($subscriptions);
     }
 
 	public static function delete($id) {
-		// SQL SELECT member_subscriptions
+		// SQL SELECT subscriptions
 		$sql = " SELECT id
-			FROM member_subscriptions
+			FROM subscriptions
 			WHERE id = $id ";
 		$GLOBALS["data"]->select($sql, $rset);
 		if($rset->numrows) {
-			// SQL DELETE member_subscription
-			$sql = " DELETE FROM member_subscriptions
+			// SQL DELETE subscription
+			$sql = " DELETE FROM subscriptions
 				WHERE id = $id ";
 			$GLOBALS["data"]->delete($sql);
 			return $rset->value("id");
@@ -81,8 +83,8 @@ class Member_Subscription {
 				// DEBUG echo "REQ : ".$_REQUEST[$var]." != OBJ : ".$value."<br>";
 			}
 		}
-		// SQL INSERT member_subscriptions
-		$sql = " INSERT INTO member_subscriptions (".$fields_sql." created_at, updated_at)
+		// SQL INSERT subscriptions
+		$sql = " INSERT INTO subscriptions (".$fields_sql." created_at, updated_at)
 			VALUES (".$datas_sql." now(), now())";
 		return $this->id = $GLOBALS["data"]->insert($sql);
 	}
@@ -107,8 +109,8 @@ class Member_Subscription {
 			}
 		}
 		if($update_sql != "") {
-			// SQL UPDATE member_subscriptions
-			$sql = " UPDATE member_subscriptions SET ".$update_sql." updated_at = now()
+			// SQL UPDATE subscriptions
+			$sql = " UPDATE subscriptions SET ".$update_sql." updated_at = now()
 				WHERE id = ".$this->id;
         	return $GLOBALS["data"]->update($sql);
 		}

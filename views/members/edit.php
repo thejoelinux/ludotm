@@ -108,13 +108,31 @@ This file is part of phpLudoreve.
 </div>
 <div class="form-group">
     <label class="control-label col-sm-2" for="member_subscription">Adhesion</label>
+	<?php if ($member->id_adherent == 0) { ?>
+	<div class="col-sm-10" style="margin-top: 5px">
+		Il faut enregistrer l'adhérent avant de pouvoir enregistrer des adhésions et des emprunts.
+	</div>
+	<?php } else { ?>
     <div class="col-sm-4">
-        <input type="text" id="member_subscription" name="member_subscription" class="form-control" value="<?=$member_subscription?>"/>
+		<div class="input-group">
+          <input type="text" id="member_subscription" name="member_subscription"  class="form-control" 
+		  	value="<?=(sizeof($member->subscriptions)) ? $member->subscriptions[0]->text() : "Aucune adhésion trouvée"?>"/>
+          <div class="input-group-btn">
+            <button type="button" id="member_subscriptions_btn" class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span></button>
+          </div>
+        </div>
     </div>
 	<label class="control-label col-sm-2" for="adhesion">Emprunts</label>
     <div class="col-sm-4">
-        <input type="text" id="loans" name="loans" class="form-control" value="<?=$member_loans?>"/>
+		<div class="input-group">
+		  <input type="text" id="loans" name="loans" class="form-control" 
+		  	value="<?=(sizeof($member->loans)) ? $member->loans_text() : "Aucun emprunt trouvé"?>">
+	      <div class="input-group-btn">
+            <button type="button" id="member_loans_btn" class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span></button>
+          </div>
+		</div>	  
     </div>
+	<?php } ?>
 </div>
 <div class="form-group">
     <label class="control-label col-sm-2" for="date_inscription">Date d'inscription</label>
@@ -264,5 +282,11 @@ $('#back_button').click(function(){
 	// TODO this function should verify that the object has not been modified
 	// and if yes, ask for confirmation from the user.
 	window.location.href='index.php?o=members&a=list';
+});
+$('#member_subscriptions_btn').click(function(){
+	window.location.href='index.php?o=members&a=subscriptions&i='+$('#i').val();
+});
+$('#member_loans_btn').click(function(){
+	window.location.href='index.php?o=members&a=loans&i='+$('#i').val();
 });
 </script>

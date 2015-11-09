@@ -8,6 +8,8 @@ class Member {
 
 	public $family_links;
 
+	public $subscriptions, $loans;
+
 	public function __construct($id = 0) {
     	if (!$this->id_adherent) {
 			$this->id_adherent = $id;
@@ -16,6 +18,8 @@ class Member {
 			1 => "Enfant",
 			2 => "Conjoint",
 			3 => "Autre");
+		$this->subscriptions = array();
+		$this->loans = array();
 	}
 
 	public static function get_family_link_name($id = 0) {
@@ -85,12 +89,49 @@ class Member {
         // SQL SELECT adherent
         $sql = "SELECT id_adherent, nom, prenom, date_inscription, date_naissance, adresse, cp_ville,
             tel_maison, tel_travail, tel_mobile, tel_fax, commentaire, num_adherent, membership_type_id,
-            adhesion, email, newsletter, autres, caution
+            adhesion, email, newsletter, autres, caution, CONCAT(nom, ' ', prenom) AS full_name
             FROM adherent
             WHERE id_adherent = ".$id;
         $GLOBALS["data"]->select($sql, $member, "Member");
         return $member;
     }
+
+	public function fetch_subscriptions() {
+		Subscription::fetch_all($this->subscriptions, $this->id_adherent);
+	}
+
+	public function create_subscription() {
+		$subscription = new Subscription();
+		$subscription->create();
+	}
+
+	public function update_subscription() {
+		$subscription = Subscription::fetch($GLOBALS["data"]->db_escape_string($_REQUEST["i"]));
+		$subscription->update();
+	}
+
+	public function fetch_loans() {
+		Loan::fetch_all($this->loans, $this->id_adherent);
+	}
+
+	public function create_loan() {
+		$loan = new Loan();
+		$loan->create();
+	}
+
+	public function update_loan() {
+		$loan = Loan::fetch($GLOBALS["data"]->db_escape_string($_REQUEST["i"]));
+		$loan->update();
+	}
+
+	public function loans_text() {
+		if (sizeof($this->loans)) {
+			$msg = sizeof($this->loans)." jeu(x) dont : ".$this->loans[0]->game_name;
+		} else {
+			$msg = "Aucun emprunt trouvé";
+		}
+		return $msg;
+	}
 
     public function render_json() {
         echo json_encode($this);
@@ -99,7 +140,7 @@ class Member {
     public static function fetch_all(&$members) {
         $members = array();
         // SQL SELECT adherent
-        $sql = "SELECT id_adherent, nom, prenom, cp_ville
+        $sql = "SELECT id_adherent, nom, prenom, cp_ville, CONCAT(nom, ' ', prenom) AS full_name
             FROM adherent
             ORDER BY nom"; 
         $GLOBALS["data"]->select($sql, $members, "Member");

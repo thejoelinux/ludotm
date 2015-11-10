@@ -76,4 +76,8 @@ alter table stats_jour rename to zzz_stats_jour;
 
 alter table family_members change birthdate birth_date date null;
 
+alter table games add `created_at` datetime NOT NULL;
+alter table games add `updated_at` datetime NOT NULL;
+
+
 INSERT INTO schema_migrations VALUES ('201511101635');

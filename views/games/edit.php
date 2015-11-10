@@ -21,7 +21,7 @@ This file is part of phpLudoreve.
   <div class="panel-heading">
 		<h4><!--  class="panel-title" -->
   		<span class="glyphicon glyphicon-knight" style="margin-right: 10px" ></span>
-	<?php if($game->id_jeu != 0) { ?>
+	<?php if($game->id != 0) { ?>
 		<?=$game->name?>
 		<small>
 		<?php if($game->loan_id) { ?>
@@ -140,7 +140,7 @@ This file is part of phpLudoreve.
 </div>
 <div class="form-group">
 	<label class="control-label col-sm-2" for="media">Medias</label>
-<?php if ($game->id_jeu == 0) { ?>
+<?php if ($game->id == 0) { ?>
 	<div class="col-sm-10" style="margin-top: 5px">
 		Il faut enregistrer le jeu avant d'ajouter des médias.
 	</div>
@@ -158,7 +158,7 @@ This file is part of phpLudoreve.
 		<script>
 		// fire this fonction when the dom is ready
 		$(document).ready(function () {
-			loadMedias(<?=$game->id_jeu?>);
+			loadMedias(<?=$game->id?>);
 		});
 		</script>
 	</div>
@@ -180,7 +180,7 @@ This file is part of phpLudoreve.
 <div class="form-group">
 	<div class="col-sm-12" align="center">
 		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la liste">
-<?php if ($game->id_jeu != 0) { ?>
+<?php if ($game->id != 0) { ?>
     	<input type="submit" class="btn btn-success" id="save_button" value="Enregistrer les changements">
 	    <input type="button" class="btn btn-danger" id="delete_button" value="Supprimer">
 <?php } else { ?>

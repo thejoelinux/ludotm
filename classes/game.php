@@ -20,7 +20,7 @@ class Game {
         $sql = "SELECT games.id, name, reference, maker, category, esar_category_id,
             comments, maker_info, content_inventory, DATE_FORMAT(aquisition_date, '%m/%d/%Y') as aquisition_date,
 			prix, players_min, players_max,
-            age_min, age_max, type, id_pret
+            age_min, age_max, type, loans.id_pret
             FROM games
                 LEFT OUTER JOIN loans ON (games.id = loans.id AND loans.is_back = 0)
             WHERE games.id = ".$id;

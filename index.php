@@ -187,10 +187,10 @@ $(document).ready(function () {
         // alert(JSON.stringify(datum)); // contains datum value, tokens and custom fields
         // outputs, e.g., {"redirect_url":"http://localhost/test/topic/test_topic","image_url":"http://localhost/test/upload/images/t_FWnYhhqd.jpg","description":"A test description","value":"A test value","tokens":["A","test","value"]}
         // in this case I created custom fields called 'redirect_url', 'image_url', 'description'   
-        if(typeof datum.id !== 'undefined') {
-            window.location.href = "index.php?o=games&a=edit&i=" + datum.id;
+        if(typeof datum.full_name !== 'undefined') {
+            window.location.href = "index.php?o=members&a=edit&i=" + datum.id;
         } else {
-            window.location.href = "index.php?o=members&a=edit&i=" + datum.id_adherent;
+            window.location.href = "index.php?o=games&a=edit&i=" + datum.id;
         }
     });
 

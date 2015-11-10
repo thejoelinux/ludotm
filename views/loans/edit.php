@@ -72,7 +72,7 @@
 <div class="form-group">
 	<div class="col-sm-12" align="center">
 		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la liste">
-<?php if ($loan->id_pret != 0) { ?>
+<?php if ($loan->id != 0) { ?>
     	<input type="button" class="btn btn-success" id="save_button" value="Enregistrer les changements">
 	    <input type="button" class="btn btn-danger" id="delete_button" value="Supprimer">
 <?php } else { ?>

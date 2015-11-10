@@ -1,29 +1,29 @@
 <?php
 
 class Game {
-	public $id_jeu;
-	public $nom, $reference, $fabricant, $categorie, $categorie_esar_id;
-	public $commentaire, $infos_fabricant, $inventaire, $date_achat, $prix;
-	public $nombre_mini, $nombre_maxi, $age_mini, $age_maxi, $type;
+	public $id;
+	public $name, $reference, $maker, $category, $esar_category_id;
+	public $comments, $maker_info, $content_inventory, $aquisition_date, $price;
+	public $players_min, $players_max, $age_min, $age_max, $game_type;
 
     // array containing the medias associated with the game
     public $medias;
 
 	public function __construct($id = 0) {
-    	if (!$this->id_jeu) {
-			$this->id_jeu = $id;
+    	if (!$this->id) {
+			$this->id = $id;
 	    }
 	}
 
     public static function fetch($id) {
-        // SQL SELECT jeu prets
-        $sql = "SELECT jeu.id_jeu, nom, reference, fabricant, categorie, categorie_esar_id,
-            commentaire, infos_fabricant, inventaire, DATE_FORMAT(date_achat, '%m/%d/%Y') as date_achat,
-			prix, nombre_mini, nombre_maxi,
-            age_mini, age_maxi, type, id_pret
-            FROM jeu
-                LEFT OUTER JOIN prets ON (jeu.id_jeu = prets.id_jeu AND prets.rendu = 0)
-            WHERE jeu.id_jeu = ".$id;
+        // SQL SELECT games prets
+        $sql = "SELECT games.id, name, reference, maker, category, esar_category_id,
+            comments, maker_info, content_inventory, DATE_FORMAT(aquisition_date, '%m/%d/%Y') as aquisition_date,
+			prix, players_min, players_max,
+            age_min, age_max, type, id_pret
+            FROM games
+                LEFT OUTER JOIN loans ON (games.id = loans.id AND loans.is_back = 0)
+            WHERE games.id = ".$id;
         $GLOBALS["data"]->select($sql, $game, "Game");
         return $game;
     }
@@ -34,12 +34,12 @@ class Game {
 			// check if there is a corresponding value in _REQUEST
 			// and the value has really changed
 			if(array_key_exists($var, $_REQUEST)) {
-				if($var == "date_achat") {
+				if($var == "aquisition_date") {
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				if($_REQUEST[$var] != $value) {
 					$this->$var = $_REQUEST[$var];
-					if($var == "date_achat") {
+					if($var == "aquisition_date") {
 						$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 					}
 					$update_sql .= " $var = '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";
@@ -48,9 +48,9 @@ class Game {
 			}
 		}
 		if($update_sql != "") {
-			// SQL UPDATE jeu
-			$sql = " UPDATE jeu SET ".substr($update_sql, 0, -1)."
-				WHERE id_jeu = ".$this->id_jeu;
+			// SQL UPDATE games
+			$sql = " UPDATE games SET ".$update_sql." updated_at = now()
+				WHERE id = ".$this->id;
         	return $GLOBALS["data"]->update($sql);
 		}
 	}
@@ -61,11 +61,11 @@ class Game {
 			// check if there is a corresponding value in _REQUEST
 			// and the value is not empty
 			if(array_key_exists($var, $_REQUEST) && $_REQUEST[$var] != "") {
-				if($var == "date_achat") {
+				if($var == "aquisition_date") {
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				$this->$var = $_REQUEST[$var];
-				if($var == "date_achat") {
+				if($var == "aquisition_date") {
 					$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 				}
 				$fields_sql .= " $var,";
@@ -73,10 +73,10 @@ class Game {
 				// DEBUG echo "REQ : ".$_REQUEST[$var]." != OBJ : ".$value."<br>";
 			}
 		}
-		// SQL INSERT jeu
-		$sql = " INSERT INTO jeu (".substr($fields_sql, 0, -1).")
-			VALUES (".substr($datas_sql, 0, -1).")";
-		return $this->id_jeu = $GLOBALS["data"]->insert($sql);	
+		// SQL INSERT games
+		$sql = " INSERT INTO games (".$fields_sql.", created_at, updated_at)
+			VALUES (".$datas_sql." now(), now())";
+		return $this->id = $GLOBALS["data"]->insert($sql);	
 	}
 
     public function render_json() {
@@ -86,20 +86,19 @@ class Game {
 	// probably not used - done in javascript on the edit view for the game
     public function fetch_medias() {
         $this->medias = array();
-		Media::fetch_all($this->medias, $this->id_jeu);
+		Media::fetch_all($this->medias, $this->id);
         return sizeof($this->medias);
     }
 
     public static function fetch_all(&$games) {
         $games = array();
-        $sql = "SELECT jeu.id_jeu, nom, 
-            CONCAT (categorie_esar.label, ' - ', categorie_esar.name) AS label,
-            id_pret as etat_pret
-
-            FROM jeu
-                LEFT OUTER JOIN categorie_esar ON jeu.categorie_esar_id = categorie_esar.id
-                LEFT OUTER JOIN prets ON (jeu.id_jeu = prets.id_jeu AND date_retour > curdate())
-            ORDER BY nom"; 
+        $sql = "SELECT games.id, nom, 
+            CONCAT (esar_categories.label, ' - ', esar_categories.name) AS label,
+            loans.id as loan_status
+            FROM games
+                LEFT OUTER JOIN esar_categories ON games.esar_category_id = esar_categories.id
+                LEFT OUTER JOIN loans ON (games.id = loans.id AND end_date > curdate())
+            ORDER BY name"; 
         $GLOBALS["data"]->select($sql, $games, "Game");
         return sizeof($games);
     }

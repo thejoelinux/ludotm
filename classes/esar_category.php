@@ -11,8 +11,9 @@ class Esar_Category {
 
 	public static function fetch_all(&$esar_categories, $fields = false) {
         $esar_categories = array();
+		// SQL SELECT esar_categories
         $sql = "SELECT id, name, label 
-            FROM categorie_esar
+            FROM esar_categories
             ORDER BY label"; 
         $GLOBALS["data"]->select($sql, $esar_categories, "Esar_Category");
         return sizeof($esar_categories);

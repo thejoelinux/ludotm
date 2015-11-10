@@ -25,7 +25,7 @@ switch($_REQUEST["a"]) {
 		if($_REQUEST["a"] == "create") {
 			$game->create();
 		}
-		$_REQUEST["i"] = $game->id_jeu;
+		$_REQUEST["i"] = $game->id;
 		$render = "games/edit";
 	break;
 
@@ -33,7 +33,7 @@ switch($_REQUEST["a"]) {
 	case "edit":
 		try {
             $game = Game::fetch($data->db_escape_string($_REQUEST["i"]));
-			if($game->id_jeu != 0) {
+			if($game->id != 0) {
 				if($_REQUEST["a"] == "update") {
 					$game->update();
 					$_REQUEST["a"] = "edit";
@@ -61,7 +61,7 @@ switch($_REQUEST["a"]) {
 
 		try {
             $game = Game::fetch($data->db_escape_string($_REQUEST["i"]));
-			if($game->id_jeu != 0) {
+			if($game->id != 0) {
 				$_REQUEST["a"] = "confirm_delete";
 				$render = "games/confirm_delete";
 			} else {

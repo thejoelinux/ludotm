@@ -25,7 +25,7 @@ switch($_REQUEST["a"]) {
 		if($_REQUEST["a"] == "create") {
 			$member->create();
 		}
-		$_REQUEST["i"] = $member->id_adherent;
+		$_REQUEST["i"] = $member->id;
 		$render = "members/edit";
 	break;
 
@@ -33,7 +33,7 @@ switch($_REQUEST["a"]) {
 	case "edit":
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
-			if($member->id_adherent != 0) {
+			if($member->id != 0) {
 				if($_REQUEST["a"] == "update") {
 					$member->update();
 					$_REQUEST["a"] = "edit";
@@ -62,7 +62,7 @@ switch($_REQUEST["a"]) {
 	case "loans":
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
-			if($member->id_adherent != 0) {
+			if($member->id != 0) {
 				$member->fetch_loans();
                 $render = "members/loans";
 			} else {
@@ -75,8 +75,8 @@ switch($_REQUEST["a"]) {
 
 	case "create_loan":
 		try {
-            $member = Member::fetch($data->db_escape_string($_REQUEST["id_adherent"]));
-			if($member->id_adherent != 0) {
+            $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($member->id != 0) {
 				$member->create_loan();
 				$member->fetch_loans();
                 $render = "members/loans";
@@ -91,7 +91,7 @@ switch($_REQUEST["a"]) {
 	case "update_loan":
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["member_id"]));
-			if($member->id_adherent != 0) {
+			if($member->id != 0) {
 				$member->update_loan();
 				$member->fetch_loans();
                 $render = "members/loans";
@@ -106,7 +106,7 @@ switch($_REQUEST["a"]) {
 	case "subscriptions":
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
-			if($member->id_adherent != 0) {
+			if($member->id != 0) {
 				$member->fetch_subscriptions();
                 $render = "members/subscriptions";
 			} else {
@@ -120,7 +120,7 @@ switch($_REQUEST["a"]) {
 	case "create_subscription":
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["member_id"]));
-			if($member->id_adherent != 0) {
+			if($member->id != 0) {
 				$member->create_subscription();
 				$member->fetch_subscriptions();
                 $render = "members/subscriptions";
@@ -135,7 +135,7 @@ switch($_REQUEST["a"]) {
 	case "update_subscription":
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["member_id"]));
-			if($member->id_adherent != 0) {
+			if($member->id != 0) {
 				$member->update_subscription();
 				$member->fetch_subscriptions();
                 $render = "members/subscriptions";

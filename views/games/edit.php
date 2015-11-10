@@ -22,9 +22,9 @@ This file is part of phpLudoreve.
 		<h4><!--  class="panel-title" -->
   		<span class="glyphicon glyphicon-knight" style="margin-right: 10px" ></span>
 	<?php if($game->id_jeu != 0) { ?>
-		<?=$game->nom?>
+		<?=$game->name?>
 		<small>
-		<?php if($game->id_pret) { ?>
+		<?php if($game->loan_id) { ?>
 		(INDISPONIBLE) FIXME : lien vers pret en cours
 		<?php } else { ?>
 		(DISPONIBLE)
@@ -38,9 +38,9 @@ This file is part of phpLudoreve.
   <div class="panel-body">
 
 <div class="form-group">
-    <label class="control-label col-sm-2" for="nom">Nom</label>
+    <label class="control-label col-sm-2" for="lastname">Nom</label>
     <div class="col-sm-10">
-        <input type="text" id="nom" name="nom" class="form-control" value="<?=$game->nom?>"/>
+        <input type="text" id="lastname" name="lastname" class="form-control" value="<?=$game->nom?>"/>
     </div>
 </div>
 <div class="form-group">
@@ -48,45 +48,45 @@ This file is part of phpLudoreve.
     <div class="col-sm-4">
         <input type="text" id="reference" name="reference" class="form-control" value="<?=$game->reference?>"/>
     </div>	
-    <label class="control-label col-sm-2" for="fabricant">Fabricant</label>
+    <label class="control-label col-sm-2" for="maker">Fabricant</label>
     <div class="col-sm-4">
-        <input type="text" id="fabricant" name="fabricant" class="form-control" value="<?=$game->fabricant?>"/>
+        <input type="text" id="maker" name="maker" class="form-control" value="<?=$game->maker?>"/>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="infos_fabricant">Infos fabricant</label>
+    <label class="control-label col-sm-2" for="maker_info">Infos fabricant</label>
     <div class="col-sm-4">
-        <input type="text" id="infos_fabricant" name="infos_fabricant" class="form-control" value="<?=$game->infos_fabricant?>"/>
+        <input type="text" id="maker_info" name="maker_info" class="form-control" value="<?=$game->maker_info?>"/>
     </div>
-    <label class="control-label col-sm-2" for="prix">Prix</label>
+    <label class="control-label col-sm-2" for="price">Prix</label>
     <div class="col-sm-4">
-        <input type="text" id="prix" name="prix" class="form-control" value="<?=$game->prix?>"/>
+        <input type="text" id="price" name="price" class="form-control" value="<?=$game->price?>"/>
     </div>
 </div>
  <div class="form-group">
-    <label class="control-label col-sm-2" for="categorie">Catégorie</label>
+    <label class="control-label col-sm-2" for="category">Catégorie</label>
     <div class="col-sm-4">
-        <input type="text" id="categorie" name="categorie" class="form-control" value="<?=$game->categorie?>"/>
+        <input type="text" id="category" name="category" class="form-control" value="<?=$game->category?>"/>
     </div>
-    <label class="control-label col-sm-2" for="categorie_esar_id">Catégorie ESAR</label>
+    <label class="control-label col-sm-2" for="esar_category_id">Catégorie ESAR</label>
     <div class="col-sm-4">
-        <select id="categorie_esar_id" name="categorie_esar_id" class="form-control">
+        <select id="esar_category_id" name="esar_category_id" class="form-control">
 		</select>
 		<script>
-		$('#categorie_esar_id').html('<option value="">Loading...</option>');
+		$('#esar_category_id').html('<option value="">Loading...</option>');
 		$.ajax({url: 'api.php?o=esar_categories&a=list',
              success: function(output) {
 				var html = '';
 				$.each(output, function(key, val){
 				  html = html + '<option value="' + val.id + '"'
-				  		+ (val.id == <?=(int)$game->categorie_esar_id?> ? ' selected ' : '' ) + '>'
+				  		+ (val.id == <?=(int)$game->esar_category_id?> ? ' selected ' : '' ) + '>'
 						+ val.label + ' - ' + val.name + '</option>';
 				});
-                $('#categorie_esar_id').html(html);
+                $('#esar_category_id').html(html);
             },
           error: function (xhr, ajaxOptions, thrownError) {
 		  	// well, that's weird, ok :)
-		  	$('#categorie_esar_id').html('<option value="">' + xhr.status + ' ' + thrownError + '</option>');
+		  	$('#esar_category_id').html('<option value="">' + xhr.status + ' ' + thrownError + '</option>');
             // alert(xhr.status + " " + thrownError);
           }});
 		</script>

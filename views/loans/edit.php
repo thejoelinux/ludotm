@@ -2,73 +2,73 @@
   <div class="panel-heading">
 		<h4><!--  class="panel-title" -->
   		<span class="glyphicon glyphicon-th-list" style="margin-right: 10px" ></span>
-		<?=($loan->id_pret != 0) ? $loan->member_name." - Emprunt du ".$loan->date_pret : "Nouvel emprunt"?>
+		<?=($loan->id != 0) ? $loan->member_name." - Emprunt du ".$loan->start_date : "Nouvel emprunt"?>
 		</h4>
   </div>
   <div class="panel-body">
 
 <div class="form-group">
-    <label class="control-label col-sm-2" for="date_pret">Début</label>
+    <label class="control-label col-sm-2" for="start_date">Début</label>
     <div class="col-sm-4">
-		<div class='input-group date' id='date_prettimepicker'>
-        	<input type="text" id="date_pret" name="date_pret" class="form-control"/>
+		<div class='input-group date' id='start_datetimepicker'>
+        	<input type="text" id="start_date" name="start_date" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
 			</span>
 		</div>
 		<script type="text/javascript">
             $(function () {
-                $('#date_prettimepicker').datetimepicker({
+                $('#start_datetimepicker').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($loan->date_pret != ""
-						? "'".$loan->date_pret."'" : "")?>)
+					defaultDate: new Date(<?=($loan->start_date != ""
+						? "'".$loan->start_date."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
-           			 $('#date_pret') = ev.format();
+           			 $('#start_date') = ev.format();
 		        });
             });
         </script>
     </div> 
 	<!-- TODO : these are dependant fields -->
-	<label class="control-label col-sm-2" for="date_retour">Fin</label>
+	<label class="control-label col-sm-2" for="end_date">Fin</label>
     <div class="col-sm-4">
-		<div class='input-group date' id='date_retourtimepicker'>
-        	<input type="text" id="date_retour" name="date_retour" class="form-control"/>
+		<div class='input-group date' id='end_datetimepicker'>
+        	<input type="text" id="end_date" name="end_date" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
 			</span>
 		</div>
 		<script type="text/javascript">
             $(function () {
-                $('#date_retourtimepicker').datetimepicker({
+                $('#end_datetimepicker').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($loan->date_retour != ""
-						? "'".$loan->date_retour."'" : "")?>)
+					defaultDate: new Date(<?=($loan->end_date != ""
+						? "'".$loan->end_date."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
-           			 $('#date_retour') = ev.format();
+           			 $('#end_date') = ev.format();
 		        });
             });
         </script>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="id_jeu">Jeu</label>
+    <label class="control-label col-sm-2" for="game_id">Jeu</label>
     <div class="col-sm-4">
-	    <input type="hidden" name="id_jeu" id="id_jeu" value="">
+	    <input type="hidden" name="game_id" id="game_id" value="">
 	    <div id="search-games" >
 			<input class="typeahead form-control" type="text" placeholder="Jeu...">
 		</div>
     </div>
-	<label class="control-label col-sm-2" for="rendu">Rendu ?</label>
+	<label class="control-label col-sm-2" for="is_back">Rendu ?</label>
     <div class="col-sm-1">
-        <input type="checkbox" id="rendu" name="rendu" class="form-control" 
-			<?=($loan->rendu ? "checked" : "")?>/>
+        <input type="checkbox" id="is_back" name="is_back" class="form-control" 
+			<?=($loan->is_back ? "checked" : "")?>/>
     </div>
 </div>
-<input type="hidden" name="id_adherent" id="id_adherent" value="<?=$loan->member_id?>">
+<input type="hidden" name="member_id" id="member_id" value="<?=$loan->member_id?>">
 <div class="form-group">
 	<div class="col-sm-12" align="center">
 		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la liste">
@@ -88,7 +88,7 @@
 <script>
 // buttons events
 $('#save_button').click(function(){
-    if(document.defaultform.date_pret.value == 0) {
+    if(document.defaultform.start_date.value == 0) {
         alert ("Vous n'avez pas saisi de date de début !");
         return false;
     }
@@ -104,7 +104,7 @@ $('#save_button').click(function(){
     return true;
 });
 $('#delete_button').click(function(){
-	var msg = 'Voulez-vous réellement supprimer une loan ?\n' + 
+	var msg = 'Voulez-vous réellement supprimer un emprunt ?\n' + 
 		'Cette action n\'est possible qu\'en cas d\'erreur de saisie.\n';
 	if(confirm(msg)) {
 		$('#a').val('delete_loan');

@@ -155,11 +155,11 @@ $(document).ready(function () {
     },
     {
       name: 'games',
-      display: 'nom',
+      display: 'name',
       source: games
     }).bind('typeahead:selected', function(obj, datum, name) {      
-        if(typeof datum.id_jeu !== 'undefined') {
-            $('#id_jeu').val(datum.id_jeu);
+        if(typeof datum.id !== 'undefined') {
+            $('#id').val(datum.id);
         }
     });
 
@@ -176,7 +176,7 @@ $(document).ready(function () {
     },
     {
       name: 'games',
-      display: 'nom',
+      display: 'name',
       source: games,
       templates: {
         header: '<h3 class="category-name">Jeux</h3>'
@@ -187,8 +187,8 @@ $(document).ready(function () {
         // alert(JSON.stringify(datum)); // contains datum value, tokens and custom fields
         // outputs, e.g., {"redirect_url":"http://localhost/test/topic/test_topic","image_url":"http://localhost/test/upload/images/t_FWnYhhqd.jpg","description":"A test description","value":"A test value","tokens":["A","test","value"]}
         // in this case I created custom fields called 'redirect_url', 'image_url', 'description'   
-        if(typeof datum.id_jeu !== 'undefined') {
-            window.location.href = "index.php?o=games&a=edit&i=" + datum.id_jeu;
+        if(typeof datum.id !== 'undefined') {
+            window.location.href = "index.php?o=games&a=edit&i=" + datum.id;
         } else {
             window.location.href = "index.php?o=members&a=edit&i=" + datum.id_adherent;
         }

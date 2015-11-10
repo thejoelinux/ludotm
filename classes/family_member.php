@@ -1,7 +1,7 @@
 <?php
 
 class Family_Member {
-	public $id, $id_adherent, $firstname, $lastname, $birthdate, $link_id, $link_name;
+	public $id, $member_id, $firstname, $lastname, $birth_date, $link_id, $link_name;
 
 	public function __construct($id = 0)
   	{
@@ -14,16 +14,16 @@ class Family_Member {
 	public static function fetch_all(&$family_members, $member_id) {
         $family_members = array();
 		// SQL SELECT family_members
-        $sql = " SELECT id, firstname, lastname, birthdate, link_id
+        $sql = " SELECT id, firstname, lastname, birth_date, link_id
             FROM family_members
-            WHERE id_adherent = ".$member_id;
+            WHERE member_id = ".$member_id;
         $GLOBALS["data"]->select($sql, $family_members, "Family_Member", true);
         return sizeof($family_members);
     }
 
 	public static function delete($id) {
 		// SQL SELECT family_members
-		$sql = " SELECT id_adherent
+		$sql = " SELECT member_id
 			FROM family_members
 			WHERE id = $id ";
 		$GLOBALS["data"]->select($sql, $rset);
@@ -32,18 +32,18 @@ class Family_Member {
 			$sql = " DELETE FROM family_members
 				WHERE id = $id ";
 			$GLOBALS["data"]->delete($sql);
-			return $rset->value("id_adherent");
+			return $rset->value("member_id");
 		}
 		return false;
 	}
 
-	public function create($firstname, $lastname, $birthdate, $link_id) {
+	public function create($firstname, $lastname, $birth_date, $link_id) {
 		// date transformation from displayable to database
-		$birthdate = date_format(date_create_from_format('d-m-Y', $birthdate),'Y-m-d');
+		$birth_date = date_format(date_create_from_format('d-m-Y', $birth_date),'Y-m-d');
 		// SQL INSERT family_members
-		$sql = " INSERT INTO family_members (firstname, lastname, birthdate, 
-						link_id, id_adherent)
-				VALUES ('".$firstname."', '".$lastname."', '".$birthdate."',
+		$sql = " INSERT INTO family_members (firstname, lastname, birth_date, 
+						link_id, member_id)
+				VALUES ('".$firstname."', '".$lastname."', '".$birth_date."',
 					'".$link_id."', ".$_REQUEST["i"].")";
 		return $this->id = $GLOBALS["data"]->insert($sql);
 	}

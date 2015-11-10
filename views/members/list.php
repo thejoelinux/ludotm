@@ -21,10 +21,10 @@
 while(list($key, $val) = each($members)) { ?>
 	<tr>
 		<td>
-			<a href="index.php?o=members&a=edit&i=<?=$val->id_adherent?>"><?=$val->nom?> <?=$val->prenom?></a>
+			<a href="index.php?o=members&a=edit&i=<?=$val->id?>"><?=$val->lastname?> <?=$val->firstname?></a>
 		</td>
 		<td>
-			<?=$val->cp_ville?>
+			<?=$val->po_town?>
 		</td>
 		<td>
             FIXME

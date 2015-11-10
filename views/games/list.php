@@ -21,13 +21,13 @@
 while(list($key, $val) = each($games)) { ?>
 	<tr>
 		<td>
-			<a href="index.php?o=games&a=edit&i=<?=$val->id_jeu?>"><?=$val->nom?></a>
+			<a href="index.php?o=games&a=edit&i=<?=$val->id?>"><?=$val->name?></a>
 		</td>
 		<td>
 			<?=$val->label?>
 		</td>
 		<td>
-			<?=($val->etat_pret == "") ? "Libre" : "Emprunte"?>
+			<?=($val->loan_status == "") ? "Libre" : "Emprunte"?>
 		</td>
 	</tr>
 <?php } ?>

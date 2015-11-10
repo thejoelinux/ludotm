@@ -1,18 +1,18 @@
 <?php
 
 class Member {
-	public $id_adherent;
-	public $nom, $prenom, $date_inscription, $date_naissance, $adresse, $cp_ville;
-	public $tel_maison, $tel_travail, $tel_mobile, $tel_fax, $commentaire;
-	public $num_adherent, $membership_type_id, $adhesion, $email, $newsletter, $autres, $caution;
+	public $id;
+	public $lastname, $firstname, $subscribe_date, $birth_date, $address, $po_town;
+	public $home_phone, $work_phone, $mobile_phone, $fax_phone, $comments;
+	public $member_ref, $membership_type_id, $subscription_label, $email, $newsletter, $other_members, $deposit;
 
 	public $family_links;
 
 	public $subscriptions, $loans;
 
 	public function __construct($id = 0) {
-    	if (!$this->id_adherent) {
-			$this->id_adherent = $id;
+    	if (!$this->id) {
+			$this->id = $id;
 	    }
 		$this->family_links = array(
 			1 => "Enfant",
@@ -40,11 +40,11 @@ class Member {
 			// check if there is a corresponding value in _REQUEST
 			// and the value is not empty
 			if(array_key_exists($var, $_REQUEST) && $_REQUEST[$var] != "") {
-				if($var == "date_naissance" || $var == "date_inscription") {
+				if($var == "birth_date" || $var == "date_inscription") {
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				$this->$var = $_REQUEST[$var];
-				if($var == "date_naissance" || $var == "date_inscription") {
+				if($var == "birth_date" || $var == "date_inscription") {
 					$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 				}
 				$fields_sql .= " $var,";
@@ -52,10 +52,10 @@ class Member {
 				// DEBUG echo "REQ : ".$_REQUEST[$var]." != OBJ : ".$value."<br>";
 			}
 		}
-		// SQL INSERT adherent
-		$sql = " INSERT INTO adherent (".substr($fields_sql, 0, -1).")
+		// SQL INSERT members
+		$sql = " INSERT INTO members (".substr($fields_sql, 0, -1).")
 			VALUES (".substr($datas_sql, 0, -1).")";
-		return $this->id_adherent = $GLOBALS["data"]->insert($sql);	
+		return $this->id = $GLOBALS["data"]->insert($sql);	
 	}
 
 	public function update() {
@@ -64,12 +64,12 @@ class Member {
 			// check if there is a corresponding value in _REQUEST
 			// and the value has really changed
 			if(array_key_exists($var, $_REQUEST)) {
-				if($var == "date_naissance" || $var == "date_inscription") {
+				if($var == "birth_date" || $var == "date_inscription") {
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				if($_REQUEST[$var] != $value) {
 					$this->$var = $_REQUEST[$var];
-					if($var == "date_naissance" || $var == "date_inscription") {
+					if($var == "birth_date" || $var == "date_inscription") {
 						$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 					}
 					$update_sql .= " $var = '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";
@@ -78,26 +78,26 @@ class Member {
 			}
 		}
 		if($update_sql != "") {
-			// SQL UPDATE adherent
-			$sql = " UPDATE adherent SET ".substr($update_sql, 0, -1)."
-				WHERE id_adherent = ".$this->id_adherent;
+			// SQL UPDATE members
+			$sql = " UPDATE members SET ".substr($update_sql, 0, -1)."
+				WHERE id = ".$this->id;
         	return $GLOBALS["data"]->update($sql);
 		}
 	}
 
     public static function fetch($id) {
-        // SQL SELECT adherent
-        $sql = "SELECT id_adherent, nom, prenom, date_inscription, date_naissance, adresse, cp_ville,
-            tel_maison, tel_travail, tel_mobile, tel_fax, commentaire, num_adherent, membership_type_id,
-            adhesion, email, newsletter, autres, caution, CONCAT(nom, ' ', prenom) AS full_name
-            FROM adherent
-            WHERE id_adherent = ".$id;
+        // SQL SELECT members
+        $sql = "SELECT id, firstname, lastname, subscribe_date, birth_date, address, po_town,
+            home_phone, work_phone, mobile_phone, fax_phone, comments, member_ref, membership_type_id,
+            subscription_label, email, newsletter, other_members, deposit, CONCAT(lastname, ' ', firstname) AS full_name
+            FROM members
+            WHERE id = ".$id;
         $GLOBALS["data"]->select($sql, $member, "Member");
         return $member;
     }
 
 	public function fetch_subscriptions() {
-		Subscription::fetch_all($this->subscriptions, $this->id_adherent);
+		Subscription::fetch_all($this->subscriptions, $this->id);
 	}
 
 	public function create_subscription() {
@@ -111,7 +111,7 @@ class Member {
 	}
 
 	public function fetch_loans() {
-		Loan::fetch_all($this->loans, $this->id_adherent);
+		Loan::fetch_all($this->loans, $this->id);
 	}
 
 	public function create_loan() {
@@ -139,10 +139,10 @@ class Member {
 
     public static function fetch_all(&$members) {
         $members = array();
-        // SQL SELECT adherent
-        $sql = "SELECT id_adherent, nom, prenom, cp_ville, CONCAT(nom, ' ', prenom) AS full_name
-            FROM adherent
-            ORDER BY nom"; 
+        // SQL SELECT members
+        $sql = "SELECT id, lastname, firstname, po_town, CONCAT(firstname, ' ', lastname) AS full_name
+            FROM members
+            ORDER BY lastname"; 
         $GLOBALS["data"]->select($sql, $members, "Member");
         return sizeof($members);
     }

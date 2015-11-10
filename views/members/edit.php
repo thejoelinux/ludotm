@@ -20,27 +20,27 @@ This file is part of phpLudoreve.
 <div class="panel panel-default">
   <div class="panel-heading">
   		<h4><span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
-	<?=($member->id_adherent != 0) ? $member->nom." ".$member->prenom : "Nouvel adhérent"?>
+	<?=($member->id != 0) ? $member->lastname." ".$member->firstname : "Nouvel adhérent"?>
 		
 		</h4>
   </div>
   <div class="panel-body">
 
 <div class="form-group">
-    <label class="control-label col-sm-2" for="nom">Nom</label>
+    <label class="control-label col-sm-2" for="lastname">Nom</label>
     <div class="col-sm-4">
-        <input type="text" id="nom" name="nom" class="form-control" value="<?=$member->nom?>"/>
+        <input type="text" id="lastname" name="lastname" class="form-control" value="<?=$member->lastname?>"/>
     </div>
-    <label class="control-label col-sm-2" for="prenom">Prénom</label>
+    <label class="control-label col-sm-2" for="firstname">Prénom</label>
     <div class="col-sm-4">
-        <input type="text" id="prenom" name="prenom" class="form-control" value="<?=$member->prenom?>"/>
+        <input type="text" id="firstname" name="firstname" class="form-control" value="<?=$member->firstname?>"/>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="date_naissance">Date de naissance</label>
+    <label class="control-label col-sm-2" for="birthdate">Date de naissance</label>
     <div class="col-sm-4">
 		<div class='input-group date' id='birth_datetimepicker'>
-        	<input type="text" id="date_naissance" name="date_naissance" class="form-control"/>
+        	<input type="text" id="birthdate" name="birthdate" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
 			</span>
@@ -50,28 +50,28 @@ This file is part of phpLudoreve.
                 $('#birth_datetimepicker').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($member->date_naissance != ""
-						? "'".$member->date_naissance."'" : "")?>)
+					defaultDate: new Date(<?=($member->birthdate != ""
+						? "'".$member->birthdate."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
-           			 $('#date_naissance') = ev.format();
+           			 $('#birthdate') = ev.format();
 		        });
             });
         </script>
     </div>
-    <label class="control-label col-sm-2" for="num_adherent">Numéro adhérent</label>
+    <label class="control-label col-sm-2" for="member_ref">Numéro adhérent</label>
     <div class="col-sm-4">
-        <input type="text" id="num_adherent" name="num_adherent" class="form-control" value="<?=$member->num_adherent?>"/>
+        <input type="text" id="member_ref" name="member_ref" class="form-control" value="<?=$member->member_ref?>"/>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="adresse">Adresse</label>
+    <label class="control-label col-sm-2" for="address">Adresse</label>
     <div class="col-sm-4">
-        <textarea id="adresse" name="adresse" class="form-control" rows="2"><?=$member->adresse?></textarea>
+        <textarea id="address" name="address" class="form-control" rows="2"><?=$member->adresse?></textarea>
     </div>
-    <label class="control-label col-sm-2" for="cp_ville">Code postal - Ville</label>
+    <label class="control-label col-sm-2" for="po_town">Code postal - Ville</label>
     <div class="col-sm-4">
-        <input type="text" id="cp_ville" name="cp_ville" class="form-control" value="<?=$member->cp_ville?>"/>
+        <input type="text" id="po_town" name="po_town" class="form-control" value="<?=$member->po_town?>"/>
     </div>
 	<!-- TODO auto complete on the existing values -->
 </div>
@@ -87,28 +87,28 @@ This file is part of phpLudoreve.
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="tel_maison">Tél. maison</label>
+    <label class="control-label col-sm-2" for="home_phone">Tél. maison</label>
     <div class="col-sm-4">
-        <input type="text" id="tel_maison" name="tel_maison" class="form-control" value="<?=$member->tel_maison?>">
+        <input type="text" id="home_phone" name="home_phone" class="form-control" value="<?=$member->home_phone?>">
     </div>
-    <label class="control-label col-sm-2" for="tel_travail">Tél. travail</label>
+    <label class="control-label col-sm-2" for="work_phone">Tél. travail</label>
     <div class="col-sm-4">
-        <input type="text" id="tel_travail" name="tel_travail" class="form-control" value="<?=$member->tel_travail?>"/>
+        <input type="text" id="work_phone" name="work_phone" class="form-control" value="<?=$member->work_phone?>"/>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="tel_mobile">Tél. mobile</label>
+    <label class="control-label col-sm-2" for="mobile_phone">Tél. mobile</label>
     <div class="col-sm-4">
-        <input type="text" id="tel_mobile" name="tel_mobile" class="form-control" value="<?=$member->tel_mobile?>">
+        <input type="text" id="mobile_phone" name="mobile_phone" class="form-control" value="<?=$member->mobile_phone?>">
     </div>
-    <label class="control-label col-sm-2" for="tel_fax">Fax</label>
+    <label class="control-label col-sm-2" for="fax_phone">Fax</label>
     <div class="col-sm-4">
-        <input type="text" id="tel_fax" name="tel_fax" class="form-control" value="<?=$member->tel_fax?>"/>
+        <input type="text" id="fax_phone" name="fax_phone" class="form-control" value="<?=$member->fax_phone?>"/>
     </div>
 </div>
 <div class="form-group">
     <label class="control-label col-sm-2" for="member_subscription">Adhesion</label>
-	<?php if ($member->id_adherent == 0) { ?>
+	<?php if ($member->id == 0) { ?>
 	<div class="col-sm-10" style="margin-top: 5px">
 		Il faut enregistrer l'adhérent avant de pouvoir enregistrer des adhésions et des emprunts.
 	</div>
@@ -135,10 +135,10 @@ This file is part of phpLudoreve.
 	<?php } ?>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="date_inscription">Date d'inscription</label>
+    <label class="control-label col-sm-2" for="subscribe_date">Date d'inscription</label>
     <div class="col-sm-4">
 		<div class='input-group date' id='inscription_datetimepicker'>
-        	<input type="text" id="date_inscription" name="date_inscription" class="form-control"/>
+        	<input type="text" id="subscribe_date" name="subscribe_date" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
 			</span>
@@ -148,11 +148,11 @@ This file is part of phpLudoreve.
                 $('#inscription_datetimepicker').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($member->date_inscription != ""
-						? "'".$member->date_inscription."'" : "")?>)
+					defaultDate: new Date(<?=($member->subscribe_date != ""
+						? "'".$member->subscribe_date."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
-           			 $('#date_inscription') = ev.format();
+           			 $('#subscribe_date') = ev.format();
 		        });
             });
         </script>
@@ -162,7 +162,7 @@ This file is part of phpLudoreve.
 </div>
 <div class="form-group">
 	<label class="control-label col-sm-2" for="family_members">Membres de la famille</label>
-<?php if ($member->id_adherent == 0) { ?>
+<?php if ($member->id == 0) { ?>
 	<div class="col-sm-10" style="margin-top: 5px">
 		Il faut enregistrer l'adhérent avant d'ajouter des membres de la famille.
 	</div>
@@ -173,7 +173,7 @@ This file is part of phpLudoreve.
 		<script>
 		// fire this fonction when the dom is ready
 		$(document).ready(function () {
-			loadFamilyMembers(<?=$member->id_adherent?>);
+			loadFamilyMembers(<?=$member->id?>);
 		});
 		</script>
 	</div>
@@ -226,22 +226,22 @@ This file is part of phpLudoreve.
 <?php } ?>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="commentaire">Commentaire</label>
+    <label class="control-label col-sm-2" for="comments">Commentaire</label>
     <div class="col-sm-10">
-        <textarea id="commentaire" name="commentaire" class="form-control" rows="4"><?=$member->commentaire?></textarea>
+        <textarea id="comments" name="comments" class="form-control" rows="4"><?=$member->comments?></textarea>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="autres">Autres personnes</label>
+    <label class="control-label col-sm-2" for="other_members">Autres personnes</label>
     <div class="col-sm-10">
-        <textarea id="autres" name="autres" class="form-control" rows="4"><?=$member->autres?></textarea>
+        <textarea id="other_members" name="other_members" class="form-control" rows="4"><?=$member->other_members?></textarea>
     </div>
 </div>
 
 <div class="form-group">
 	<div class="col-sm-12" align="center">
 		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la liste">
-<?php if ($member->id_adherent != 0) { ?>
+<?php if ($member->id != 0) { ?>
     	<input type="button" class="btn btn-success" id="save_button" value="Enregistrer les changements">
 	    <input type="button" class="btn btn-danger" id="delete_button" value="Supprimer">
 <?php } else { ?>
@@ -257,7 +257,7 @@ This file is part of phpLudoreve.
 <script>
 // buttons events
 $('#save_button').click(function(){
-    if(document.defaultform.nom.value == 0) {
+    if(document.defaultform.lastname.value == 0) {
         alert ("Vous n'avez pas saisi de nom!");
         return false;
     }

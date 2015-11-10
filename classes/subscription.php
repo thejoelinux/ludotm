@@ -34,13 +34,13 @@ class Subscription {
 	public static function fetch_all(&$subscriptions, $member_id) {
         $subscriptions = array();
 		// SQL SELECT subscriptions adherent membership_types payment_methods
-        $sql = " SELECT ms.id, start_date, end_date, ms.member_id, CONCAT(a.nom, ' ', a.prenom) as member_name,
+        $sql = " SELECT ms.id, start_date, end_date, ms.member_id, CONCAT(m.lastname, ' ', m.firstname) as member_name,
 				ms.membership_type_id, mt.name as membership_type_name,
 				ms.payment_method_id, pm.name as payment_method_name,
 				ms.price, credit, ms.comments, ms.created_at, ms.updated_at
-            FROM subscriptions ms, adherent a, membership_types mt, payment_methods pm
+            FROM subscriptions ms, members m, membership_types mt, payment_methods pm
             WHERE member_id = ".$member_id."
-				AND ms.member_id = a.id_adherent
+				AND ms.member_id = m.id
 				AND ms.membership_type_id = mt.id
 				AND ms.payment_method_id = pm.id
 				ORDER BY end_date

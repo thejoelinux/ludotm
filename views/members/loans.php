@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">
   		<h4><span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
-			<?=$member->nom." ".$member->prenom." - Emprunts"?>
+			<?=$member->lastname." ".$member->firstname." - Emprunts"?>
 		</h4>
   </div>
   <div class="panel-body">
@@ -25,15 +25,15 @@
 	<?php } else { while(list($key, $val) = each($member->loans)) { ?>
 	<tr>
 		<td><?=$val->game_name?></td>
-		<td><?=$val->date_pret?></td>
-		<td><?=$val->date_retour?></td>
-		<td><?=$val->rendu?></td>
+		<td><?=$val->start_date?></td>
+		<td><?=$val->end_date?></td>
+		<td><?=$val->is_back?></td>
 		<td>
-			<a href="index.php?o=loans&a=edit&i=<?=$val->id_pret?>">
+			<a href="index.php?o=loans&a=edit&i=<?=$val->idt?>">
 				<button type="button" class="btn btn-default btn-sm">
 				  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 			</a>
-			<a onClick="if(confirm('Êtes vous sur ?')) { set_value('a', 'delete_loan'); set_value('i', '<?=$val->id_pret?>'); defaultform.submit()}" href="#">
+			<a onClick="if(confirm('Êtes vous sur ?')) { set_value('a', 'delete_loan'); set_value('i', '<?=$val->id?>'); defaultform.submit()}" href="#">
 				<button type="button" class="btn btn-danger btn-sm">
 				  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 			</a>
@@ -59,6 +59,6 @@
 $('#back_button').click(function(){
 	// TODO this function should verify that the object has not been modified
 	// and if yes, ask for confirmation from the user.
-	window.location.href='index.php?o=members&a=edit&i=<?=$member->id_adherent?>';
+	window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
 });
 </script>

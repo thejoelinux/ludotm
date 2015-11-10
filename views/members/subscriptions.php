@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">
   		<h4><span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
-			<?=$member->nom." ".$member->prenom." - Adhésions"?>
+			<?=$member->lastname." ".$member->firstname." - Adhésions"?>
 		</h4>
   </div>
   <div class="panel-body">
@@ -65,6 +65,6 @@
 $('#back_button').click(function(){
 	// TODO this function should verify that the object has not been modified
 	// and if yes, ask for confirmation from the user.
-	window.location.href='index.php?o=members&a=edit&i=<?=$member->id_adherent?>';
+	window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
 });
 </script>

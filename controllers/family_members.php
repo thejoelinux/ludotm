@@ -22,12 +22,12 @@ switch($_REQUEST["a"]) {
 	case "add": // for API
 		$family_member = new Family_Member();
 		if($_REQUEST["fm_firstname"] != "" && $_REQUEST["fm_lastname"] != ""
-			&& $_REQUEST["fm_birthdate"] != "" && $_REQUEST["fm_link_id"] != "") {
+			&& $_REQUEST["fm_birth_date"] != "" && $_REQUEST["fm_link_id"] != "") {
 			try {
 				$family_member->create(
 					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_firstname"]), 
 					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_lastname"]),
-					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_birthdate"]), 
+					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_birth_date"]), 
 					$GLOBALS["data"]->db_escape_string($_REQUEST["fm_link_id"]));
 
 				$render = "json/list";

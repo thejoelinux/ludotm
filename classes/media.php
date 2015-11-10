@@ -12,18 +12,18 @@ class Media {
 
 	public static function fetch_all(&$medias, $game_id) {
         $medias = array();
-		// SQL SELECT medias media_type
+		// SQL SELECT medias media_types
         $sql = " SELECT m.id, m.description, m.media_type_id, m.file, mt.mime_type
             FROM medias m
 				LEFT OUTER JOIN media_types mt ON (m.media_type_id = mt.id)
-            WHERE id_jeu = ".$game_id;
+            WHERE game_id = ".$game_id;
         $GLOBALS["data"]->select($sql, $medias, "Media", true);
         return sizeof($medias);
     }
 
 	public static function delete($id) {
 		// SQL SELECT medias
-		$sql = " SELECT file, id_jeu
+		$sql = " SELECT file, game_id
 			FROM medias
 			WHERE id = $id ";
 		$GLOBALS["data"]->select($sql, $rset);
@@ -33,14 +33,14 @@ class Media {
 			$sql = " DELETE FROM medias
 				WHERE id = $id ";
 			$GLOBALS["data"]->delete($sql);
-			return $rset->value("id_jeu");
+			return $rset->value("game_id");
 		}
 		return false;
 	}
 
 	public function create() {
 		// SQL INSERT medias
-		$sql = " INSERT INTO medias (description, id_jeu, media_type_id)
+		$sql = " INSERT INTO medias (description, game_id, media_type_id)
 				VALUES ('".$this->description."', ".$_REQUEST["i"].", ".
 				$this->media_type_id.")";
 		return $this->id = $GLOBALS["data"]->insert($sql);

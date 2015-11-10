@@ -1,0 +1,42 @@
+CREATE TABLE `members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lastname` tinytext,
+  `firstname` tinytext,
+  `subscribe_date` date DEFAULT NULL,
+  `birth_date` date DEFAULT NULL,
+  `address` tinytext,
+  `po_town` tinytext,
+  `home_phone` tinytext,
+  `work_phone` tinytext,
+  `mobile_phone` tinytext,
+  `fax_phone` tinytext,
+  `comments` text,
+  `member_ref` int(11) DEFAULT NULL,
+  `subscription_label` enum('Famille','Individuel','Nounou','Nounou+famille','Structure') DEFAULT NULL,
+  `membership_type_id` int(11) DEFAULT NULL,
+  `email` tinytext,
+  `newsletter` tinyint(1) DEFAULT NULL,
+  `other_members` longtext,
+  `deposit` enum('Cheque','Espece','Aucune') DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `games` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` tinytext,
+  `reference` tinytext,
+  `maker` tinytext,
+  `category` tinytext,
+  `comment` blob,
+  `maker_info` tinytext,
+  `content_inventory` blob,
+  `aquisition_date` date NOT NULL DEFAULT '0000-00-00',
+  `price` int(11) DEFAULT NULL,
+  `players_min` int(11) DEFAULT NULL,
+  `players_max` int(11) DEFAULT NULL,
+  `age_min` int(11) DEFAULT NULL,
+  `age_max` int(11) DEFAULT NULL,
+  `type` tinytext,
+  `esar_category_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

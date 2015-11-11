@@ -27,9 +27,11 @@
 		<td><?=$val->game_name?></td>
 		<td><?=$val->start_date?></td>
 		<td><?=$val->end_date?></td>
-		<td><?=$val->is_back?></td>
+		<td><input type="checkbox" id="is_back_<?=$val->id?>" name="is_back_<?=$val->id?>" class="form-control is_back_cbx" 
+			data-switch-with-ajax <?=($val->is_back != "") ? "checked" : ""?></td>
+
 		<td>
-			<a href="index.php?o=loans&a=edit&i=<?=$val->idt?>">
+			<a href="index.php?o=loans&a=edit&i=<?=$val->id?>">
 				<button type="button" class="btn btn-default btn-sm">
 				  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 			</a>
@@ -56,9 +58,19 @@
 </div>
 
 <script>
-$('#back_button').click(function(){
-	// TODO this function should verify that the object has not been modified
-	// and if yes, ask for confirmation from the user.
-	window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
+$(document).ready(function () {
+	$('#back_button').click(function(){
+		// TODO this function should verify that the object has not been modified
+		// and if yes, ask for confirmation from the user.
+		window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
+	});
+	$('.is_back_cbx').bootstrapSwitch({
+		onText: "Oui",
+		offText: "Non",
+	}).on('switchChange.bootstrapSwitch', function(event, state) {
+	  console.log(this); // DOM element
+	  console.log(event); // jQuery event
+	  console.log(state); // true | false
+	});
 });
 </script>

@@ -38,9 +38,9 @@ This file is part of phpLudoreve.
   <div class="panel-body">
 
 <div class="form-group">
-    <label class="control-label col-sm-2" for="lastname">Nom</label>
+    <label class="control-label col-sm-2" for="name">Nom</label>
     <div class="col-sm-10">
-        <input type="text" id="lastname" name="lastname" class="form-control" value="<?=$game->nom?>"/>
+        <input type="text" id="name" name="name" class="form-control" value="<?=$game->name?>"/>
     </div>
 </div>
 <div class="form-group">
@@ -93,32 +93,32 @@ This file is part of phpLudoreve.
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2 col-xs-7" for="nombre_mini">Nombre de joueurs de </label>
+    <label class="control-label col-sm-2 col-xs-7" for="players_min">Nombre de joueurs de </label>
     <div class="col-sm-1 col-xs-1">
-        <input type="text" id="nombre_mini" name="nombre_mini" class="form-control" value="<?=$game->nombre_mini?>"/>
+        <input type="text" id="players_min" name="players_min" class="form-control" value="<?=$game->players_min?>"/>
     </div>
-    <label class="control-label col-sm-1 col-xs-1" for="nombre_maxi">à</label>
+    <label class="control-label col-sm-1 col-xs-1" for="players_max">à</label>
     <div class="col-sm-1 col-xs-1">
-        <input type="text" id="nombre_maxi" name="nombre_maxi" class="form-control" value="<?=$game->nombre_maxi?>"/>
+        <input type="text" id="players_max" name="players_max" class="form-control" value="<?=$game->players_max?>"/>
     </div>
-    <label class="control-label col-sm-3 col-xs-7" for="age_mini">Age des joueurs de </label>
+    <label class="control-label col-sm-3 col-xs-7" for="age_min">Age des joueurs de </label>
     <div class="col-sm-1 col-xs-1">
-        <input type="text" id="age_mini" name="age_mini" class="form-control" value="<?=$game->age_mini?>"/>
+        <input type="text" id="age_min" name="age_min" class="form-control" value="<?=$game->age_min?>"/>
     </div>
-    <label class="control-label col-sm-1 col-xs-1" for="age_maxi">à</label>
+    <label class="control-label col-sm-1 col-xs-1" for="age_max">à</label>
     <div class="col-sm-2 col-xs-1">
-        <input type="text" id="age_maxi" name="age_maxi" class="form-control" value="<?=$game->age_maxi?>"/>
+        <input type="text" id="age_max" name="age_max" class="form-control" value="<?=$game->age_max?>"/>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="type">Type de jeu</label>
+    <label class="control-label col-sm-2" for="game_type">Type de jeu</label>
     <div class="col-sm-4">
-        <input type="text" id="type" name="type" class="form-control" value="<?=$game->type?>"/>
+        <input type="text" id="game_type" name="game_type" class="form-control" value="<?=$game->game_type?>"/>
     </div>
-    <label class="control-label col-sm-2" for="date_achat">Date d'achat</label>
+    <label class="control-label col-sm-2" for="aquisition_date">Date d'achat</label>
     <div class="col-sm-4">
 		<div class='input-group date' id='datetimepicker1'>
-        	<input type="text" id="date_achat" name="date_achat" class="form-control"/>
+        	<input type="text" id="aquisition_date" name="aquisition_date" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
 			</span>
@@ -128,11 +128,11 @@ This file is part of phpLudoreve.
                 $('#datetimepicker1').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($game->date_achat != ""
-						? "'".$game->date_achat."'" : "")?>)
+					defaultDate: new Date(<?=($game->aquisition_date != ""
+						? "'".$game->aquisition_date."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
-           			 $('#date_achat') = ev.format();
+           			 $('#aquisition_date') = ev.format();
 		        });
             });
         </script>
@@ -165,15 +165,15 @@ This file is part of phpLudoreve.
 <?php } ?>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="inventaire">Inventaire</label>
+    <label class="control-label col-sm-2" for="content_inventory">Inventaire</label>
     <div class="col-sm-10">
-        <textarea id="inventaire" name="inventaire" class="form-control" rows="4"><?=$game->inventaire?></textarea>
+        <textarea id="content_inventory" name="content_inventory" class="form-control" rows="4"><?=$game->content_inventory?></textarea>
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="commentaire">Commentaire</label>
+    <label class="control-label col-sm-2" for="comments">Commentaire</label>
     <div class="col-sm-10">
-        <textarea id="commentaire" name="commentaire" class="form-control" rows="4"><?=$game->commentaire?></textarea>
+        <textarea id="comments" name="comments" class="form-control" rows="4"><?=$game->comments?></textarea>
     </div>
 </div>
 

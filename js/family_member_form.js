@@ -24,7 +24,7 @@ function completeFamilyHandler (response) { // response is an array of family_me
 		$.each(response, function(key, val){
 			html = html + '<div id="fm_' + val.id + '" class="thumbnail col-sm-2" style="text-align: center">'
 				+ '<strong>' + val.lastname + '</strong><br>' + val.firstname + '<br>'
-				+ val.birthdate
+				+ val.birth_date
 				+ '<div class="caption">' + val.link_name
 				+ ' <a href="javascript:deleteFamilyMember(' + val.id + ')" class="glyphicon glyphicon-remove"></a></div></div>';
 		});

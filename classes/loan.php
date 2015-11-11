@@ -15,18 +15,29 @@ class Loan {
 	}
 
 	public static function fetch_all(&$loans, $member_id) {
-        $subscriptions = array();
+        $loans = array();
 		// SQL SELECT loans games
         $sql = " SELECT l.id, start_date, end_date, is_back, l.created_at, l.updated_at,
 					g.name as game_name
             FROM loans l, games g
             WHERE member_id = ".$member_id."
-				AND g.id = l.id
+				AND g.id = l.game_id
 				ORDER BY is_back ASC, start_date DESC
 				";
         $GLOBALS["data"]->select($sql, $loans, "Loan", true);
         return sizeof($loans);
     }
+
+	public static function fetch($id) {
+		// SQL SELECT loans
+		$sql = " SELECT l.id, start_date, end_date, is_back, l.created_at, l.updated_at, member_id,
+					g.name as game_name
+            FROM loans l, games g
+            WHERE l.id = $id
+			AND  g.id = l.game_id";
+		$GLOBALS["data"]->select($sql, $loan, "Loan");
+		return $loan;
+	}
 
 	public static function delete($id) {
 		// SQL SELECT loans
@@ -73,7 +84,7 @@ class Loan {
         foreach(get_object_vars($this) as $var => $value) {
 			// check if there is a corresponding value in _REQUEST
 			// and the value has really changed
-			if(array_key_exists($var, $_REQUEST)) {
+			if(!is_array($this->$var) && array_key_exists($var, $_REQUEST)) {
 				if($var == "start_date" || $var == "end_date") {
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}

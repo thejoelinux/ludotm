@@ -35,9 +35,10 @@ $data = new data();
 	<link rel="stylesheet" href="css/zabuto_calendar.min.css">
 	<link rel="stylesheet" href="css/jquery.dataTables.min.css">
 	<link rel="stylesheet" href="css/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" href="css/bootstrap-switch.min.css">
 	<!-- link rel="stylesheet" href="css/datatables.min.css" -->
 	<link rel="stylesheet" href="css/styles.css">
-	<script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/jquery-2.1.4.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -81,17 +82,16 @@ $data = new data();
     </div>
   </div>
 </nav>
-<?php
-// compute date
-include("helpers/date.php");
-?>
 <form action="index.php" method="POST" id="defaultform" name="defaultform" 
 	class="form-horizontal" enctype="multipart/form-data">
 	<!-- div class="col-sm-9 col-md-10 main" -->
 	<div class="container">
 <?php
+$_REQUEST["a"] = (array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : "";
+$_REQUEST["i"] = (array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : "";
 if(array_key_exists("o", $_REQUEST) && $_REQUEST["o"] != ""
 	&& file_exists("controllers/".$_REQUEST["o"].".php")) {
+		
         include("controllers/".$_REQUEST["o"].".php");
 } else {
     $_REQUEST["o"] = "home";
@@ -100,8 +100,8 @@ if(array_key_exists("o", $_REQUEST) && $_REQUEST["o"] != ""
 ?>
 	</div>
 	<input type="hidden" name="o" id="o" value="<?=$_REQUEST["o"]?>"> 
-	<input type="hidden" name="a" id="a" value="<?=(array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : ""?>"> 
-	<input type="hidden" name="i" id="i" value="<?=(array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : ""?>">
+	<input type="hidden" name="a" id="a" value="<?=$_REQUEST["a"]?>"> 
+	<input type="hidden" name="i" id="i" value="<?=$_REQUEST["i"]?>">
 </form>
 <footer>
 <?php if($debug) { ?>
@@ -121,6 +121,7 @@ SESSION :
 <script src="js/typeahead.bundle.min.js"></script>
 <script src="js/moment-with-locales.min.js"></script>
 <script src="js/bootstrap-datetimepicker.js"></script>
+<script src="js/bootstrap-switch.min.js"></script>
 <script src="js/functions.js"></script>
 <script type="application/javascript">
 $(document).ready(function () {
@@ -132,7 +133,7 @@ $(document).ready(function () {
     });
 
     var games = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('nom'),
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       prefetch: { url : 'api.php?o=games&a=name_list',
 	  	cache: false }
@@ -150,7 +151,7 @@ $(document).ready(function () {
       }
     });
 
-	$('#search-games .typeahead').typeahead({
+	$('#search-games-for-loans .typeahead').typeahead({
         highlight: true
     },
     {
@@ -159,7 +160,7 @@ $(document).ready(function () {
       source: games
     }).bind('typeahead:selected', function(obj, datum, name) {      
         if(typeof datum.id !== 'undefined') {
-            $('#id').val(datum.id);
+            $('#game_id').val(datum.id);
         }
     });
 
@@ -193,7 +194,11 @@ $(document).ready(function () {
             window.location.href = "index.php?o=games&a=edit&i=" + datum.id;
         }
     });
-
+	// every check box on site turned into a switch except with data-switch-with-ajax flag
+	$("input[type=\"checkbox\"]").not("[data-switch-with-ajax]").bootstrapSwitch({
+		onText: "Oui",
+		offText: "Non"
+	});
 });
 /*
 TODO : Display calendar events via ajax

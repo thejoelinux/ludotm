@@ -75,7 +75,7 @@ switch($_REQUEST["a"]) {
 
 	case "create_loan":
 		try {
-            $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
+            $member = Member::fetch($data->db_escape_string($_REQUEST["member_id"]));
 			if($member->id != 0) {
 				$member->create_loan();
 				$member->fetch_loans();

@@ -19,8 +19,8 @@ class Game {
         // SQL SELECT games prets
         $sql = "SELECT games.id, name, reference, maker, category, esar_category_id,
             comments, maker_info, content_inventory, DATE_FORMAT(aquisition_date, '%m/%d/%Y') as aquisition_date,
-			prix, players_min, players_max,
-            age_min, age_max, type, loans.id_pret
+			price, players_min, players_max,
+            age_min, age_max, game_type, loans.id as loan_id
             FROM games
                 LEFT OUTER JOIN loans ON (games.id = loans.id AND loans.is_back = 0)
             WHERE games.id = ".$id;
@@ -92,13 +92,13 @@ class Game {
 
     public static function fetch_all(&$games) {
         $games = array();
-        $sql = "SELECT games.id, nom, 
-            CONCAT (esar_categories.label, ' - ', esar_categories.name) AS label,
-            loans.id as loan_status
-            FROM games
-                LEFT OUTER JOIN esar_categories ON games.esar_category_id = esar_categories.id
-                LEFT OUTER JOIN loans ON (games.id = loans.id AND end_date > curdate())
-            ORDER BY name"; 
+        $sql = "SELECT g.id, g.name, 
+            CONCAT (ec.label, ' - ', ec.name) AS label,
+            l.id as loan_status
+            FROM games g
+                LEFT OUTER JOIN esar_categories ec ON g.esar_category_id = ec.id
+                LEFT OUTER JOIN loans l ON (g.id = l.id AND end_date > curdate())
+            ORDER BY g.name"; 
         $GLOBALS["data"]->select($sql, $games, "Game");
         return sizeof($games);
     }

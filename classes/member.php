@@ -63,7 +63,7 @@ class Member {
         foreach(get_object_vars($this) as $var => $value) {
 			// check if there is a corresponding value in _REQUEST
 			// and the value has really changed
-			if(array_key_exists($var, $_REQUEST)) {
+			if(!is_array($this->$var) && array_key_exists($var, $_REQUEST)) {
 				if($var == "birth_date" || $var == "date_inscription") {
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}

@@ -37,10 +37,10 @@ This file is part of phpLudoreve.
     </div>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="birthdate">Date de naissance</label>
+    <label class="control-label col-sm-2" for="birth_date">Date de naissance</label>
     <div class="col-sm-4">
 		<div class='input-group date' id='birth_datetimepicker'>
-        	<input type="text" id="birthdate" name="birthdate" class="form-control"/>
+        	<input type="text" id="birth_date" name="birth_date" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
 			</span>
@@ -50,11 +50,11 @@ This file is part of phpLudoreve.
                 $('#birth_datetimepicker').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($member->birthdate != ""
-						? "'".$member->birthdate."'" : "")?>)
+					defaultDate: new Date(<?=($member->birth_date != ""
+						? "'".$member->birth_date."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
-           			 $('#birthdate') = ev.format();
+           			 $('#birth_date') = ev.format();
 		        });
             });
         </script>
@@ -67,7 +67,7 @@ This file is part of phpLudoreve.
 <div class="form-group">
     <label class="control-label col-sm-2" for="address">Adresse</label>
     <div class="col-sm-4">
-        <textarea id="address" name="address" class="form-control" rows="2"><?=$member->adresse?></textarea>
+        <textarea id="address" name="address" class="form-control" rows="2"><?=$member->address?></textarea>
     </div>
     <label class="control-label col-sm-2" for="po_town">Code postal - Ville</label>
     <div class="col-sm-4">
@@ -137,7 +137,7 @@ This file is part of phpLudoreve.
 <div class="form-group">
     <label class="control-label col-sm-2" for="subscribe_date">Date d'inscription</label>
     <div class="col-sm-4">
-		<div class='input-group date' id='inscription_datetimepicker'>
+		<div class='input-group date' id='subscribe_datetimepicker'>
         	<input type="text" id="subscribe_date" name="subscribe_date" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
@@ -145,10 +145,10 @@ This file is part of phpLudoreve.
 		</div>
 		<script type="text/javascript">
             $(function () {
-                $('#inscription_datetimepicker').datetimepicker({
+                $('#subscribe_datetimepicker').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($member->subscribe_date != ""
+					defaultDate: new Date(<?=($member->subscribe_date != "" && $member->subscribe_date != "0000-00-00"
 						? "'".$member->subscribe_date."'" : "")?>)
 				})
 				.on('changeDate', function(ev){
@@ -181,16 +181,16 @@ This file is part of phpLudoreve.
 <div class="form-group">
 	<label class="control-label col-sm-1 col-sm-offset-2" for="fm_lastname">Nom</label>
     <div class="col-sm-2">
-        <input type="text" id="fm_lastname" name="fm_lastname" class="form-control" value="<?=$member->nom?>"/>
+        <input type="text" id="fm_lastname" name="fm_lastname" class="form-control" value="<?=$member->lastname?>"/>
     </div>
 	<label class="control-label col-sm-1" for="fm_firstname">Prénom</label>
     <div class="col-sm-2">
         <input type="text" id="fm_firstname" name="fm_firstname" class="form-control" value=""/>
     </div>
-	<label class="control-label col-sm-1" for="fm_birthdate">DDN</label>
+	<label class="control-label col-sm-1" for="fm_birth_date">DDN</label>
 	<div class="col-sm-2">
 		<div class='input-group date' id='fm_birth_datetimepicker'>
-        	<input type="text" id="fm_birthdate" name="fm_birthdate" class="form-control"/>
+        	<input type="text" id="fm_birth_date" name="fm_birth_date" class="form-control"/>
 			<span class="input-group-addon">
 				<span class="glyphicon glyphicon-calendar"></span>
 			</span>
@@ -203,7 +203,7 @@ This file is part of phpLudoreve.
 					defaultDate: new Date()
 				})
 				.on('changeDate', function(ev){
-           			 $('#fm_birthdate') = ev.format();
+           			 $('#fm_birth_date') = ev.format();
 		        });
             });
         </script>

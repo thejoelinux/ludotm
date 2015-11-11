@@ -2,7 +2,7 @@
   <div class="panel-heading">
 		<h4><!--  class="panel-title" -->
   		<span class="glyphicon glyphicon-th-list" style="margin-right: 10px" ></span>
-		<?=($loan->id != 0) ? $loan->member_name." - Emprunt du ".$loan->start_date : "Nouvel emprunt"?>
+		<?=($loan->id != 0) ? $loan->game_name." - Emprunt du ".$loan->start_date : "Nouvel emprunt"?>
 		</h4>
   </div>
   <div class="panel-body">
@@ -55,18 +55,25 @@
     </div>
 </div>
 <div class="form-group">
+	<?php if($loan->id == 0) { ?>
     <label class="control-label col-sm-2" for="game_id">Jeu</label>
     <div class="col-sm-4">
 	    <input type="hidden" name="game_id" id="game_id" value="">
-	    <div id="search-games" >
+	    <div id="search-games-for-loans" >
 			<input class="typeahead form-control" type="text" placeholder="Jeu...">
 		</div>
     </div>
+	<?php } else { ?>
+	<!-- FIXME : this field may be a little bit useless when creating a new loan -->
 	<label class="control-label col-sm-2" for="is_back">Rendu ?</label>
-    <div class="col-sm-1">
+    <div class="col-sm-4">
         <input type="checkbox" id="is_back" name="is_back" class="form-control" 
 			<?=($loan->is_back ? "checked" : "")?>/>
     </div>
+	<?php } ?>
+	<div class="control-label col-sm-6">
+		Créé le : <?=$loan->created_at?> / Mis-à-jour le <?=$loan->updated_at?>
+	</div>
 </div>
 <input type="hidden" name="member_id" id="member_id" value="<?=$loan->member_id?>">
 <div class="form-group">

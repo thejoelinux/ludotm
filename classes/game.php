@@ -92,12 +92,17 @@ class Game {
 
     public static function fetch_all(&$games) {
         $games = array();
+		$where_clause = "";
+		if(array_key_exists("filter", $_REQUEST) && $_REQUEST["filter"] == "available") {
+			$where_clause = "WHERE l.id IS NULL";
+		}
         $sql = "SELECT g.id, g.name, 
             CONCAT (ec.label, ' - ', ec.name) AS label,
             l.id as loan_status
             FROM games g
                 LEFT OUTER JOIN esar_categories ec ON g.esar_category_id = ec.id
-                LEFT OUTER JOIN loans l ON (g.id = l.id AND end_date > curdate())
+                LEFT OUTER JOIN loans l ON (g.id = l.game_id AND l.is_back = 0)
+			$where_clause	
             ORDER BY g.name"; 
         $GLOBALS["data"]->select($sql, $games, "Game");
         return sizeof($games);

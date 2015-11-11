@@ -125,10 +125,20 @@ class Member {
 	}
 
 	public function loans_text() {
-		if (sizeof($this->loans)) {
-			$msg = sizeof($this->loans)." jeu(x) dont : ".$this->loans[0]->game_name;
+		// count in loans the games not restitued and/or late
+		$not_back = $late = 0;
+		while(list($key, $val) = each($this->loans)) {
+			$not_back += $val->is_back;
+			$late += $val->is_late;
+		}
+
+		if ($not_back > 0) {
+			$msg = $not_back." jeu(x)";
+			if($late > 0) {
+				$msg .= " dont ".$late." en retard.";
+			}
 		} else {
-			$msg = "Aucun emprunt trouvé";
+			$msg = "Pas d'emprunt en cours.";
 		}
 		return $msg;
 	}

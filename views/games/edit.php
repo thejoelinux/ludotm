@@ -195,10 +195,10 @@ This file is part of phpLudoreve.
 <script>
 // buttons events
 $('#save_button').click(function(){
-    if(dGocument.defaultform.nom.value == 0) {
+    if(document.defaultform.name.value == 0) {
         alert ("Vous n'avez pas saisi de nom !");
         return false;
-    }
+	}
 	if($('#i').val() == 0) {
 		$('#a').val('create');
 	} else {

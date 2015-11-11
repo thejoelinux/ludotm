@@ -39,6 +39,23 @@ switch($_REQUEST["a"]) {
 			$render = "data_exception";
 		}
 	break;
+
+	case "switch_state": // API CALL
+		try {
+			$loan = Loan::fetch($data->db_escape_string($_REQUEST["i"]));
+			if($loan->id != 0) {
+				$loan->change_state($data->db_escape_string($_REQUEST["state"]));
+				echo json_encode($loan);
+				exit();
+			} else {
+				$render = "unprocessable";
+			}
+		} catch(data_exception $e) {
+			phpinfo();
+			exit();
+			$render = "data_exception";
+		}
+	break;
 }	
 // view part
 include("views/".$render.".php");

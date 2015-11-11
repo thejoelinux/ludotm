@@ -24,11 +24,13 @@
 	</tr>
 	<?php } else { while(list($key, $val) = each($member->loans)) { ?>
 	<tr>
-		<td><?=$val->game_name?></td>
+		<td><?=$val->game_name?>
+		<?=($val->is_late) ? "<span class=\"label label-warning\">En retard</span>" : "" ?>
+		</td>
 		<td><?=$val->start_date?></td>
 		<td><?=$val->end_date?></td>
 		<td><input type="checkbox" id="is_back_<?=$val->id?>" name="is_back_<?=$val->id?>" class="form-control is_back_cbx" 
-			data-switch-with-ajax <?=($val->is_back != "") ? "checked" : ""?></td>
+			data-switch-with-ajax <?=($val->is_back ? " checked " : "")?></td>
 
 		<td>
 			<a href="index.php?o=loans&a=edit&i=<?=$val->id?>">
@@ -68,9 +70,24 @@ $(document).ready(function () {
 		onText: "Oui",
 		offText: "Non",
 	}).on('switchChange.bootstrapSwitch', function(event, state) {
-	  console.log(this); // DOM element
-	  console.log(event); // jQuery event
-	  console.log(state); // true | false
+		  $.ajax({
+			url: 'api.php?o=loans&a=switch_state&i=' + this.name.substr(8)
+				+ "&state=" +  (state ? 1 : 0), // post on the API
+			type: 'POST',
+			xhr: function() {  // Custom XMLHttpRequest
+				var myXhr = $.ajaxSettings.xhr();
+				return myXhr;
+			},
+			success: function(){
+					alert('Le jeu est noté comme restitué aujourd\'hui.');
+				},
+			error: function(){
+					alert('Une erreur a eu lieu lors de la restitution de ce jeu.');
+				},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
 	});
 });
 </script>

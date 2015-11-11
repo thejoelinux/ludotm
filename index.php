@@ -157,9 +157,15 @@ $(document).ready(function () {
     {
       name: 'games',
       display: 'name',
-      source: games
+      source: new Bloodhound({
+	      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+    	  queryTokenizer: Bloodhound.tokenizers.whitespace,
+	      prefetch: { url : 'api.php?o=games&a=name_list&filter=available',
+	  		cache: false }
+      })
     }).bind('typeahead:selected', function(obj, datum, name) {      
         if(typeof datum.id !== 'undefined') {
+			console.log(datum);
             $('#game_id').val(datum.id);
         }
     });

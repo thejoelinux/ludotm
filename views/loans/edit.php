@@ -63,17 +63,20 @@
 			<input class="typeahead form-control" type="text" placeholder="Jeu...">
 		</div>
     </div>
+	<div class="control-label col-sm-6">
+		Créé le : <?=$loan->created_at?> / Mis-à-jour le <?=$loan->updated_at?>
+	</div>
 	<?php } else { ?>
 	<!-- FIXME : this field may be a little bit useless when creating a new loan -->
 	<label class="control-label col-sm-2" for="is_back">Rendu ?</label>
     <div class="col-sm-4">
-        <input type="checkbox" id="is_back" name="is_back" class="form-control" 
-			<?=($loan->is_back ? "checked" : "")?>/>
+        <input type="checkbox" id="is_back" name="is_back" class="form-control is_back_cbx" 
+			data-switch-with-ajax <?=($loan->is_back ? "checked" : "")?>/>
     </div>
-	<?php } ?>
 	<div class="control-label col-sm-6">
-		Créé le : <?=$loan->created_at?> / Mis-à-jour le <?=$loan->updated_at?>
+		Si la date de retour est vide, elle sera positionnée à 21 jours plus tard.
 	</div>
+	<?php } ?>
 </div>
 <input type="hidden" name="member_id" id="member_id" value="<?=$loan->member_id?>">
 <div class="form-group">
@@ -94,34 +97,64 @@
 
 <script>
 // buttons events
-$('#save_button').click(function(){
-    if(document.defaultform.start_date.value == 0) {
-        alert ("Vous n'avez pas saisi de date de début !");
-        return false;
-    }
-	// go to the members controllers, as this action should display
-	// the list of the loans for the current user
-	$('#o').val('members');
-	if($('#i').val() == 0) {
-		$('#a').val('create_loan');
-	} else {
-		$('#a').val('update_loan');
-	}
-    document.defaultform.submit();
-    return true;
-});
-$('#delete_button').click(function(){
-	var msg = 'Voulez-vous réellement supprimer un emprunt ?\n' + 
-		'Cette action n\'est possible qu\'en cas d\'erreur de saisie.\n';
-	if(confirm(msg)) {
-		$('#a').val('delete_loan');
-    	document.defaultform.submit();
-	}
-});
-$('#back_button').click(function(){
-	// TODO this function should verify that the object has not been modified
-	// and if yes, ask for confirmation from the user.
-	window.location.href='index.php?o=members&a=loans&i=<?=$loan->member_id?>';
+$(document).ready(function () {
+	$('#save_button').click(function(){
+		if(document.defaultform.start_date.value == 0) {
+			alert ("Vous n'avez pas saisi de date de début !");
+			return false;
+		}
+		// go to the members controllers, as this action should display
+		// the list of the loans for the current user
+		$('#o').val('members');
+		if($('#i').val() == 0) {
+			$('#a').val('create_loan');
+		} else {
+			$('#a').val('update_loan');
+		}
+		document.defaultform.submit();
+		return true;
+	});
+	$('#delete_button').click(function(){
+		var msg = 'Voulez-vous réellement supprimer un emprunt ?\n' + 
+			'Cette action n\'est possible qu\'en cas d\'erreur de saisie.\n';
+		if(confirm(msg)) {
+			$('#a').val('delete_loan');
+			document.defaultform.submit();
+		}
+	});
+	$('#back_button').click(function(){
+		// TODO this function should verify that the object has not been modified
+		// and if yes, ask for confirmation from the user.
+		window.location.href='index.php?o=members&a=loans&i=<?=$loan->member_id?>';
+	});
+
+
+	$('.is_back_cbx').bootstrapSwitch({
+		onText: "Oui",
+		offText: "Non",
+	}).on('switchChange.bootstrapSwitch', function(event, state) {
+		  $.ajax({
+			url: 'api.php?o=loans&a=switch_state&i=' + <?=$loan->id?>
+				+ "&state=" +  (state ? 1 : 0), // post on the API
+			type: 'POST',
+			xhr: function() {  // Custom XMLHttpRequest
+				var myXhr = $.ajaxSettings.xhr();
+				return myXhr;
+			},
+			success: function(){
+					if(state) {
+						alert('Ce jeu est noté comme restitué aujourd\'hui.');
+					} else {
+						alert('Ce jeu est noté comme non restitué aujourd\'hui.');
+					}
+				},
+			error: function(){
+					alert('Une erreur a eu lieu lors de la restitution de ce jeu.');
+				},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+	});
 });
 </script>
-

@@ -22,15 +22,16 @@ function completeMediaHandler (response) { // response is an array of medias
 	if(response.length) {
 		html = '';
 		$.each(response, function(key, val){
-			html = html + '<div id="media_' + val.id + '" class="thumbnail col-sm-2">';
+			html = html + '<div id="media_' + val.id + '" class="thumbnail col-sm-2" align="center">';
 			if(val.mime_type !== null && val.mime_type.match('image')) {
 				html = html + '<img width="100" height="80" '
 					+ ' src="uploads/' + val.file + '" alt="' + val.description + '">';
 			} else {
-				html = html + val.description;
+				html = html + '<a href="api.php?o=medias&a=download&i=' + val.id + '" target="new">'
+					+ '<span class="glyphicon glyphicon-save"></span> ' + val.description + '</a>';
 			}
 			html = html + '<div class="caption">'
-				+ '<a href="javascript:deleteMedia(' + val.id + ')">Effacer</a></div></div>';
+				+ '<a href="javascript:deleteMedia(' + val.id + ')"><span class="glyphicon glyphicon-remove"></span> Effacer</a></div></div>';
 		});
 	}
 	$('#media_list').html(html);

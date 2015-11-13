@@ -267,6 +267,8 @@ $('#save_button').click(function(){
         alert ("Vous n'avez pas saisi de nom!");
         return false;
     }
+	// special checkbox
+	$('#newsletter').val($('#newsletter').val() == 'on' ? 1 : 0);
 	if($('#i').val() == 0) {
 		$('#a').val('create');
 	} else {

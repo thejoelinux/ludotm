@@ -64,6 +64,17 @@ switch($_REQUEST["a"]) {
 	case "list": // for API
 		$render = "json/list";
 	break;
+
+	case "download":
+		$media = Media::fetch($_REQUEST["i"]);
+		if($media->id != 0) {
+			header("Content-Type: ".$media->mime_type);
+			readfile("uploads/".$media->file);
+			exit();
+		} else {
+			$render = "unprocessable";
+		}
+	break;
 }
 
 if($render == "json/list") {

@@ -25,9 +25,9 @@ This file is part of phpLudoreve.
 		<?=$game->name?>
 		<small>
 		<?php if($game->loan_id) { ?>
-		(INDISPONIBLE) FIXME : lien vers pret en cours
+		INDISPONIBLE : <a href="index.php?o=loans&a=edit&i=<?=$game->loan_id?>">jusqu'au <?=$game->loan_end_date?></a>
 		<?php } else { ?>
-		(DISPONIBLE)
+		DISPONIBLE
 		<?php } ?>
 		</small>
 	<?php } else { ?>

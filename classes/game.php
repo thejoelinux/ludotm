@@ -22,9 +22,9 @@ class Game extends Record {
         $sql = "SELECT games.id, name, reference, maker, category, esar_category_id,
             comments, maker_info, content_inventory, DATE_FORMAT(aquisition_date, '%m/%d/%Y') as aquisition_date,
 			price, players_min, players_max,
-            age_min, age_max, game_type, loans.id as loan_id
+            age_min, age_max, game_type, loans.id as loan_id, DATE_FORMAT(loans.end_date, '%d/%m/%Y')  AS loan_end_date
             FROM games
-                LEFT OUTER JOIN loans ON (games.id = loans.id AND loans.is_back = 0)
+                LEFT OUTER JOIN loans ON (games.id = loans.game_id AND loans.is_back = 0)
             WHERE games.id = ".$id;
         $GLOBALS["data"]->select($sql, $game, "Game");
         return $game;

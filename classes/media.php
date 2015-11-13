@@ -10,6 +10,17 @@ class Media {
 	    }
 	}
 
+	public static function fetch($id) {
+        // SQL SELECT medias
+        $sql = "SELECT m.id, m.description, m.media_type_id, m.game_id, m.file,
+				mt.mime_type
+            FROM medias m, media_types mt
+            WHERE m.id = ".$id."
+				AND m.media_type_id = mt.id ";
+        $GLOBALS["data"]->select($sql, $media, "Media");
+        return $media;
+    }
+
 	public static function fetch_all(&$medias, $game_id) {
         $medias = array();
 		// SQL SELECT medias media_types

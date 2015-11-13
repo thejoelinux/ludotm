@@ -20,13 +20,20 @@ This file is part of phpLudoreve.
 $render = "list";
 switch($_REQUEST["a"]) {
 	case "new":
-	case "create":
 		$game = new Game(0);
-		if($_REQUEST["a"] == "create") {
-			$game->create();
-		}
 		$_REQUEST["i"] = $game->id;
 		$render = "games/edit";
+	break;
+
+	case "create":
+		try {
+			$game = new Game(0);
+			$game->create();
+			$_REQUEST["i"] = $game->id;
+			$render = "games/edit";
+		} catch(data_exception $e) {
+			$render = "data_exception";
+		}
 	break;
 
 	case "update":

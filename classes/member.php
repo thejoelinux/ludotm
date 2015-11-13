@@ -1,6 +1,6 @@
 <?php
 
-class Member {
+class Member extends Record {
 	public $id;
 	public $lastname, $firstname, $subscribe_date, $birth_date, $address, $po_town;
 	public $home_phone, $work_phone, $mobile_phone, $fax_phone, $comments;
@@ -9,6 +9,8 @@ class Member {
 	public $family_links;
 
 	public $subscriptions, $loans;
+
+	public $table = "members";
 
 	public function __construct($id = 0) {
     	if (!$this->id) {
@@ -31,57 +33,6 @@ class Member {
 			return $family_links[$id];
 		} else {
 			return false;
-		}
-	}
-
-	public function create() {
-		$fields_sql = $datas_sql = "";
-		foreach(get_object_vars($this) as $var => $value) {
-			// check if there is a corresponding value in _REQUEST
-			// and the value is not empty
-			if(array_key_exists($var, $_REQUEST) && $_REQUEST[$var] != "") {
-				if($var == "birth_date" || $var == "date_inscription") {
-					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
-				}
-				$this->$var = $_REQUEST[$var];
-				if($var == "birth_date" || $var == "date_inscription") {
-					$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
-				}
-				$fields_sql .= " $var,";
-				$datas_sql .= " '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";
-				// DEBUG echo "REQ : ".$_REQUEST[$var]." != OBJ : ".$value."<br>";
-			}
-		}
-		// SQL INSERT members
-		$sql = " INSERT INTO members (".substr($fields_sql, 0, -1).")
-			VALUES (".substr($datas_sql, 0, -1).")";
-		return $this->id = $GLOBALS["data"]->insert($sql);	
-	}
-
-	public function update() {
-		$update_sql = "";
-        foreach(get_object_vars($this) as $var => $value) {
-			// check if there is a corresponding value in _REQUEST
-			// and the value has really changed
-			if(!is_array($this->$var) && array_key_exists($var, $_REQUEST)) {
-				if($var == "birth_date" || $var == "date_inscription") {
-					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
-				}
-				if($_REQUEST[$var] != $value) {
-					$this->$var = $_REQUEST[$var];
-					if($var == "birth_date" || $var == "date_inscription") {
-						$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
-					}
-					$update_sql .= " $var = '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";
-					// DEBUG echo "REQ : ".$_REQUEST[$var]." != OBJ : ".$value."<br>";
-				}
-			}
-		}
-		if($update_sql != "") {
-			// SQL UPDATE members
-			$sql = " UPDATE members SET ".substr($update_sql, 0, -1)."
-				WHERE id = ".$this->id;
-        	return $GLOBALS["data"]->update($sql);
 		}
 	}
 
@@ -128,7 +79,7 @@ class Member {
 		// count in loans the games not restitued and/or late
 		$not_back = $late = 0;
 		while(list($key, $val) = each($this->loans)) {
-			$not_back += $val->is_back;
+			$not_back += ($val->is_back ? 0 : 1);
 			$late += $val->is_late;
 		}
 

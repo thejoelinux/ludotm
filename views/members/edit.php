@@ -56,6 +56,9 @@ This file is part of phpLudoreve.
 				.on('changeDate', function(ev){
            			 $('#birth_date') = ev.format();
 		        });
+				<?php if($member->birth_date == "" || $member->birth_date == "0000-00-00") { ?>
+				$('#birth_date').val('');
+				<?php } ?>
             });
         </script>
     </div>
@@ -154,6 +157,9 @@ This file is part of phpLudoreve.
 				.on('changeDate', function(ev){
            			 $('#subscribe_date') = ev.format();
 		        });
+				<?php if($member->subscribe_date == "" || $member->subscribe_date == "0000-00-00") { ?>
+				$('#subscribe_date').val('');
+				<?php } ?>
             });
         </script>
     </div>

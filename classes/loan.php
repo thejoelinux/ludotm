@@ -22,13 +22,15 @@ class Loan extends Record {
         $sql = " SELECT l.id, start_date, end_date, is_back, l.created_at, l.updated_at,
 					g.name as game_name, CASE WHEN (end_date < curdate() AND is_back = 0) THEN 1 ELSE 0 END AS is_late
             FROM loans l, games g
-            WHERE member_id = ".$member_id."
-				AND g.id = l.game_id
+            WHERE
+				g.id = l.game_id 
+				".($member_id == 0 ? "" : "AND member_id = ".$member_id)."
 				ORDER BY is_back ASC, start_date DESC
-				";
+				".($member_id == 0 ? "LIMIT 0,5" : "");
         $GLOBALS["data"]->select($sql, $loans, "Loan", true);
         return sizeof($loans);
     }
+
 
 	public static function fetch($id) {
 		// SQL SELECT loans

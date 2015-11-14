@@ -5,31 +5,28 @@
             <div class="caption" align="center">
                 <h3>Prêts en cours</h3>
                 <p>
-                right hand side of the screen, w/ loans status & new buttons
-                right hand side of the screen, w/ loans status & new buttons
-                right hand side of the screen, w/ loans status & new buttons
-                right hand side of the screen, w/ loans status & new buttons
+				<?php if(sizeof($loans)) { while(list($key, $val) = each($loans)) { ?>
+				<a href="index.php?o=loans&a=edit&i=<?=$val->id?>"><?=$val->game_name?></a>,
+					retour le <?=$val->end_date?><br>
+				<?php } } else { ?>
+					Aucun emprunt en cours.
+				<?php } ?>
                 </p>
-                <div id="search-members" >
-                    <input class="typeahead" type="text" placeholder="Adherent...">
-                </div>
-                <p><a href="#" class="btn btn-primary" role="button">Emprunter</a>
-                <a href="#" class="btn btn-default" role="button">Restituer</a></p>
             </div>
         </div>
     </div>
     <div class="col-sm-4">
         <div class="thumbnail">
             <div class="caption" align="center">
-                <h3>Prêts en cours</h3>
+                <h3>Derniers adhérents</h3>
                 <p>
-                right hand side of the screen, w/ loans status & new buttons
-                right hand side of the screen, w/ loans status & new buttons
-                right hand side of the screen, w/ loans status & new buttons
-                right hand side of the screen, w/ loans status & new buttons
+				<?php if(sizeof($members)) { while(list($key, $val) = each($members)) { ?>
+				<a href="index.php?o=members&a=edit&i=<?=$val->id?>"><?=$val->full_name?></a>,
+					à <?=$val->po_town?><br>
+				<?php } } else { ?>
+					Pas encore d'adhérents.
+				<?php } ?>
                 </p>
-                <p><a href="#" class="btn btn-primary" role="button">Emprunter</a>
-                <a href="#" class="btn btn-default" role="button">Restituer</a></p>
             </div>
         </div>
     </div>
@@ -43,6 +40,10 @@ $(document).ready(function () {
     $("#main-calendar").zabuto_calendar({
         language: "fr",
         today: true,
+		ajax : {
+			url : 'api.php?o=members&a=birthdays',
+			modal : true
+		}
     });
 });
 </script>

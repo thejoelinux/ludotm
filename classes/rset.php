@@ -79,8 +79,22 @@ class rset {
 
     /* Returns a json output
      */
-    public function display_json() {
-        return "please write me";
+    public function to_json() {
+		if($this->numrows) { 
+			$json = "[";
+			do {
+				$json .= "{";
+				while(list($key, $val) = each($this->table)) {
+					$json .= "\"$val\" : \"".$this->value($val)."\",";
+				}
+				reset($this->table);
+				$json = substr($json, 0, -1)."},";
+			} while($this->nextrow());
+			$json = substr($json, 0, -1)."]";
+			return $json;
+		} else {
+			return "[]";
+		}
     }
 
 

@@ -13,9 +13,9 @@ class Member extends Record {
 	public $table = "members";
 
 	public function __construct($id = 0) {
-    	if (!$this->id) {
+		if (!$this->id) {
 			$this->id = $id;
-	    }
+		}
 		$this->family_links = array(
 			1 => "Enfant",
 			2 => "Conjoint",
@@ -46,6 +46,37 @@ class Member extends Record {
         $GLOBALS["data"]->select($sql, $member, "Member");
         return $member;
     }
+
+	public static function fetch_birthdays() {
+		// from http://stackoverflow.com/a/28000048/1191256 - give credit where credit is due
+		// SQL SELECT members family_members
+		$sql = "SELECT CONCAT ( firstname, ' ', lastname, '(', YEAR(CURDATE())-YEAR(birth_date), ') ') AS title,
+				DATE_ADD(
+					birth_date, 
+					INTERVAL YEAR(CURDATE())-YEAR(birth_date) YEAR
+				) AS `date`,
+				'true' AS `badge`
+			FROM members 
+			WHERE 
+				`birth_date` IS NOT NULL
+			HAVING 
+				`date` BETWEEN DATE_FORMAT(NOW() ,'%Y-%m-01') AND LAST_DAY(CURDATE())
+			UNION
+			SELECT CONCAT ( firstname, ' ', lastname, '(', YEAR(CURDATE())-YEAR(birth_date), ') ') AS title,
+				DATE_ADD(
+					birth_date, 
+					INTERVAL YEAR(CURDATE())-YEAR(birth_date) YEAR
+				) AS `date`,
+				'true' AS `badge`
+			FROM family_members 
+			WHERE 
+				`birth_date` IS NOT NULL
+			HAVING 
+				`date` BETWEEN DATE_FORMAT(NOW() ,'%Y-%m-01') AND LAST_DAY(CURDATE())
+			ORDER BY `date`";
+        $GLOBALS["data"]->select($sql, $rset);
+		return $rset;
+	}
 
 	public function fetch_subscriptions() {
 		Subscription::fetch_all($this->subscriptions, $this->id);
@@ -107,6 +138,17 @@ class Member extends Record {
         $GLOBALS["data"]->select($sql, $members, "Member");
         return sizeof($members);
     }
+
+	public static function fetch_last(&$members) {
+		$members = array();
+        // SQL SELECT members
+        $sql = "SELECT id, po_town, CONCAT(firstname, ' ', lastname) AS full_name
+            FROM members
+            ORDER BY created_at DESC
+			LIMIT 0,10"; 
+        $GLOBALS["data"]->select($sql, $members, "Member");
+        return sizeof($members);
+	}
 }
 
 ?>

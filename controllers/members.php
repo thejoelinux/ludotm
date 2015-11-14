@@ -49,6 +49,16 @@ switch($_REQUEST["a"]) {
 		}
 	break;
 
+	case "birthdays": // for API
+		try {
+			$rset = Member::fetch_birthdays();
+			echo $rset->to_json();
+            exit(); // no further rendering needed
+		} catch(data_exception $e) {
+			$render = "data_exception";
+		}
+	break;
+
     case "name_list": // for API
         try {
             Member::fetch_all($members);

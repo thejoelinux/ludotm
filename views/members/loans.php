@@ -48,10 +48,17 @@
 <div class="form-group">
 	<div class="col-sm-12" align="center">
 		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la fiche adhérent">
-		<span class="btn btn-success btm-md" onClick="set_value('a', 'new'); set_value('o', 'loans'); defaultform.submit()">
+		<?php if($member->has_valid_subscription()) { ?>
+		<span class="btn btn-success btn-md" onClick="set_value('a', 'new'); set_value('o', 'loans'); defaultform.submit()">
 			<i class="glyphicon glyphicon-plus"></i>
 			<span>Nouvel emprunt...</span>
 		</span>
+		<?php } else { ?>
+		<span class="btn btn-danger btn-md">
+			<i class="glyphicon glyphicon-warning-sign"></i>
+			<span>Impossible de faire un nouvel emprunt.</span>
+		</span>
+		<?php } ?>
 	</div>
 </div>
 

@@ -73,6 +73,7 @@ switch($_REQUEST["a"]) {
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["i"]));
 			if($member->id != 0) {
+				$member->fetch_subscriptions();
 				$member->fetch_loans();
                 $render = "members/loans";
 			} else {
@@ -87,8 +88,11 @@ switch($_REQUEST["a"]) {
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["member_id"]));
 			if($member->id != 0) {
-				$member->create_loan();
-				$member->fetch_loans();
+				$member->fetch_subscriptions();
+				if($member->has_valid_subscription()) {
+					$member->create_loan();
+					$member->fetch_loans();
+				} // no error message - normally you can't do this
                 $render = "members/loans";
 			} else {
 				$render = "members/not_found"; // TODO
@@ -102,6 +106,7 @@ switch($_REQUEST["a"]) {
 		try {
             $member = Member::fetch($data->db_escape_string($_REQUEST["member_id"]));
 			if($member->id != 0) {
+				$member->fetch_subscriptions();
 				$member->update_loan();
 				$member->fetch_loans();
                 $render = "members/loans";

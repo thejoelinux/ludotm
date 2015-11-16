@@ -22,7 +22,8 @@ class Subscription extends Record {
         $sql = " SELECT ms.id, start_date, end_date, ms.member_id, CONCAT(a.lastname, ' ', a.firstname) as member_name,
 				ms.membership_type_id, mt.name as membership_type_name,
 				ms.payment_method_id, pm.name as payment_method_name,
-				ms.price, credit, ms.comments, ms.created_at, ms.updated_at
+				ms.price, credit, ms.comments, ms.created_at, ms.updated_at,
+				DATEDIFF(end_date, curdate()) as remaining_days
             FROM subscriptions ms, adherent a, membership_types mt, payment_methods pm
             WHERE ms.id = ".$id."
 				AND ms.member_id = a.id
@@ -39,7 +40,8 @@ class Subscription extends Record {
         $sql = " SELECT ms.id, start_date, end_date, ms.member_id, CONCAT(m.lastname, ' ', m.firstname) as member_name,
 				ms.membership_type_id, mt.name as membership_type_name,
 				ms.payment_method_id, pm.name as payment_method_name,
-				ms.price, credit, ms.comments, ms.created_at, ms.updated_at
+				ms.price, credit, ms.comments, ms.created_at, ms.updated_at,
+				DATEDIFF(end_date, curdate()) as remaining_days
             FROM subscriptions ms, members m, membership_types mt, payment_methods pm
             WHERE member_id = ".$member_id."
 				AND ms.member_id = m.id

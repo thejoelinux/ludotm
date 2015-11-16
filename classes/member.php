@@ -41,7 +41,9 @@ class Member extends Record {
         // SQL SELECT members
         $sql = "SELECT id, firstname, lastname, subscribe_date, birth_date, address, po_town,
             home_phone, work_phone, mobile_phone, fax_phone, comments, member_ref, membership_type_id,
-            subscription_label, email, newsletter, other_members, deposit, CONCAT(lastname, ' ', firstname) AS full_name
+            subscription_label, email, newsletter, other_members, deposit, deposit_expiration_date,
+			DATEDIFF(deposit_expiration_date, curdate()) as remaining_deposit_days,
+			CONCAT(lastname, ' ', firstname) AS full_name
             FROM members
             WHERE id = ".$id;
         $GLOBALS["data"]->select($sql, $member, "Member");
@@ -95,6 +97,25 @@ class Member extends Record {
 
 	public function fetch_loans() {
 		Loan::fetch_all($this->loans, $this->id);
+	}
+
+	public function has_valid_subscription() {
+		$cr = false;
+		if(sizeof($this->subscriptions)) {
+			while(list($key, $val) = each($this->subscriptions)) {
+				if($val->remaining_days > 0) {
+					$cr = true;
+				}
+			}	
+		}
+		if($this->deposit) {
+			if($this->remaining_deposit_days < 0) {
+				$cr = false;
+			}
+		} else {
+			$cr = false;
+		}
+		return $cr;
 	}
 
 	public function create_loan() {

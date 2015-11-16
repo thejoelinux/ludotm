@@ -4,7 +4,8 @@ class Member extends Record {
 	public $id;
 	public $lastname, $firstname, $subscribe_date, $birth_date, $address, $po_town;
 	public $home_phone, $work_phone, $mobile_phone, $fax_phone, $comments;
-	public $member_ref, $membership_type_id, $subscription_label, $email, $newsletter, $other_members, $deposit;
+	public $member_ref, $membership_type_id, $subscription_label, $email, $newsletter, $other_members;
+	public $deposit, $deposit_expiration_date;
 
 	public $family_links;
 

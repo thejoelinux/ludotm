@@ -116,7 +116,7 @@ This file is part of phpLudoreve.
 		Il faut enregistrer l'adhérent avant de pouvoir enregistrer des adhésions et des emprunts.
 	</div>
 	<?php } else { ?>
-    <div class="col-sm-4">
+	<div class="col-sm-4">
 		<div class="input-group">
           <input type="text" id="member_subscription" name="member_subscription"  class="form-control" 
 		  	value="<?=(sizeof($member->subscriptions)) ? $member->subscriptions[0]->text() : "Aucune adhésion trouvée"?>"/>
@@ -125,6 +125,16 @@ This file is part of phpLudoreve.
           </div>
         </div>
     </div>
+	<?php
+			if(!sizeof($member->subscriptions)) {
+		?>
+    <div class="col-sm-6" style="margin-top: 5px">
+		Il faut ajouter une première adhésion avant de pouvoir enregistrer des emprunts.		
+	</div>
+		<?php
+			} else {
+	?>
+
 	<label class="control-label col-sm-2" for="adhesion">Emprunts</label>
     <div class="col-sm-4">
 		<div class="input-group">
@@ -135,7 +145,40 @@ This file is part of phpLudoreve.
           </div>
 		</div>	  
     </div>
-	<?php } ?>
+</div>	
+<div class="form-group">
+    <label class="control-label col-sm-2" for="deposit">Caution</label>
+    <div class="col-sm-1">
+        <input type="checkbox" id="deposit" name="deposit" class="form-control" 
+			<?=($member->deposit ? "checked" : "")?>/>
+    </div>
+    <label class="control-label col-sm-2 col-sm-offset-3" for="deposit_expiration_date">Limite validité</label>
+	<div class="col-sm-4">
+		<div class='input-group date' id='deposit_expiration_datetimepicker'>
+        	<input type="text" id="deposit_expiration_date" name="deposit_expiration_date" class="form-control"/>
+			<span class="input-group-addon">
+				<span class="glyphicon glyphicon-calendar"></span>
+			</span>
+		</div>
+		<script type="text/javascript">
+            $(function () {
+                $('#deposit_expiration_datetimepicker').datetimepicker({
+					locale: 'fr',
+					format: 'DD-MM-YYYY',
+					defaultDate: new Date(<?=($member->deposit_expiration_date != "" && $member->deposit_expiration_date != "0000-00-00"
+						? "'".$member->deposit_expiration_date."'" : "")?>)
+				})
+				.on('changeDate', function(ev){
+           			 $('#deposit_expiration_date') = ev.format();
+		        });
+				<?php if($member->deposit_expiration_date == "" || $member->deposit_expiration_date == "0000-00-00") { ?>
+				$('#deposit_expiration_date').val('');
+				<?php } ?>
+            });
+        </script>
+    </div>
+	<?php }
+	} ?>
 </div>
 <div class="form-group">
     <label class="control-label col-sm-2" for="subscribe_date">Date d'inscription</label>
@@ -269,6 +312,7 @@ $('#save_button').click(function(){
     }
 	// special checkbox
 	$('#newsletter').val($('#newsletter').val() == 'on' ? 1 : 0);
+	$('#deposit').val($('#deposit').val() == 'on' ? 1 : 0);
 	if($('#i').val() == 0) {
 		$('#a').val('create');
 	} else {

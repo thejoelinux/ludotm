@@ -23,6 +23,27 @@ function __autoload($class_name) {
 include("config/config.php");
 global $data;
 $data = new data();
+global $user;
+$user = new User(0);
+if(!array_key_exists("user_id", $_SESSION)) { 
+	if(array_key_exists("a", $_REQUEST) && $_REQUEST["a"] == "submit_login") {
+		// try to authenticate
+		$user = User::validate($GLOBALS["data"]->db_escape_string($_REQUEST["name"]),
+			$GLOBALS["data"]->db_escape_string($_REQUEST["passwd"]));
+		if($user->id != 0) {
+			$_SESSION["user_id"] = $user->id;
+			$_REQUEST["o"] = "home";
+		}
+	} // stay not authenticated
+} else {
+	if(array_key_exists("a", $_REQUEST) && $_REQUEST["a"] == "logout") {
+		// logout
+		unset($_SESSION["user_id"]);
+	} else {
+		// stay authenticated
+		$user = User::fetch($_SESSION["user_id"]);
+	}
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,7 +74,8 @@ $data = new data();
       <a class="navbar-brand" href="index.php">
 	  	<img id="logo" src="images/logo-texte.png" alt="phpLudoreve"></a>
     </div>
-    <div id="navbar" class="collapse navbar-collapse navbar-right">
+	<?php if($user->id != 0) { ?>
+	<div id="navbar" class="collapse navbar-collapse navbar-right">
       <ul class="nav navbar-nav">
     	<li><a href="index.php?o=members">Adhérents</a></li>
     	<li><a href="index.php?o=games">Jeux</a></li>
@@ -73,13 +95,12 @@ $data = new data();
             <input class="typeahead" type="text" placeholder="Recherche...">
         </div>
 	  </form>
-	  <!-- when authentication will be ready
 	  <ul class="nav navbar-nav navbar-right">
-        <li><a href="#/users"><span class="glyphicon glyphicon-user"></span> Account</a></li>
-        <li><a href="#/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        <li><a href="index.php?o=users&a=edit&i=<?=$user->id?>"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+        <li><a href="index.php?a=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
       </ul>
-	  -->
     </div>
+	<?php } ?>
   </div>
 </nav>
 <form action="index.php" method="POST" id="defaultform" name="defaultform" 
@@ -89,13 +110,19 @@ $data = new data();
 <?php
 $_REQUEST["a"] = (array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : "";
 $_REQUEST["i"] = (array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : "";
-if(array_key_exists("o", $_REQUEST) && $_REQUEST["o"] != ""
-	&& file_exists("controllers/".$_REQUEST["o"].".php")) {
-		
-        include("controllers/".$_REQUEST["o"].".php");
+if($user->id == 0) {
+	// not authenticated
+	$_REQUEST["o"] = "users";
+	include("controllers/users.php");
 } else {
-    $_REQUEST["o"] = "home";
-    include("controllers/home.php");
+	if(array_key_exists("o", $_REQUEST) && $_REQUEST["o"] != ""
+		&& file_exists("controllers/".$_REQUEST["o"].".php")) {
+			
+			include("controllers/".$_REQUEST["o"].".php");
+	} else {
+		$_REQUEST["o"] = "home";
+		include("controllers/home.php");
+	}
 }
 ?>
 	</div>
@@ -123,6 +150,7 @@ SESSION :
 <script src="js/bootstrap-datetimepicker.js"></script>
 <script src="js/bootstrap-switch.min.js"></script>
 <script src="js/functions.js"></script>
+<?php if($user->id != 0) { ?>
 <script type="application/javascript">
 $(document).ready(function () {
     var members = new Bloodhound({
@@ -211,5 +239,6 @@ TODO : Display calendar events via ajax
 See documentation at https://github.com/zabuto/calendar
 */
 </script>
+<?php } ?>
 </body>
 </html>

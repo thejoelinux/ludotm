@@ -1,40 +1,86 @@
-function set_value(myField, myValue) {
-    document.getElementById(myField).value = myValue;
-}
+$(document).ready(function () {
+    var members = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('full_name'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: { url : 'api.php?o=members&a=name_list',
+	  	cache: false }
+    });
 
-function apply_value(myField, myValue) {
-    set_value(myField, myValue);
-    document.defaultform.submit();
-}
+    var games = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: { url : 'api.php?o=games&a=name_list',
+	  	cache: false }
+    });
 
+    $('#search-members .typeahead').typeahead({
+        highlight: true
+    },
+    {
+      name: 'members',
+      display: 'full_name',
+      source: members,
+      templates: {
+        header: '<h3 class="category-name">Adhérents</h3>'
+      }
+    });
 
-var xhr = null;
-function getXhr() {
-	if (window.XMLHttpRequest) // Firefox et autres
-		xhr = new XMLHttpRequest();
-	else if (window.ActiveXObject){ // Internet Explorer
-		try {
-			xhr = new ActiveXObject("Msxml2.XMLHTTP");
-		} catch (e) {
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-	}
-	else { // XMLHttpRequest non support� par le navigateur
-		alert("XMLHTTPRequest objects not supported.");
-	}
-	return xhr;
-}
-
-function modif_date(currentDate, myDiv, myField){
-        getXhr();
-        xhr.onreadystatechange = function(){
-                if(xhr.readyState == 4 && xhr.status == 200){
-                        contenu = xhr.responseText;
-                        document.getElementById(myDiv).innerHTML = contenu;
-                }
+	$('#search-games-for-loans .typeahead').typeahead({
+        highlight: true
+    },
+    {
+      name: 'games',
+      display: 'name',
+      source: new Bloodhound({
+	      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+    	  queryTokenizer: Bloodhound.tokenizers.whitespace,
+	      prefetch: { url : 'api.php?o=games&a=name_list&filter=available',
+	  		cache: false }
+      })
+    }).bind('typeahead:selected', function(obj, datum, name) {      
+        if(typeof datum.id !== 'undefined') {
+			console.log(datum);
+            $('#game_id').val(datum.id);
         }
+    });
 
-        xhr.open("POST","async/date_async.php",true);
-        xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-        xhr.send("date="+currentDate+"&field="+myField+"&div="+myDiv);
-}
+    $('#search-all .typeahead').typeahead({
+      highlight: true
+    },
+    {
+      name: 'members',
+      display: 'full_name',
+      source: members,
+      templates: {
+        header: '<h3 class="category-name">Adhérents</h3>'
+      }
+    },
+    {
+      name: 'games',
+      display: 'name',
+      source: games,
+      templates: {
+        header: '<h3 class="category-name">Jeux</h3>'
+      }
+    });
+    // from https://github.com/twitter/typeahead.js/issues/300 suggestion
+    $('#search-all').bind('typeahead:selected', function(obj, datum, name) {      
+        // alert(JSON.stringify(datum)); // contains datum value, tokens and custom fields
+        // outputs, e.g., {"redirect_url":"http://localhost/test/topic/test_topic","image_url":"http://localhost/test/upload/images/t_FWnYhhqd.jpg","description":"A test description","value":"A test value","tokens":["A","test","value"]}
+        // in this case I created custom fields called 'redirect_url', 'image_url', 'description'   
+        if(typeof datum.full_name !== 'undefined') {
+            window.location.href = "index.php?o=members&a=edit&i=" + datum.id;
+        } else {
+            window.location.href = "index.php?o=games&a=edit&i=" + datum.id;
+        }
+    });
+	// every check box on site turned into a switch except with data-switch-with-ajax flag
+	$("input[type=\"checkbox\"]").not("[data-switch-with-ajax]").bootstrapSwitch({
+		onText: "Oui",
+		offText: "Non"
+	});
+});
+/*
+TODO : Display calendar events via ajax
+See documentation at https://github.com/zabuto/calendar
+*/

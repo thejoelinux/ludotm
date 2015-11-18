@@ -60,8 +60,8 @@ function deleteMedia(id) {
 // send a new file via an AJAX call, in case of success
 // refresh the media list with the response
 $('#add_media').click(function(){
-	set_value('o', 'medias');
-	set_value('a', 'upload');
+	$('#o').val('medias');
+	$('#a').val('upload');
 	var formData = new FormData($('#defaultform')[0]);
 	$.ajax({
 		url: 'api.php', // post on the API
@@ -80,10 +80,6 @@ $('#add_media').click(function(){
 		processData: false
 	});
 	// restore values
-	set_value('o', 'games');
-	set_value('a', 'edit');
+	$('#o').val('games');
+	$('#a').val('edit');
 });
-
-
-
-

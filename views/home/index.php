@@ -1,4 +1,5 @@
 <div class="row">
+
     <div class="col-sm-4">
         <!-- right hand side of the screen, w/ loans status & new buttons -->
         <div class="thumbnail">

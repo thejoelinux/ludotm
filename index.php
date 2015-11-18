@@ -74,31 +74,46 @@ if(!array_key_exists("user_id", $_SESSION)) {
       <a class="navbar-brand" href="index.php">
 	  	<img id="logo" src="images/logo-texte.png" alt="phpLudoreve"></a>
     </div>
-	<?php if($user->id != 0) { ?>
+	<?php if($user->id != 0) { 
+		$menu_entries = array();
+	?>
 	<div id="navbar" class="collapse navbar-collapse navbar-right">
       <ul class="nav navbar-nav">
-    	<li><a href="index.php?o=members">Adhérents</a></li>
+	  	<?php if($user->has_role("games")) { 
+			$menu_entries["esar_categories"] = "Catégories Esar";
+		?>
     	<li><a href="index.php?o=games">Jeux</a></li>
+		<?php } ?>
+	  	<?php if($user->has_role("members")) { 
+			$menu_entries["membership_types"] = "Types d'adhésion";
+			$menu_entries["payment_methods"] = "Méthodes de paiement";
+		?>
+    	<li><a href="index.php?o=members">Adhérents</a></li>
+		<?php } ?>
+		<?php if($user->has_role("admin")) { ?>
+		<li><a href="index.php?o=users&a=list">Comptes</a></li>
+		<?php } ?>
+		<?php if(sizeof($menu_entries)) { ?>
 		<li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" 
 		  	aria-expanded="false">Options <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="index.php?o=membership_types&a=list">Types d'adhésion</a></li>
-            <li><a href="index.php?o=payment_methods&a=list">Méthodes de paiement</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+		  <?php while(list($key, $val) = each($menu_entries)) { ?>
+            <li><a href="index.php?o=<?=$key?>&a=list"><?=$val?></a></li>
+		  <?php } ?>
           </ul>
         </li>
+		<?php } ?> 
       </ul>
-	  <form class="navbar-form navbar-right">
+	  <ul class="nav navbar-nav navbar-right">
+        <li><a href="index.php?o=users&a=edit&i=<?=$user->id?>"><span class="glyphicon glyphicon-user"></span> Mon compte</a></li>
+        <li><a href="index.php?a=logout"><span class="glyphicon glyphicon-log-out"></span> Se déconnecter</a></li>
+      </ul>
+		<form class="navbar-form navbar-right">
         <div id="search-all" >
             <input class="typeahead" type="text" placeholder="Recherche...">
         </div>
-	  </form>
-	  <ul class="nav navbar-nav navbar-right">
-        <li><a href="index.php?o=users&a=edit&i=<?=$user->id?>"><span class="glyphicon glyphicon-user"></span> Account</a></li>
-        <li><a href="index.php?a=logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-      </ul>
+		</form>
     </div>
 	<?php } ?>
   </div>
@@ -132,12 +147,12 @@ if($user->id == 0) {
 </form>
 <footer>
 <?php if($debug) { ?>
-<pre>
-REQUEST :
-<?php print_r($_REQUEST) ?>
-SESSION :
-<?php print_r($_SESSION) ?>
-</pre>
+	<pre>
+	REQUEST :
+	<?php print_r($_REQUEST) ?>
+	SESSION :
+	<?php print_r($_SESSION) ?>
+	</pre>
 <?php } ?>
 </footer>
 <!-- Placed at the end of the document so the pages load faster -->
@@ -149,96 +164,8 @@ SESSION :
 <script src="js/moment-with-locales.min.js"></script>
 <script src="js/bootstrap-datetimepicker.js"></script>
 <script src="js/bootstrap-switch.min.js"></script>
-<script src="js/functions.js"></script>
 <?php if($user->id != 0) { ?>
-<script type="application/javascript">
-$(document).ready(function () {
-    var members = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('full_name'),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: { url : 'api.php?o=members&a=name_list',
-	  	cache: false }
-    });
-
-    var games = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: { url : 'api.php?o=games&a=name_list',
-	  	cache: false }
-    });
-
-    $('#search-members .typeahead').typeahead({
-        highlight: true
-    },
-    {
-      name: 'members',
-      display: 'full_name',
-      source: members,
-      templates: {
-        header: '<h3 class="category-name">Adhérents</h3>'
-      }
-    });
-
-	$('#search-games-for-loans .typeahead').typeahead({
-        highlight: true
-    },
-    {
-      name: 'games',
-      display: 'name',
-      source: new Bloodhound({
-	      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-    	  queryTokenizer: Bloodhound.tokenizers.whitespace,
-	      prefetch: { url : 'api.php?o=games&a=name_list&filter=available',
-	  		cache: false }
-      })
-    }).bind('typeahead:selected', function(obj, datum, name) {      
-        if(typeof datum.id !== 'undefined') {
-			console.log(datum);
-            $('#game_id').val(datum.id);
-        }
-    });
-
-    $('#search-all .typeahead').typeahead({
-      highlight: true
-    },
-    {
-      name: 'members',
-      display: 'full_name',
-      source: members,
-      templates: {
-        header: '<h3 class="category-name">Adhérents</h3>'
-      }
-    },
-    {
-      name: 'games',
-      display: 'name',
-      source: games,
-      templates: {
-        header: '<h3 class="category-name">Jeux</h3>'
-      }
-    });
-    // from https://github.com/twitter/typeahead.js/issues/300 suggestion
-    $('#search-all').bind('typeahead:selected', function(obj, datum, name) {      
-        // alert(JSON.stringify(datum)); // contains datum value, tokens and custom fields
-        // outputs, e.g., {"redirect_url":"http://localhost/test/topic/test_topic","image_url":"http://localhost/test/upload/images/t_FWnYhhqd.jpg","description":"A test description","value":"A test value","tokens":["A","test","value"]}
-        // in this case I created custom fields called 'redirect_url', 'image_url', 'description'   
-        if(typeof datum.full_name !== 'undefined') {
-            window.location.href = "index.php?o=members&a=edit&i=" + datum.id;
-        } else {
-            window.location.href = "index.php?o=games&a=edit&i=" + datum.id;
-        }
-    });
-	// every check box on site turned into a switch except with data-switch-with-ajax flag
-	$("input[type=\"checkbox\"]").not("[data-switch-with-ajax]").bootstrapSwitch({
-		onText: "Oui",
-		offText: "Non"
-	});
-});
-/*
-TODO : Display calendar events via ajax
-See documentation at https://github.com/zabuto/calendar
-*/
-</script>
+<script src="js/functions.js"></script>
 <?php } ?>
 </body>
 </html>

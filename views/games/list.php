@@ -2,7 +2,7 @@
 	<h2>Liste des jeux</h2>
 </div>
 <div class="col-sm-4" align="center">
-	<span class="btn btn-success" onClick="set_value('a', 'new'); defaultform.submit()">
+	<span class="btn btn-success" onClick="$('#a').val('new'); defaultform.submit()">
 		<i class="glyphicon glyphicon-plus"></i>
 		<span>Nouveau jeu ...</span>
 	</span>

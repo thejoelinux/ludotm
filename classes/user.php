@@ -23,7 +23,21 @@ class User extends Record {
             FROM users
             WHERE id = ".$id;
         $GLOBALS["data"]->select($sql, $user, "User");
+		if($user->id != 0) {
+			$user->roles = Role::fetch_user_roles($user->id);
+		}
         return $user;
+    }
+
+	public static function fetch_all(&$users) {
+        $users = array();
+        // SQL SELECT users
+        $sql = "SELECT id, name, email, active,
+				created_at, updated_at
+            FROM users
+            ORDER BY name"; 
+        $GLOBALS["data"]->select($sql, $users, "User", true);
+        return sizeof($users);
     }
 
 	public static function validate($name, $password) {
@@ -36,6 +50,8 @@ class User extends Record {
 		if($user->id == 0) {
 			$user = new User(0);
 			$user->alert_msg = "Echec de l'authentification";
+		} else {
+			$user->roles = Role::fetch($user->id);
 		}
 		return $user;
 	}
@@ -47,6 +63,17 @@ class User extends Record {
 			WHERE name = '".$user."'";
         $GLOBALS["data"]->select($sql, $users, "User");
         return sizeof($users);
+	}
+
+	public function has_role($role_name) {
+		while(list($key, $val) = each($this->roles)) {
+			if($val->name == $role_name) {
+				reset($this->roles);
+				return true;
+			}
+		}
+		reset($this->roles);
+		return false;
 	}
 }
 

@@ -56,8 +56,8 @@ function deleteFamilyMember(id) {
 // refresh the family_member list with the response
 $(document).ready(function () {
 	$('#add_family_member').click(function(){
-		set_value('o', 'family_members');
-		set_value('a', 'add');
+		$('#o').val('family_members');
+		$('#a').val('add');
 		var formData = new FormData($('#defaultform')[0]);
 		$.ajax({
 			url: 'api.php', // post on the API
@@ -76,7 +76,7 @@ $(document).ready(function () {
 			processData: false
 		});
 		// restore values
-		set_value('o', 'members');
-		set_value('a', 'edit');
+		$('#o').val('members');
+		$('#a').val('edit');
 	});
 });

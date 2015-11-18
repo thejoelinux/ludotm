@@ -39,7 +39,7 @@
 				<button type="button" class="btn btn-default btn-sm">
 				  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
 			</a>
-			<a onClick="if(confirm('Êtes vous sur ?')) { set_value('a', 'delete_subscription'); set_value('i', '<?=$val->id?>'); defaultform.submit()}" href="#">
+			<a onClick="if(confirm('Êtes vous sur ?')) { $('#a').val('delete_subscription'); $('i').val('<?=$val->id?>'); defaultform.submit()}" href="#">
 				<button type="button" class="btn btn-danger btn-sm">
 				  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 			</a>
@@ -50,7 +50,7 @@
 <div class="form-group">
 	<div class="col-sm-12" align="center">
 		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la fiche adhérent">
-		<span class="btn btn-success btm-md" onClick="set_value('a', 'new'); set_value('o', 'subscriptions'); defaultform.submit()">
+		<span class="btn btn-success btm-md" onClick="$('a').val('new'); $('o').val('subscriptions'); defaultform.submit()">
 			<i class="glyphicon glyphicon-plus"></i>
 			<span>Nouvelle adhésion...</span>
 		</span>

@@ -62,14 +62,16 @@
 </div>
 
 <script>
-$('#back_button').click(function(){
-	// TODO this function should verify that the object has not been modified
-	// and if yes, ask for confirmation from the user.
-	window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
-});
-$('#new_button').click(function(){
-	$('a').val('new'); 
-	$('o').val('subscriptions'); 
-	defaultform.submit();
+$(document).ready(function () {
+	$('#back_button').click(function(){
+		// TODO this function should verify that the object has not been modified
+		// and if yes, ask for confirmation from the user.
+		window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
+	});
+	$('#new_button').click(function(){
+		$('#a').val('new');
+		$('#o').val('subscriptions');
+		defaultform.submit();
+	});
 });
 </script>

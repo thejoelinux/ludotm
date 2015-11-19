@@ -1,8 +1,17 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-  		<h4><span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
-			<?=$member->lastname." ".$member->firstname." - Adhésions"?>
-		</h4>
+
+		<span class="btn btn-primary" id="back_button">
+  			<i class="glyphicon glyphicon-user"></i>
+			Retour à la fiche adhérent
+		</span>
+
+  		<span style="font-size: 150%; font-weight: bold">&nbsp;<?=$member->lastname." ".$member->firstname." - Adhésions"?>&nbsp;</span>
+
+		<span class="btn btn-success btm-md" style="float: right" id="new_button">
+			<i class="glyphicon glyphicon-plus"></i>
+			<span>Nouvelle adhésion...</span>
+		</span>
   </div>
   <div class="panel-body">
 
@@ -31,7 +40,7 @@
 		<td><?=$val->end_date?></td>
 		<td><?=$val->membership_type_name?></td>
 		<td><?=$val->payment_method_name?></td>
-		<td><?=$val->credit?></td>
+		<td><?=$val->credit ? "Oui" : "Non" ?></td>
 		<td><?=$val->price?></td>
 		<td><?=$val->comments?></td>
 		<td>
@@ -47,15 +56,6 @@
 	<?php } } ?>
 </table>
 
-<div class="form-group">
-	<div class="col-sm-12" align="center">
-		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la fiche adhérent">
-		<span class="btn btn-success btm-md" onClick="$('a').val('new'); $('o').val('subscriptions'); defaultform.submit()">
-			<i class="glyphicon glyphicon-plus"></i>
-			<span>Nouvelle adhésion...</span>
-		</span>
-	</div>
-</div>
 
   <!-- end of panel -->
   </div>
@@ -66,5 +66,10 @@ $('#back_button').click(function(){
 	// TODO this function should verify that the object has not been modified
 	// and if yes, ask for confirmation from the user.
 	window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
+});
+$('#new_button').click(function(){
+	$('a').val('new'); 
+	$('o').val('subscriptions'); 
+	defaultform.submit();
 });
 </script>

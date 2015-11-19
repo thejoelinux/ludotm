@@ -1,8 +1,23 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-  		<h4><span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
-			<?=$member->lastname." ".$member->firstname." - Emprunts"?>
-		</h4>
+  		<span class="btn btn-primary" id="back_button">
+  			<i class="glyphicon glyphicon-user"></i>
+			Retour à la fiche adhérent
+		</span>	
+
+		<span style="font-size: 150%; font-weight: bold">&nbsp;<?=$member->lastname." ".$member->firstname." - Emprunts"?>&nbsp;</span>
+		
+		<?php if($member->has_valid_subscription()) { ?>
+		<span class="btn btn-success btn-md" style="float: right" id="new_button">
+			<i class="glyphicon glyphicon-plus"></i>
+			<span>Nouvel emprunt...</span>
+		</span>
+		<?php } else { ?>
+		<span class="btn btn-danger btn-md" style="float: right">
+			<i class="glyphicon glyphicon-warning-sign"></i>
+			<span>Impossible de faire un nouvel emprunt.</span>
+		</span>
+		<?php } ?>
   </div>
   <div class="panel-body">
 
@@ -45,23 +60,6 @@
 	<?php } } ?>
 </table>
 
-<div class="form-group">
-	<div class="col-sm-12" align="center">
-		<input type="button" class="btn btn-primary" id="back_button" value="&lt;&lt; Retour à la fiche adhérent">
-		<?php if($member->has_valid_subscription()) { ?>
-		<span class="btn btn-success btn-md" onClick="$('#a').val('new'); $('#o').val('loans'); defaultform.submit()">
-			<i class="glyphicon glyphicon-plus"></i>
-			<span>Nouvel emprunt...</span>
-		</span>
-		<?php } else { ?>
-		<span class="btn btn-danger btn-md">
-			<i class="glyphicon glyphicon-warning-sign"></i>
-			<span>Impossible de faire un nouvel emprunt.</span>
-		</span>
-		<?php } ?>
-	</div>
-</div>
-
   <!-- end of panel -->
   </div>
 </div>
@@ -72,6 +70,11 @@ $(document).ready(function () {
 		// TODO this function should verify that the object has not been modified
 		// and if yes, ask for confirmation from the user.
 		window.location.href='index.php?o=members&a=edit&i=<?=$member->id?>';
+	});
+	$('#new_button').click(function(){
+		$('#a').val('new');
+		$('#o').val('loans');
+		defaultform.submit();
 	});
 	$('.is_back_cbx').bootstrapSwitch({
 		onText: "Oui",

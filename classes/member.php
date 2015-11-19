@@ -107,6 +107,7 @@ class Member extends Record {
 					$cr = true;
 				}
 			}	
+			reset($this->subscriptions);
 		}
 		if($this->deposit) {
 			if($this->remaining_deposit_days < 0) {
@@ -120,6 +121,12 @@ class Member extends Record {
 
 	public function create_loan() {
 		$loan = new Loan();
+		// ajust the end_date to be 21 days after if end_date == start_date
+		if($_REQUEST["end_date"] == $_REQUEST["start_date"]) {
+			$date = DateTime::createFromFormat ('d-m-Y', $_REQUEST["start_date"]);
+			$date->add(new DateInterval('P21D'));
+			$_REQUEST["end_date"] = $date->format('d-m-Y');
+		}
 		$loan->create();
 	}
 

@@ -93,6 +93,7 @@ switch($_REQUEST["a"]) {
 					$member->create_loan();
 					$member->fetch_loans();
 				} // no error message - normally you can't do this
+				$_REQUEST["i"] = $member->id;
                 $render = "members/loans";
 			} else {
 				$render = "members/not_found"; // TODO
@@ -109,6 +110,7 @@ switch($_REQUEST["a"]) {
 				$member->fetch_subscriptions();
 				$member->update_loan();
 				$member->fetch_loans();
+				$_REQUEST["i"] = $member->id;
                 $render = "members/loans";
 			} else {
 				$render = "members/not_found"; // TODO
@@ -138,6 +140,7 @@ switch($_REQUEST["a"]) {
 			if($member->id != 0) {
 				$member->create_subscription();
 				$member->fetch_subscriptions();
+				$_REQUEST["i"] = $member->id;
                 $render = "members/subscriptions";
 			} else {
 				$render = "members/not_found"; // TODO
@@ -153,6 +156,7 @@ switch($_REQUEST["a"]) {
 			if($member->id != 0) {
 				$member->update_subscription();
 				$member->fetch_subscriptions();
+				$_REQUEST["i"] = $member->id;
                 $render = "members/subscriptions";
 			} else {
 				$render = "members/not_found"; // TODO

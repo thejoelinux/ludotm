@@ -50,7 +50,7 @@ This file is part of phpLudoreve.
                 $('#birth_datetimepicker').datetimepicker({
 					locale: 'fr',
 					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($member->birth_date != ""
+					defaultDate: new Date(<?=($member->birth_date != "" && $member->birth_date != "0000-00-00"
 						? "'".$member->birth_date."'" : "")?>)
 				})
 				.on('changeDate', function(ev){

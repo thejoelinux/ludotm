@@ -85,7 +85,9 @@ This file is part of phpLudoreve.
     </div>
     <label class="control-label col-sm-2" for="newsletter">Newsletter</label>
     <div class="col-sm-1">
-        <input type="checkbox" id="newsletter" name="newsletter" class="form-control" 
+		<input type="hidden" id="newsletter" name="newsletter"
+			value="<?=($member->newsletter ? 1 : 0)?>"/>
+        <input type="checkbox" id="newsletter_cbx" name="newsletter_cbx" class="form-control" 
 			<?=($member->newsletter ? "checked" : "")?>/>
     </div>
 </div>
@@ -149,7 +151,9 @@ This file is part of phpLudoreve.
 <div class="form-group">
     <label class="control-label col-sm-2" for="deposit">Caution</label>
     <div class="col-sm-1">
-        <input type="checkbox" id="deposit" name="deposit" class="form-control" 
+		<input type="hidden" id="deposit" name="deposit"
+			value="<?=($member->deposit ? 1 : 0)?>" />
+        <input type="checkbox" id="deposit_cbx" name="deposit_cbx" class="form-control" 
 			<?=($member->deposit ? "checked" : "")?>/>
     </div>
     <label class="control-label col-sm-2 col-sm-offset-3" for="deposit_expiration_date">Limite validité</label>
@@ -304,41 +308,47 @@ This file is part of phpLudoreve.
 </div>
 
 <script>
-// buttons events
-$('#save_button').click(function(){
-    if(document.defaultform.lastname.value == 0) {
-        alert ("Vous n'avez pas saisi de nom!");
-        return false;
-    }
+$(document).ready(function () {
 	// special checkbox
-	$('#newsletter').val($('#newsletter').val() == 'on' ? 1 : 0);
-	$('#deposit').val($('#deposit').val() == 'on' ? 1 : 0);
-	if($('#i').val() == 0) {
-		$('#a').val('create');
-	} else {
-		$('#a').val('update');
-	}
-    document.defaultform.submit();
-    return true;
-});
-$('#delete_button').click(function(){
-	var msg = 'Voulez-vous réellement supprimer un adhérent ?\n' + 
-		'Cette action n\'est possible que si l\'adhérent n\'a fait aucun\n' +
-		'emprunt et payé aucune cotisation.';
-	if(confirm(msg)) {
-		$('#a').val('confirm_delete');
-    	document.defaultform.submit();
-	}
-});
-$('#back_button').click(function(){
-	// TODO this function should verify that the object has not been modified
-	// and if yes, ask for confirmation from the user.
-	window.location.href='index.php?o=members&a=list';
-});
-$('#member_subscriptions_btn').click(function(){
-	window.location.href='index.php?o=members&a=subscriptions&i='+$('#i').val();
-});
-$('#member_loans_btn').click(function(){
-	window.location.href='index.php?o=members&a=loans&i='+$('#i').val();
+	$('input[name="newsletter_cbx"]').on('switchChange.bootstrapSwitch', function(event, state) {
+		$('#newsletter').val(state == true ? 1 : 0);
+	});
+	$('input[name="deposit_cbx"]').on('switchChange.bootstrapSwitch', function(event, state) {
+		$('#deposit').val(state == true ? 1 : 0);
+	});
+	// buttons events
+	$('#save_button').click(function(){
+		if(document.defaultform.lastname.value == 0) {
+			alert ("Vous n'avez pas saisi de nom!");
+			return false;
+		}
+		if($('#i').val() == 0) {
+			$('#a').val('create');
+		} else {
+			$('#a').val('update');
+		}
+		document.defaultform.submit();
+		return true;
+	});
+	$('#delete_button').click(function(){
+		var msg = 'Voulez-vous réellement supprimer un adhérent ?\n' + 
+			'Cette action n\'est possible que si l\'adhérent n\'a fait aucun\n' +
+			'emprunt et payé aucune cotisation.';
+		if(confirm(msg)) {
+			$('#a').val('confirm_delete');
+			document.defaultform.submit();
+		}
+	});
+	$('#back_button').click(function(){
+		// TODO this function should verify that the object has not been modified
+		// and if yes, ask for confirmation from the user.
+		window.location.href='index.php?o=members&a=list';
+	});
+	$('#member_subscriptions_btn').click(function(){
+		window.location.href='index.php?o=members&a=subscriptions&i='+$('#i').val();
+	});
+	$('#member_loans_btn').click(function(){
+		window.location.href='index.php?o=members&a=loans&i='+$('#i').val();
+	});
 });
 </script>

@@ -169,35 +169,6 @@
 	} ?>
 </div>
 <div class="form-group">
-    <label class="control-label col-sm-2" for="subscribe_date">Date d'inscription</label>
-    <div class="col-sm-4">
-		<div class='input-group date' id='subscribe_datetimepicker'>
-        	<input type="text" id="subscribe_date" name="subscribe_date" class="form-control"/>
-			<span class="input-group-addon">
-				<span class="glyphicon glyphicon-calendar"></span>
-			</span>
-		</div>
-		<script type="text/javascript">
-            $(function () {
-                $('#subscribe_datetimepicker').datetimepicker({
-					locale: 'fr',
-					format: 'DD-MM-YYYY',
-					defaultDate: new Date(<?=($member->subscribe_date != "" && $member->subscribe_date != "0000-00-00"
-						? "'".$member->subscribe_date."'" : "")?>)
-				})
-				.on('changeDate', function(ev){
-           			 $('#subscribe_date') = ev.format();
-		        });
-				<?php if($member->subscribe_date == "" || $member->subscribe_date == "0000-00-00") { ?>
-				$('#subscribe_date').val('');
-				<?php } ?>
-            });
-        </script>
-    </div>
-	<div class="col-sm-4">
-	</div>
-</div>
-<div class="form-group">
 	<label class="control-label col-sm-2" for="family_members">Membres de la famille</label>
 <?php if ($member->id == 0) { ?>
 	<div class="col-sm-10" style="margin-top: 5px">

@@ -2,9 +2,9 @@
 
 class Member extends Record {
 	public $id;
-	public $lastname, $firstname, $subscribe_date, $birth_date, $address, $po_town;
+	public $lastname, $firstname, $birth_date, $address, $po_town;
 	public $home_phone, $work_phone, $mobile_phone, $fax_phone, $comments;
-	public $member_ref, $membership_type_id, $subscription_label, $email, $newsletter, $other_members;
+	public $member_ref, $email, $newsletter, $other_members;
 	public $deposit, $deposit_expiration_date;
 
 	public $family_links;
@@ -39,9 +39,9 @@ class Member extends Record {
 
     public static function fetch($id) {
         // SQL SELECT members
-        $sql = "SELECT id, firstname, lastname, subscribe_date, birth_date, address, po_town,
-            home_phone, work_phone, mobile_phone, fax_phone, comments, member_ref, membership_type_id,
-            subscription_label, email, newsletter, other_members, deposit, deposit_expiration_date,
+        $sql = "SELECT id, firstname, lastname, birth_date, address, po_town,
+            home_phone, work_phone, mobile_phone, fax_phone, comments, member_ref,
+            email, newsletter, other_members, deposit, deposit_expiration_date,
 			DATEDIFF(deposit_expiration_date, curdate()) as remaining_deposit_days,
 			CONCAT(lastname, ' ', firstname) AS full_name
             FROM members

@@ -14,7 +14,10 @@ class Subscription extends Record {
 	}
 
 	public function text(){
-		return "Du ".$this->start_date." au ".$this->end_date;
+        return "Du ".
+            date_format(date_create_from_format('Y-m-d',$this->start_date), 'd/m/Y').
+            " au ".
+            date_format(date_create_from_format('Y-m-d',$this->end_date), 'd/m/Y');
 	}
 
 	public static function fetch($id) {

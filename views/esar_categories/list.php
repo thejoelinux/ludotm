@@ -15,7 +15,7 @@
   <div class="panel-body">
 
 <div class="col-sm-12" align="center">
-<table id="list_esar">
+<table id="list_esar" style="display:none">
 	<thead>
 		<tr>
 		<th>Label</th>
@@ -44,7 +44,12 @@ while(list($key, $val) = each($esar_categories)) { ?>
 
 <script>
 $(document).ready(function() {
-    $('#list_esar').DataTable({"autoWidth": false})
+    $('#list_esar').DataTable({
+        "autoWidth": false,
+        "fnDrawCallback": function() {
+           $(this).show();
+        }
+    })
 });
 /* FIXME : translation of the table
 see https://datatables.net/plug-ins/i18n/French

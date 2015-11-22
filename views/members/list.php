@@ -13,7 +13,7 @@
 <div class="panel-body">
 
 <div class="col-sm-12" align="center">
-<table id="list_member">
+<table id="list_member" style="display:none">
 	<thead>
 		<tr>
 		<th>Nom</th>
@@ -44,7 +44,12 @@ while(list($key, $val) = each($members)) { ?>
 </div>
 <script>
 $(document).ready(function() {
-    $('#list_member').DataTable({"autoWidth": false})
+    $('#list_member').DataTable({
+        "autoWidth": false,
+        "fnDrawCallback": function() {
+           $(this).show();
+        }
+    })
     $('#new_button').click(function(){
 		$('#a').val('new');
 		defaultform.submit();

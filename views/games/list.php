@@ -16,7 +16,7 @@
 
 
 <div class="col-sm-12" align="center">
-<table id="list_jeu">
+<table id="list_jeu" style="display:none"> 
 	<thead>
 		<tr>
 		<th>Nom</th>
@@ -48,11 +48,12 @@ while(list($key, $val) = each($games)) { ?>
 </div>
 <script>
 $(document).ready(function() {
-	$('#list_jeu').DataTable(
-		/*{"autoWidth": false}*/
-		)
-/*		.removeClass( 'display' )
-		.addClass('table table-striped table-bordered');*/
+	$('#list_jeu').DataTable({
+		"autoWidth": false,
+        "fnDrawCallback": function() {
+           $(this).show();
+        }
+    });
     $('#new_button').click(function(){
 		$('#a').val('new');
 		defaultform.submit();

@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">
 		<h4>
-  		<span class="glyphicon glyphicon-list-alt" style="margin-right: 10px" ></span>
+  		<span class="glyphicon glyphicon-list-alt" style="margin-right: 10px;" ></span>
 		<?=($esar_category->id != 0) ? "Catégorie ESAR : ".$esar_category->name : "Nouvelle catégorie ESAR"?>
 		</h4>
   </div>

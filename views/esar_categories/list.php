@@ -2,53 +2,49 @@
   <div class="panel-heading">
 	<span style="font-size: 150%;" class="glyphicon glyphicon-user"></span>
   	<span style="font-size: 150%; font-weight: bold">
-    Adhérents
-    <span class="btn btn-success btn-md" style="float: right" id="new_button">
+    Catégories ESAR
+	</span>
+
+	<span class="btn btn-success btn-md" style="float: right" id="new_button">
 		<i class="glyphicon glyphicon-plus"></i>
-		<span>Nouvel adhérent...</span>
+		<span>Nouvelle catégorie...</span>
 	</span>
   </div>
 
-</div>
-<div class="panel-body">
+  </div>
+  <div class="panel-body">
 
 <div class="col-sm-12" align="center">
-<table id="list_member">
+<table id="list_esar">
 	<thead>
 		<tr>
-		<th>Nom</th>
-		<th>Ville</th>
-		<th>Etat</th>
+		<th>Label</th>
+		<th>Description</th>
 		</tr>
 	</thead>
 	<tbody>
 <?php
-while(list($key, $val) = each($members)) { ?>
+while(list($key, $val) = each($esar_categories)) { ?>
 	<tr>
 		<td>
-			<a href="index.php?o=members&a=edit&i=<?=$val->id?>"><?=$val->lastname?> <?=$val->firstname?></a>
+			<a href="index.php?o=esar_categories&a=edit&i=<?=$val->id?>"><?=$val->label?></a>
 		</td>
 		<td>
-			<?=$val->po_town?>
-		</td>
-		<td>
-            FIXME
+			<?=$val->name?>
 		</td>
 	</tr>
 <?php } ?>
 	</tbody>
 </table>
 </div>
+
   <!-- end of panel -->
   </div>
 </div>
+
 <script>
 $(document).ready(function() {
-    $('#list_member').DataTable({"autoWidth": false})
-    $('#new_button').click(function(){
-		$('#a').val('new');
-		defaultform.submit();
-	});
+    $('#list_esar').DataTable({"autoWidth": false})
 });
 /* FIXME : translation of the table
 see https://datatables.net/plug-ins/i18n/French

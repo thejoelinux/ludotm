@@ -1,12 +1,20 @@
-<div class="col-sm-8" align="center">
-	<h2>Liste des jeux</h2>
-</div>
-<div class="col-sm-4" align="center">
-	<span class="btn btn-success" onClick="$('#a').val('new'); defaultform.submit()">
+<div class="panel panel-default">
+  <div class="panel-heading">
+	<span style="font-size: 150%;" class="glyphicon glyphicon-knight"></span>
+  	<span style="font-size: 150%; font-weight: bold">
+    Jeux
+    </span>
+
+<span class="btn btn-success btn-md" style="float: right" id="new_button">
 		<i class="glyphicon glyphicon-plus"></i>
-		<span>Nouveau jeu ...</span>
+		<span>Nouvel jeu...</span>
 	</span>
 </div>
+
+  </div>
+  <div class="panel-body">
+
+
 <div class="col-sm-12" align="center">
 <table id="list_jeu">
 	<thead>
@@ -34,6 +42,10 @@ while(list($key, $val) = each($games)) { ?>
 	</tbody>
 </table>
 </div>
+
+  <!-- end of panel -->
+  </div>
+</div>
 <script>
 $(document).ready(function() {
 	$('#list_jeu').DataTable(
@@ -41,6 +53,10 @@ $(document).ready(function() {
 		)
 /*		.removeClass( 'display' )
 		.addClass('table table-striped table-bordered');*/
+    $('#new_button').click(function(){
+		$('#a').val('new');
+		defaultform.submit();
+    });
 });
 /* FIXME : translation of the table
 see https://datatables.net/plug-ins/i18n/French

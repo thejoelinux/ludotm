@@ -42,8 +42,6 @@
 	<?php } ?>
 </table>
 
-
-
   <!-- end of panel -->
   </div>
 </div>

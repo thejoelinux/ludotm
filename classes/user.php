@@ -51,7 +51,7 @@ class User extends Record {
 			$user = new User(0);
 			$user->alert_msg = "Echec de l'authentification";
 		} else {
-			$user->roles = Role::fetch($user->id);
+			$user->roles = Role::fetch_user_roles($user->id);
 		}
 		return $user;
 	}
@@ -69,11 +69,57 @@ class User extends Record {
 		while(list($key, $val) = each($this->roles)) {
 			if($val->name == $role_name) {
 				reset($this->roles);
-				return true;
+				return $val->selected == $this->id;
 			}
 		}
 		reset($this->roles);
 		return false;
+	}
+
+    public function update_roles() {
+        if(!array_key_exists("roles", $_REQUEST) || !is_array($_REQUEST["roles"])) {
+            // no roles posted : delete all and return
+            // SQL DELETE user_roles
+            $sql = " DELETE FROM user_roles WHERE user_id = ".$this->id;
+            return $GLOBALS["data"]->delete($sql);
+        } else {
+            $list_to_delete = "";
+            while(list($key, $val) = each($this->roles)) {
+                if($val->selected && !in_array($val->name, $_REQUEST["roles"])) {
+                    $list_to_delete .= $val->id.",";
+                }
+            }
+            reset($this->roles);
+            if($list_to_delete != "") {
+                // SQL DELETE user_roles
+                $sql = " DELETE FROM user_roles WHERE user_id = ".$this->id.
+                       " AND role_id IN ( ".substr($list_to_delete, 0, -1).") ";
+                $GLOBALS["data"]->delete($sql);
+            }
+            $list_to_add = "";
+            while(list($key, $val) = each($_REQUEST["roles"])) {
+                if(!$this->has_role($val)) {
+                    $list_to_add .= "'".$val."',";
+                }
+            }
+            if($list_to_add != "") {
+                // SQL INSERT user_roles SELECT roles
+                $sql = " INSERT INTO user_roles (user_id, role_id, created_at) 
+                    SELECT ".$this->id.", id, now()
+                    FROM roles
+                    WHERE name IN (".substr($list_to_add, 0, -1).")";
+                $GLOBALS["data"]->insert($sql);
+            }
+        }
+        return true;
+    }
+
+    function change_state($new_state) {
+		// SQL UPDATE users
+		$sql = " UPDATE users SET active = ".$new_state.",
+					updated_at = now()
+				WHERE id = ".$this->id;
+       	return $GLOBALS["data"]->update($sql);
 	}
 }
 

@@ -6,13 +6,13 @@ class Record {
 		$fields_sql = $datas_sql = "";
 		foreach(get_object_vars($this) as $var => $value) {
 			// check if there is a corresponding value in _REQUEST
-			// and the value is not empty
-			if(array_key_exists($var, $_REQUEST) && $_REQUEST[$var] != "") {
-				if(strrpos($var, "_date", -5)) { // search if the var is suffixed by date
+			// and the value is not empty AND is not an array
+			if(array_key_exists($var, $_REQUEST) && $_REQUEST[$var] != "" && !is_array($_REQUEST[$var])) {
+				if(strlen($var) > 5 && strrpos($var, "_date", -5)) { // search if the var is suffixed by date
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				$this->$var = $_REQUEST[$var];
-				if(strrpos($var, "_date", -5)) {
+				if(strlen($var) > 5 && strrpos($var, "_date", -5)) {
 					$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 				}
 				$fields_sql .= " $var,";
@@ -31,12 +31,12 @@ class Record {
 			// check if there is a corresponding value in _REQUEST
 			// and the value has really changed
 			if(!is_array($this->$var) && array_key_exists($var, $_REQUEST)) {
-				if(strrpos($var, "_date", -5)) { // search if the var is suffixed by date
+				if(strlen($var) > 5 && strrpos($var, "_date", -5)) { // search if the var is suffixed by date
 					$_REQUEST[$var] = date_format(date_create_from_format('d-m-Y', $_REQUEST[$var]),'m/d/Y');
 				}
 				if($_REQUEST[$var] != $value) {
 					$this->$var = $_REQUEST[$var];
-					if(strrpos($var, "_date", -5)) {
+					if(strlen($var) > 5 && strrpos($var, "_date", -5)) {
 						$_REQUEST[$var] = date_format(date_create_from_format('m/d/Y', $_REQUEST[$var]),'Y-m-d');
 					}
 					$update_sql .= " $var = '".$GLOBALS["data"]->db_escape_string($_REQUEST[$var])."',";

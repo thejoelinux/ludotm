@@ -20,6 +20,21 @@ switch($_REQUEST["a"]) {
 		}
     break;
 
+	case "user_list": // for API or HTML
+		try {
+			$roles = Role::fetch_user_roles($_REQUEST["i"]);
+			if($format == "json") {
+				echo json_encode($roles);
+				exit(); // no further rendering needed 
+			} else {
+				$render = "roles/list";
+			}
+		} catch(data_exception $e) {
+			header($_SERVER['SERVER_PROTOCOL'] . ' Internal Server Error', true, 500);
+			exit(); // no further rendering needed 
+		}
+    break;
+
 	case "create":
 		try {
 			$membership_type = new Membership_Type(0);

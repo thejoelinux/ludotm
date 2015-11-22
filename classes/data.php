@@ -37,6 +37,7 @@ class data {
                     mysqli_connect_error(),
                     "Connection");
         }
+        $this->db_handle->set_charset("utf8");
 
         return true;
     }

@@ -23,15 +23,15 @@ function __autoload($class_name) {
 include("config/config.php");
 global $data;
 $data = new data();
-global $user;
-$user = new User(0);
+global $logged_user;
+$logged_user = new User(0);
 if(!array_key_exists("user_id", $_SESSION)) { 
 	if(array_key_exists("a", $_REQUEST) && $_REQUEST["a"] == "submit_login") {
 		// try to authenticate
-		$user = User::validate($GLOBALS["data"]->db_escape_string($_REQUEST["name"]),
+		$logged_user = User::validate($GLOBALS["data"]->db_escape_string($_REQUEST["name"]),
 			$GLOBALS["data"]->db_escape_string($_REQUEST["passwd"]));
-		if($user->id != 0) {
-			$_SESSION["user_id"] = $user->id;
+		if($logged_user->id != 0) {
+			$_SESSION["user_id"] = $logged_user->id;
 			$_REQUEST["o"] = "home";
 		}
 	} // stay not authenticated
@@ -41,7 +41,7 @@ if(!array_key_exists("user_id", $_SESSION)) {
 		unset($_SESSION["user_id"]);
 	} else {
 		// stay authenticated
-		$user = User::fetch($_SESSION["user_id"]);
+		$logged_user = User::fetch($_SESSION["user_id"]);
 	}
 }
 ?>
@@ -57,6 +57,7 @@ if(!array_key_exists("user_id", $_SESSION)) {
 	<link rel="stylesheet" href="css/jquery.dataTables.min.css">
 	<link rel="stylesheet" href="css/bootstrap-datetimepicker.css">
 	<link rel="stylesheet" href="css/bootstrap-switch.min.css">
+	<link rel="stylesheet" href="css/bootstrap-multiselect.css">
 	<!-- link rel="stylesheet" href="css/datatables.min.css" -->
 	<link rel="stylesheet" href="css/styles.css">
 	<script src="js/jquery-2.1.4.min.js"></script>
@@ -74,23 +75,23 @@ if(!array_key_exists("user_id", $_SESSION)) {
       <a class="navbar-brand" href="index.php">
 	  	<img id="logo" src="images/logo-texte.png" alt="phpLudoreve"></a>
     </div>
-	<?php if($user->id != 0) { 
+	<?php if($logged_user->id != 0) { 
 		$menu_entries = array();
 	?>
 	<div id="navbar" class="collapse navbar-collapse navbar-right">
       <ul class="nav navbar-nav">
-	  	<?php if($user->has_role("games")) { 
+	  	<?php if($logged_user->has_role("games")) { 
 			$menu_entries["esar_categories"] = "Catégories Esar";
 		?>
     	<li><a href="index.php?o=games">Jeux</a></li>
 		<?php } ?>
-	  	<?php if($user->has_role("members")) { 
+	  	<?php if($logged_user->has_role("members")) { 
 			$menu_entries["membership_types"] = "Types d'adhésion";
 			$menu_entries["payment_methods"] = "Méthodes de paiement";
 		?>
     	<li><a href="index.php?o=members">Adhérents</a></li>
 		<?php } ?>
-		<?php if($user->has_role("admin")) { ?>
+		<?php if($logged_user->has_role("admin")) { ?>
 		<li><a href="index.php?o=users&a=list">Comptes</a></li>
 		<?php } ?>
 		<?php if(sizeof($menu_entries)) { ?>
@@ -106,7 +107,7 @@ if(!array_key_exists("user_id", $_SESSION)) {
 		<?php } ?> 
       </ul>
 	  <ul class="nav navbar-nav navbar-right">
-        <li><a href="index.php?o=users&a=edit&i=<?=$user->id?>"><span class="glyphicon glyphicon-user"></span> Mon compte</a></li>
+        <li><a href="index.php?o=users&a=edit&i=<?=$logged_user->id?>"><span class="glyphicon glyphicon-user"></span> Mon compte</a></li>
         <li><a href="index.php?a=logout"><span class="glyphicon glyphicon-log-out"></span> Se déconnecter</a></li>
       </ul>
 		<form class="navbar-form navbar-right">
@@ -125,7 +126,7 @@ if(!array_key_exists("user_id", $_SESSION)) {
 <?php
 $_REQUEST["a"] = (array_key_exists("a", $_REQUEST)) ? $_REQUEST["a"] : "";
 $_REQUEST["i"] = (array_key_exists("i", $_REQUEST)) ? $_REQUEST["i"] : "";
-if($user->id == 0) {
+if($logged_user->id == 0) {
 	// not authenticated
 	$_REQUEST["o"] = "users";
 	include("controllers/users.php");
@@ -164,7 +165,9 @@ if($user->id == 0) {
 <script src="js/moment-with-locales.min.js"></script>
 <script src="js/bootstrap-datetimepicker.js"></script>
 <script src="js/bootstrap-switch.min.js"></script>
-<?php if($user->id != 0) { ?>
+
+<script src="js/bootstrap-multiselect.js"></script>
+<?php if($logged_user->id != 0) { ?>
 <script src="js/functions.js"></script>
 <?php } ?>
 </body>

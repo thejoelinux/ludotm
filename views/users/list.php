@@ -1,8 +1,16 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-  		<h4><span class="glyphicon glyphicon-user" style="margin-right: 10px" ></span>
+	<span style="font-size: 150%;" class="glyphicon glyphicon-user"></span>
+  	<span style="font-size: 150%; font-weight: bold">
 			Utilisateurs
-		</h4>
+	</span>
+
+	<span class="btn btn-success btn-md" style="float: right" id="new_button">
+		<i class="glyphicon glyphicon-plus"></i>
+		<span>Nouvel utilisateur...</span>
+	</span>
+</div>
+
   </div>
   <div class="panel-body">
 
@@ -34,14 +42,7 @@
 	<?php } ?>
 </table>
 
-<div class="form-group">
-	<div class="col-sm-12" align="center">
-		<span class="btn btn-success btn-md" onClick="$('#a').val('new'); $('#o').val('loans'); defaultform.submit()">
-			<i class="glyphicon glyphicon-plus"></i>
-			<span>Nouvel utilisateur</span>
-		</span>
-	</div>
-</div>
+
 
   <!-- end of panel -->
   </div>
@@ -49,12 +50,17 @@
 
 <script>
 $(document).ready(function () {
+	$('#new_button').click(function(){
+		$('#a').val('new');
+		$('#o').val('users');
+		defaultform.submit();
+	});
 	$('.active_cbx').bootstrapSwitch({
 		onText: "Oui",
 		offText: "Non",
 	}).on('switchChange.bootstrapSwitch', function(event, state) {
 		  $.ajax({
-			url: 'api.php?o=users&a=switch_state&i=' + this.name.substr(8)
+			url: 'api.php?o=users&a=switch_state&i=' + this.name.substr(7)
 				+ "&state=" +  (state ? 1 : 0), // post on the API
 			type: 'POST',
 			xhr: function() {  // Custom XMLHttpRequest
@@ -62,11 +68,13 @@ $(document).ready(function () {
 				return myXhr;
 			},
 			success: function(){
-					alert('Le compte utilisateur est à présent désactivé.');
+                    if(state) {
+                        alert('Le compte utilisateur est activé.');
+                    } else {
+    					alert('Le compte utilisateur est à présent désactivé.');
+                    }
 				},
-			error: function(){
-					alert('Le compte utilisateur est activé.');
-				},
+			error: function(){},
 			cache: false,
 			contentType: false,
 			processData: false
